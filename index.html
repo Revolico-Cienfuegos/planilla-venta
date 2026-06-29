@@ -1,0 +1,499 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Planilla de Venta</title>
+<link rel="manifest" href="manifest.json">
+<meta name="theme-color" content="#1e6f5c">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<link rel="apple-touch-icon" href="icon-192.png">
+<style>
+  :root{
+    --ink:#1c2b24;
+    --paper:#f6f1e4;
+    --line:#cdbf9d;
+    --accent:#c0392b;
+    --accent-2:#1e6f5c;
+    --gold:#b8860b;
+    --field-bg:#fffdf8;
+  }
+
+  *{box-sizing:border-box;}
+
+  body{
+    margin:0;
+    background:
+      radial-gradient(circle at 20% 0%, rgba(192,57,43,0.06), transparent 40%),
+      radial-gradient(circle at 90% 100%, rgba(30,111,92,0.07), transparent 45%),
+      var(--paper);
+    color:var(--ink);
+    font-family:"Courier New", ui-monospace, monospace;
+    min-height:100vh;
+    padding:24px 14px 60px;
+  }
+
+  .ticket{
+    max-width:560px;
+    margin:0 auto;
+    background:var(--field-bg);
+    border:1px solid var(--line);
+    box-shadow: 0 1px 0 var(--line), 0 12px 30px -16px rgba(28,43,36,0.35);
+    position:relative;
+  }
+
+  .ticket::before, .ticket::after{
+    content:"";
+    position:absolute;
+    left:0; right:0; height:10px;
+    background-image: radial-gradient(circle, var(--paper) 5px, transparent 6px);
+    background-size: 16px 16px;
+    background-position: -4px center;
+  }
+  .ticket::before{ top:-5px; }
+  .ticket::after{ bottom:-5px; }
+
+  header{
+    text-align:center;
+    padding:28px 20px 18px;
+    border-bottom:2px dashed var(--line);
+  }
+
+  .siren{
+    font-size:13px;
+    letter-spacing:.18em;
+    color:var(--accent);
+    font-weight:700;
+  }
+
+  h1{
+    font-family: Georgia, 'Times New Roman', serif;
+    font-size:26px;
+    letter-spacing:.04em;
+    margin:6px 0 4px;
+    text-transform:uppercase;
+  }
+
+  .sub{
+    font-size:11.5px;
+    color:#6b6354;
+    letter-spacing:.05em;
+  }
+
+  form{ padding:22px 22px 8px; }
+
+  .group{ margin-bottom:18px; }
+
+  .group.section-break{
+    margin-top:26px;
+    padding-top:16px;
+    border-top:1px dashed var(--line);
+  }
+
+  .section-title{
+    font-family: Georgia, serif;
+    font-size:13px;
+    text-transform:uppercase;
+    letter-spacing:.08em;
+    color:var(--accent-2);
+    margin-bottom:14px;
+    font-weight:700;
+  }
+
+  label{
+    display:block;
+    font-size:12.5px;
+    margin-bottom:6px;
+    color:var(--ink);
+  }
+
+  label .opt{
+    color:#9a8f72;
+    font-style:italic;
+    font-size:11px;
+  }
+
+  input, textarea{
+    width:100%;
+    border:none;
+    border-bottom:1.5px solid var(--line);
+    background:transparent;
+    font-family:inherit;
+    font-size:14.5px;
+    padding:7px 2px;
+    color:var(--ink);
+    transition:border-color .15s;
+  }
+
+  input:focus, textarea:focus{
+    outline:none;
+    border-bottom-color:var(--accent);
+  }
+
+  input[readonly]{
+    color:#5c5547;
+    background:rgba(184,134,11,0.05);
+    border-bottom-style:dotted;
+    cursor:default;
+  }
+
+  textarea{ resize:vertical; min-height:50px; }
+
+  .row2{
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:14px;
+  }
+
+  @media (max-width:420px){
+    .row2{ grid-template-columns:1fr; }
+  }
+
+  .zelle-box{
+    border:1.5px dashed var(--gold);
+    padding:14px 14px 4px;
+    border-radius:2px;
+    background:rgba(184,134,11,0.04);
+  }
+
+  .submit-area{
+    padding:18px 22px 26px;
+    border-top:2px dashed var(--line);
+    margin-top:10px;
+  }
+
+  button{
+    width:100%;
+    background:var(--accent-2);
+    color:#fefcf4;
+    border:none;
+    padding:15px;
+    font-family: Georgia, serif;
+    font-size:15px;
+    font-weight:700;
+    letter-spacing:.06em;
+    text-transform:uppercase;
+    cursor:pointer;
+    transition: transform .08s ease, background .15s;
+  }
+
+  button:active{ transform:scale(0.98); }
+  button:hover{ background:#16584a; }
+
+  .hint{
+    text-align:center;
+    font-size:11px;
+    color:#8a8169;
+    margin-top:10px;
+    line-height:1.5;
+  }
+
+  .stamp{
+    position:absolute;
+    top:18px;
+    right:18px;
+    border:2px solid var(--accent);
+    color:var(--accent);
+    font-size:9px;
+    font-weight:700;
+    letter-spacing:.08em;
+    padding:4px 7px;
+    transform:rotate(8deg);
+    border-radius:4px;
+    opacity:.75;
+  }
+
+  footer{
+    text-align:center;
+    font-size:11px;
+    color:#9a8f72;
+    margin-top:18px;
+  }
+</style>
+</head>
+<body>
+
+<div class="ticket">
+  <div class="stamp">ORIGINAL</div>
+  <header>
+    <div class="siren">❗ ❗ ❗</div>
+    <h1>Planilla de Venta</h1>
+    <div class="sub">Completa los datos y envíala directo por WhatsApp</div>
+  </header>
+
+  <form id="planillaForm">
+
+    <div class="group">
+      <label for="fecha">📅 Fecha</label>
+      <input type="date" id="fecha" name="fecha">
+    </div>
+
+    <div class="group">
+      <label for="nombreCliente">👤 Nombre del cliente</label>
+      <input type="text" id="nombreCliente" name="nombreCliente" placeholder="Nombre completo">
+    </div>
+
+    <div class="group">
+      <label for="telCliente">📱 Teléfono del cliente</label>
+      <input type="tel" id="telCliente" name="telCliente" placeholder="5xxxxxxx">
+    </div>
+
+    <div class="group">
+      <label for="equipo">📦 Equipo a comprar</label>
+      <input type="text" id="equipo" name="equipo" placeholder="Ej: iPhone 13, 128GB">
+    </div>
+
+    <div class="group row2">
+      <div>
+        <label for="cantidad">💵 Cantidad y tipo de moneda</label>
+        <input type="text" id="cantidad" name="cantidad" placeholder="Ej: 150 USD">
+      </div>
+      <div>
+        <label for="cambio">💵 Cambio</label>
+        <input type="text" id="cambio" name="cambio" placeholder="Ej: 1 USD = 380 CUP">
+      </div>
+    </div>
+
+    <div class="group">
+      <label for="direccion">📍 Dirección</label>
+      <input type="text" id="direccion" name="direccion" placeholder="Calle, número, entre calles">
+    </div>
+
+    <div class="group">
+      <label for="referencia">📍 Punto de referencia</label>
+      <input type="text" id="referencia" name="referencia" placeholder="Ej: cerca del parque...">
+    </div>
+
+    <div class="group">
+      <label for="domicilio">🛵 Costo del domicilio si es para municipio</label>
+      <input type="text" id="domicilio" name="domicilio">
+    </div>
+
+    <div class="group section-break">
+      <div class="section-title">En caso de Zelle — datos de quién transfiere</div>
+      <div class="zelle-box">
+        <div class="group">
+          <label for="zelleNombre">👤 Nombre</label>
+          <input type="text" id="zelleNombre" name="zelleNombre">
+        </div>
+        <div class="group">
+          <label for="zelleTelefono">📱 Teléfono</label>
+          <input type="tel" id="zelleTelefono" name="zelleTelefono">
+        </div>
+      </div>
+    </div>
+
+    <div class="group section-break">
+      <div class="section-title">Datos del gestor <span class="opt" style="font-style:italic;">(fijos)</span></div>
+      <div class="group">
+        <label for="gestorNombre">👤 Nombre del gestor</label>
+        <input type="text" id="gestorNombre" name="gestorNombre" value="Claudia Yamaye González Rodríguez" readonly>
+      </div>
+      <div class="group">
+        <label for="gestorTelefono">📱 Teléfono del gestor</label>
+        <input type="tel" id="gestorTelefono" name="gestorTelefono" value="54571729" readonly>
+      </div>
+      <div class="group">
+        <label for="gestorTarjeta">💳 Tarjeta del gestor</label>
+        <input type="text" id="gestorTarjeta" name="gestorTarjeta" value="9224-0699-9677-9001" readonly>
+      </div>
+    </div>
+
+    <div class="group section-break">
+      <label for="observaciones">📝 Observaciones</label>
+      <textarea id="observaciones" name="observaciones" placeholder="Cualquier detalle adicional..."></textarea>
+    </div>
+
+    <div class="submit-area">
+      <button type="submit">Enviar por WhatsApp</button>
+      <button type="button" id="copyBtn" style="margin-top:10px; background:transparent; border:1.5px dashed var(--line); color:var(--ink);">Copiar mensaje</button>
+      <div class="hint">Los campos que dejes vacíos no se incluirán en el mensaje. Si los emoji no se ven bien al enviar, usa "Copiar mensaje" y pégalo directo en el chat.</div>
+    </div>
+
+  </form>
+</div>
+
+<footer>Planilla de Venta · generada para envío directo</footer>
+
+<script>
+const WHATSAPP_LINK = "https://wa.me/5354571729";
+
+function isMobileDevice() {
+  return /Android|iPhone|iPad|iPod/i.test(navigator.userAgent);
+}
+
+function buildWhatsappUrl(message) {
+  const encoded = encodeURIComponent(message);
+  const match = WHATSAPP_LINK.match(/wa\.me\/(\d{7,15})/);
+  if (!match) return null;
+  const phone = match[1];
+
+  if (isMobileDevice()) {
+    // El esquema nativo whatsapp:// abre la app directamente sin pasar
+    // por ninguna página web intermedia, evitando que esa página
+    // muestre los emojis rotos antes de redirigir a la app.
+    return `whatsapp://send?phone=${phone}&text=${encoded}`;
+  }
+  // En PC (sin app nativa) usamos WhatsApp Web directo.
+  return `https://web.whatsapp.com/send?phone=${phone}&text=${encoded}`;
+}
+
+const fieldDefs = [
+  { id: "fecha", label: "📅 Fecha", isDate: true },
+  { id: "nombreCliente", label: "👤 Nombre del cliente" },
+  { id: "telCliente", label: "📱 Teléfono del cliente" },
+  { id: "equipo", label: "📦 Equipo a comprar" },
+  { id: "cantidad", label: "💵 Cantidad y tipo de moneda" },
+  { id: "cambio", label: "💵 Cambio" },
+  { id: "direccion", label: "📍 Dirección" },
+  { id: "referencia", label: "📍 Punto de referencia" },
+  { id: "domicilio", label: "🛵 Costo del domicilio si es para municipio" },
+];
+
+const zelleDefs = [
+  { id: "zelleNombre", label: "👤 Nombre" },
+  { id: "zelleTelefono", label: "📱 Teléfono" },
+];
+
+const gestorDefs = [
+  { id: "gestorNombre", label: "👤 Nombre del gestor" },
+  { id: "gestorTelefono", label: "📱 Teléfono del gestor" },
+  { id: "gestorTarjeta", label: "💳 Tarjeta del gestor" },
+];
+
+function formatFecha(value) {
+  if (!value) return "";
+  const [y, m, d] = value.split("-");
+  return `${d}/${m}/${y}`;
+}
+
+function buildMessage(data) {
+  let lines = [];
+  lines.push("❗❗ PLANILLA DE VENTA ❗❗");
+  lines.push("");
+
+  fieldDefs.forEach(f => {
+    let val = data[f.id];
+    if (val && val.trim() !== "") {
+      if (f.isDate) val = formatFecha(val);
+      lines.push(`${f.label}: ${val}`);
+    }
+  });
+
+  const zelleHasData = zelleDefs.some(f => data[f.id] && data[f.id].trim() !== "");
+  if (zelleHasData) {
+    lines.push("");
+    lines.push("En caso de Zelle, datos de quién realizará la transferencia:");
+    zelleDefs.forEach(f => {
+      const val = data[f.id];
+      if (val && val.trim() !== "") {
+        lines.push(`${f.label}: ${val}`);
+      }
+    });
+  }
+
+  const gestorHasData = gestorDefs.some(f => data[f.id] && data[f.id].trim() !== "");
+  if (gestorHasData) {
+    lines.push("");
+    gestorDefs.forEach(f => {
+      const val = data[f.id];
+      if (val && val.trim() !== "") {
+        lines.push(`${f.label}: ${val}`);
+      }
+    });
+  }
+
+  if (data.observaciones && data.observaciones.trim() !== "") {
+    lines.push("");
+    lines.push(`📝 Observaciones: ${data.observaciones}`);
+  }
+
+  return lines.join("\n");
+}
+
+function getFormData() {
+  const formData = new FormData(document.getElementById("planillaForm"));
+  const data = {};
+  formData.forEach((value, key) => { data[key] = value; });
+  return data;
+}
+
+document.getElementById("planillaForm").addEventListener("submit", function(e){
+  e.preventDefault();
+
+  const data = getFormData();
+  const message = buildMessage(data);
+  const directUrl = buildWhatsappUrl(message);
+
+  if (directUrl) {
+    if (isMobileDevice()) {
+      // Intentamos abrir la app nativa directamente. Si en ~1.5s la página
+      // sigue visible (la app no respondió, ej. no está instalada o el
+      // navegador bloqueó el esquema), caemos a api.whatsapp.com como respaldo.
+      const fallbackUrl = `https://api.whatsapp.com/send?phone=${WHATSAPP_LINK.match(/wa\.me\/(\d{7,15})/)[1]}&text=${encodeURIComponent(message)}`;
+      const fallbackTimer = setTimeout(() => {
+        window.location.href = fallbackUrl;
+      }, 1500);
+      window.addEventListener("blur", () => clearTimeout(fallbackTimer), { once: true });
+      window.location.href = directUrl;
+    } else {
+      window.open(directUrl, "_blank");
+    }
+  } else {
+    copyToClipboard(message);
+    alert("El mensaje fue copiado. Se abrirá WhatsApp: pega el mensaje (mantén presionado y selecciona Pegar) y envíalo.");
+    window.open(WHATSAPP_LINK, "_blank");
+  }
+});
+
+function copyToClipboard(text) {
+  // Intento moderno (requiere HTTPS o localhost)
+  if (navigator.clipboard && window.isSecureContext) {
+    return navigator.clipboard.writeText(text);
+  }
+  // Fallback para file:// o navegadores sin Clipboard API
+  return new Promise((resolve, reject) => {
+    const ta = document.createElement("textarea");
+    ta.value = text;
+    ta.style.position = "fixed";
+    ta.style.left = "-9999px";
+    ta.style.top = "0";
+    document.body.appendChild(ta);
+    ta.focus();
+    ta.select();
+    try {
+      const ok = document.execCommand("copy");
+      document.body.removeChild(ta);
+      ok ? resolve() : reject(new Error("execCommand falló"));
+    } catch (err) {
+      document.body.removeChild(ta);
+      reject(err);
+    }
+  });
+}
+
+document.getElementById("copyBtn").addEventListener("click", function(){
+  const data = getFormData();
+  const message = buildMessage(data);
+  const btn = this;
+  copyToClipboard(message).then(() => {
+    btn.textContent = "¡Mensaje copiado!";
+    setTimeout(() => { btn.textContent = "Copiar mensaje"; }, 1800);
+  }).catch(() => {
+    btn.textContent = "No se pudo copiar";
+    setTimeout(() => { btn.textContent = "Copiar mensaje"; }, 1800);
+  });
+});
+
+// Registrar service worker (requisito para que Chrome ofrezca "Instalar app")
+if ("serviceWorker" in navigator) {
+  window.addEventListener("load", () => {
+    navigator.serviceWorker.register("sw.js").catch(() => {});
+  });
+}
+</script>
+
+</body>
+</html>
