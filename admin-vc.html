@@ -1,0 +1,386 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Admin · Ventas Cienfuegos</title>
+<style>
+:root{
+  --azul:#1a3a5c;--azul2:#2a5080;--dorado:#c8922a;
+  --crema:#fdfaf4;--crema2:#f5efe4;--linea:#e0d5c0;
+  --texto:#1e2d1e;--suave:#6b6050;--rojo:#c0392b;--radio:10px;
+}
+*{box-sizing:border-box;margin:0;padding:0;}
+body{background:var(--crema);color:var(--texto);font-family:'Segoe UI',system-ui,-apple-system,sans-serif;min-height:100vh;font-size:15px;}
+button{cursor:pointer;font-family:inherit;}
+
+/* HEADER */
+.hdr{background:var(--azul);color:#fff;padding:0 16px;}
+.hdr-in{max-width:640px;margin:0 auto;display:flex;align-items:center;justify-content:space-between;height:56px;}
+.badge{width:36px;height:36px;border-radius:50%;background:var(--dorado);display:flex;align-items:center;justify-content:center;font-weight:800;font-size:13px;color:#fff;}
+.hdr-titulo{font-weight:700;font-size:15px;margin-left:10px;flex:1;}
+.hdr-link{background:transparent;border:1.5px solid rgba(255,255,255,0.3);color:rgba(255,255,255,0.85);padding:6px 12px;border-radius:20px;font-size:12px;text-decoration:none;}
+
+/* WRAP */
+.wrap{max-width:640px;margin:0 auto;padding:20px 14px 80px;}
+
+/* LOGIN */
+.login-bg{min-height:80vh;display:flex;align-items:center;justify-content:center;}
+.login-card{background:#fff;border:1px solid var(--linea);border-radius:14px;padding:32px 24px;max-width:360px;width:100%;text-align:center;box-shadow:0 4px 20px rgba(26,58,92,0.1);}
+.login-ico{font-size:38px;margin-bottom:10px;}
+.login-h{font-size:20px;font-weight:800;color:var(--azul);margin-bottom:6px;}
+.login-p{font-size:13px;color:var(--suave);margin-bottom:22px;line-height:1.5;}
+.input{width:100%;border:1.5px solid var(--linea);border-radius:8px;padding:12px 14px;font-size:14px;font-family:inherit;background:#fff;transition:border-color .2s;margin-bottom:10px;}
+.input:focus{outline:none;border-color:var(--azul);}
+.err{color:var(--rojo);font-size:12px;min-height:16px;margin-bottom:8px;}
+.btn{width:100%;border:none;padding:13px;border-radius:8px;font-size:14px;font-weight:700;transition:background .2s;}
+.btn-azul{background:var(--azul);color:#fff;}
+.btn-azul:hover{background:var(--azul2);}
+.btn-dorado{background:var(--dorado);color:#fff;}
+.btn-outline{background:transparent;border:1.5px solid var(--linea);color:var(--suave);width:100%;padding:12px;border-radius:8px;font-size:14px;font-weight:600;}
+
+/* PANEL */
+#panel,#form-producto{display:none;}
+.aviso{background:rgba(200,146,42,.1);border:1.5px solid rgba(200,146,42,.35);border-radius:8px;padding:12px 14px;font-size:12.5px;line-height:1.65;color:#5c4a14;margin-bottom:16px;}
+.aviso code{background:rgba(200,146,42,.2);padding:1px 5px;border-radius:3px;font-weight:700;}
+.acciones-top{display:flex;flex-direction:column;gap:10px;margin-bottom:20px;}
+
+/* FILTRO CATEGORÍA */
+.cat-select{width:100%;border:1.5px solid var(--linea);border-radius:8px;padding:10px 12px;font-size:13.5px;font-family:inherit;background:#fff;color:var(--texto);margin-bottom:16px;}
+
+/* LISTA */
+.lista{display:flex;flex-direction:column;gap:10px;}
+.item{display:flex;align-items:center;gap:12px;background:#fff;border:1px solid var(--linea);border-radius:10px;padding:12px;box-shadow:0 1px 4px rgba(26,58,92,.06);}
+.item-img{width:60px;height:60px;border-radius:8px;object-fit:cover;flex-shrink:0;background:var(--crema2);}
+.item-ph{width:60px;height:60px;border-radius:8px;flex-shrink:0;background:var(--crema2);display:flex;align-items:center;justify-content:center;font-size:22px;opacity:.4;}
+.item-info{flex:1;min-width:0;}
+.item-cat{font-size:10.5px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:var(--dorado);margin-bottom:2px;}
+.item-nombre{font-size:14px;font-weight:700;color:var(--azul);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.item-precio{font-size:12.5px;color:var(--dorado);margin-top:2px;}
+.item-btns{display:flex;gap:6px;flex-shrink:0;}
+.btn-sm{border:1.5px solid var(--linea);background:transparent;color:var(--texto);font-size:12px;padding:6px 10px;border-radius:6px;font-family:inherit;}
+.btn-del{border:1.5px solid var(--rojo);background:transparent;color:var(--rojo);width:34px;height:34px;border-radius:6px;display:flex;align-items:center;justify-content:center;font-size:16px;}
+.empty-lista{text-align:center;padding:36px 20px;color:var(--suave);font-size:14px;}
+
+/* FORMULARIO */
+.form-h{font-size:18px;font-weight:800;color:var(--azul);margin-bottom:18px;}
+.form-group{margin-bottom:16px;}
+.form-row{display:flex;gap:12px;margin-bottom:16px;}
+.lbl{display:block;font-size:11.5px;font-weight:700;color:var(--suave);margin-bottom:6px;text-transform:uppercase;letter-spacing:.04em;}
+.textarea{width:100%;border:1.5px solid var(--linea);border-radius:8px;padding:11px 13px;font-size:14px;background:#fff;min-height:85px;resize:vertical;font-family:inherit;}
+.textarea:focus{outline:none;border-color:var(--azul);}
+.img-picker{border:2px dashed var(--linea);border-radius:10px;cursor:pointer;display:flex;align-items:center;justify-content:center;overflow:hidden;height:170px;background:#fff;transition:border-color .2s;}
+.img-picker:hover{border-color:var(--azul);}
+.img-picker img{width:100%;height:100%;object-fit:cover;}
+.img-ph{display:flex;flex-direction:column;align-items:center;gap:8px;color:var(--suave);font-size:13px;}
+.aviso-archivo{margin-top:10px;background:rgba(200,146,42,.1);border:1.5px dashed rgba(200,146,42,.5);border-radius:8px;padding:11px 13px;font-size:12px;line-height:1.7;color:#5c4a14;display:none;}
+.aviso-archivo code{background:rgba(200,146,42,.2);padding:1px 5px;border-radius:3px;font-weight:700;}
+.btn-dl-foto{margin-top:8px;background:var(--dorado);color:#fff;border:none;padding:8px 14px;border-radius:6px;font-size:12px;font-weight:700;font-family:inherit;}
+.sep{height:1px;background:var(--linea);margin:20px 0;}
+
+/* CONTADORES */
+.stats{display:grid;grid-template-columns:repeat(2,1fr);gap:10px;margin-bottom:18px;}
+.stat{background:#fff;border:1px solid var(--linea);border-radius:10px;padding:14px;text-align:center;}
+.stat-n{font-size:24px;font-weight:800;color:var(--azul);}
+.stat-l{font-size:11px;color:var(--suave);text-transform:uppercase;letter-spacing:.06em;}
+</style>
+</head>
+<body>
+
+<header class="hdr">
+  <div class="hdr-in">
+    <div class="badge">VC</div>
+    <span class="hdr-titulo">Panel de Administración</span>
+    <a href="index.html" class="hdr-link">← Ver tienda</a>
+  </div>
+</header>
+
+<div class="wrap">
+
+  <!-- LOGIN -->
+  <div class="login-bg" id="loginWrap">
+    <div class="login-card">
+      <div class="login-ico">🔐</div>
+      <h2 class="login-h">Acceso privado</h2>
+      <p class="login-p">Esta página es solo para el administrador de Ventas Cienfuegos.</p>
+      <input type="password" class="input" id="passInput" placeholder="Contraseña" autocomplete="off">
+      <div class="err" id="loginErr"></div>
+      <button class="btn btn-azul" id="loginBtn">Entrar</button>
+    </div>
+  </div>
+
+  <!-- PANEL -->
+  <div id="panel">
+
+    <!-- STATS -->
+    <div class="stats" id="stats"></div>
+
+    <div class="aviso">
+      ⚠️ Cuando termines: descarga <code>productos.json</code> y súbelo a GitHub reemplazando el viejo. Las fotos nuevas súbelas a la carpeta <code>imagenes/</code> con el nombre que te indica el panel.
+    </div>
+
+    <div class="acciones-top">
+      <button class="btn btn-azul" id="nuevoBtn">＋ Agregar producto</button>
+      <button class="btn btn-dorado" id="descargarBtn">⬇ Descargar productos.json</button>
+    </div>
+
+    <!-- FILTRO -->
+    <select class="cat-select" id="filtroLista">
+      <option value="todas">📦 Todos los productos</option>
+    </select>
+
+    <div class="empty-lista" id="emptyLista" style="display:none;">Aún no hay productos. ¡Agrega el primero!</div>
+    <div class="lista" id="lista"></div>
+  </div>
+
+  <!-- FORMULARIO -->
+  <div id="form-producto">
+    <div class="form-h" id="formH">Nuevo producto</div>
+
+    <div class="form-group">
+      <label class="lbl">Foto del producto</label>
+      <div class="img-picker" id="imgPicker">
+        <div class="img-ph"><span style="font-size:32px;">🖼️</span><span>Tocar para elegir foto</span></div>
+      </div>
+      <input type="file" accept="image/*" id="fileInput" style="display:none;">
+      <div class="aviso-archivo" id="avisoArchivo"></div>
+    </div>
+
+    <div class="form-group">
+      <label class="lbl">Categoría</label>
+      <select class="input" id="campoCategoria">
+        <option value="">-- Selecciona una categoría --</option>
+        <option value="electricidad">⚡ Electricidad y Protección</option>
+        <option value="solar">☀️ Energía Solar y Respaldo</option>
+        <option value="moviles">📱 Dispositivos Móviles y Carga Portátil</option>
+        <option value="electrodomesticos">🍳 Electrodomésticos y Cocina</option>
+        <option value="audio">📺 Audio y Televisión</option>
+        <option value="iluminacion">💡 Iluminación</option>
+        <option value="herramientas">🔧 Herramientas</option>
+        <option value="automotriz">🚗 Automotriz y Medición</option>
+        <option value="miscelaneos">🏠 Misceláneos y Hogar</option>
+        <option value="planillas">📋 Planillas de Venta</option>
+      </select>
+    </div>
+
+    <div class="form-group">
+      <label class="lbl">Nombre del producto</label>
+      <input type="text" class="input" id="campoNombre" placeholder="Ej: Panel solar 200W monocristalino">
+    </div>
+
+    <div class="form-row">
+      <div style="flex:2;">
+        <label class="lbl">Precio</label>
+        <input type="text" class="input" id="campoPrecio" placeholder="Ej: 85">
+      </div>
+      <div style="flex:1;">
+        <label class="lbl">Moneda</label>
+        <input type="text" class="input" id="campoMoneda" placeholder="USD">
+      </div>
+    </div>
+
+    <div class="form-group">
+      <label class="lbl">Descripción</label>
+      <textarea class="textarea" id="campoDescripcion" placeholder="Características, especificaciones, estado, garantía..."></textarea>
+    </div>
+
+    <button class="btn btn-azul" id="guardarBtn">Guardar producto</button>
+    <div class="sep"></div>
+    <button class="btn-outline" id="cancelarBtn">Cancelar</button>
+  </div>
+
+</div>
+
+<script>
+const PASS = "vender2026";
+const LS = "vc_admin_productos";
+
+const CATS = [
+  {id:"electricidad",nombre:"Electricidad y Protección",ico:"⚡"},
+  {id:"solar",nombre:"Energía Solar y Respaldo",ico:"☀️"},
+  {id:"moviles",nombre:"Dispositivos Móviles y Carga Portátil",ico:"📱"},
+  {id:"electrodomesticos",nombre:"Electrodomésticos y Cocina",ico:"🍳"},
+  {id:"audio",nombre:"Audio y Televisión",ico:"📺"},
+  {id:"iluminacion",nombre:"Iluminación",ico:"💡"},
+  {id:"herramientas",nombre:"Herramientas",ico:"🔧"},
+  {id:"automotriz",nombre:"Automotriz y Medición",ico:"🚗"},
+  {id:"miscelaneos",nombre:"Misceláneos y Hogar",ico:"🏠"},
+  {id:"planillas",nombre:"Planillas de Venta",ico:"📋"},
+];
+
+let productos=[], editandoId=null, imagenActual="", archivoPendiente=null, archivoNombre="";
+
+function catNombre(id){ return CATS.find(c=>c.id===id)?.nombre||id; }
+function catIco(id){ return CATS.find(c=>c.id===id)?.ico||"📦"; }
+function fmt(p,m){ return p?`${p} ${m||""}`.trim():""; }
+
+// ── LOGIN ──
+document.getElementById("loginBtn").addEventListener("click", login);
+document.getElementById("passInput").addEventListener("keydown", e=>{ if(e.key==="Enter") login(); });
+
+function login(){
+  if(document.getElementById("passInput").value===PASS){
+    document.getElementById("loginWrap").style.display="none";
+    document.getElementById("panel").style.display="block";
+    cargar();
+  } else {
+    document.getElementById("loginErr").textContent="Contraseña incorrecta";
+  }
+}
+
+// ── DATOS ──
+function cargar(){
+  const local = localStorage.getItem(LS);
+  if(local){ try{ productos=JSON.parse(local); renderStats(); renderLista(); buildFiltro(); return; }catch(e){} }
+  fetch("productos.json?_="+Date.now()).then(r=>r.json()).then(d=>{
+    productos=Array.isArray(d)?d:[];
+    renderStats(); renderLista(); buildFiltro();
+  }).catch(()=>{ productos=[]; renderStats(); renderLista(); buildFiltro(); });
+}
+
+function guardarLocal(){ localStorage.setItem(LS, JSON.stringify(productos)); }
+
+// ── STATS ──
+function renderStats(){
+  const total = productos.length;
+  const cats = new Set(productos.map(p=>p.categoria)).size;
+  document.getElementById("stats").innerHTML=`
+    <div class="stat"><div class="stat-n">${total}</div><div class="stat-l">Productos</div></div>
+    <div class="stat"><div class="stat-n">${cats}</div><div class="stat-l">Categorías</div></div>
+  `;
+}
+
+// ── FILTRO ──
+function buildFiltro(){
+  const sel = document.getElementById("filtroLista");
+  const catsActivas = CATS.filter(c=>productos.some(p=>p.categoria===c.id));
+  sel.innerHTML = `<option value="todas">📦 Todos (${productos.length})</option>` +
+    catsActivas.map(c=>{
+      const n = productos.filter(p=>p.categoria===c.id).length;
+      return `<option value="${c.id}">${c.ico} ${c.nombre} (${n})</option>`;
+    }).join("");
+}
+
+document.getElementById("filtroLista").addEventListener("change", e=>renderLista(e.target.value));
+
+// ── LISTA ──
+function renderLista(filtro="todas"){
+  const lista = document.getElementById("lista");
+  const empty = document.getElementById("emptyLista");
+  const datos = filtro==="todas" ? productos : productos.filter(p=>p.categoria===filtro);
+  if(!datos.length){ empty.style.display="block"; lista.innerHTML=""; return; }
+  empty.style.display="none";
+  lista.innerHTML = datos.map(p=>`
+    <div class="item">
+      ${p.imagen?`<img class="item-img" src="${p.imagen}" alt="${p.nombre}" loading="lazy">`:`<div class="item-ph">🖼️</div>`}
+      <div class="item-info">
+        <div class="item-cat">${catIco(p.categoria)} ${catNombre(p.categoria)}</div>
+        <div class="item-nombre">${p.nombre||"(sin nombre)"}</div>
+        <div class="item-precio">${fmt(p.precio,p.moneda)}</div>
+      </div>
+      <div class="item-btns">
+        <button class="btn-sm" data-id="${p.id}">✏️</button>
+        <button class="btn-del" data-del="${p.id}">✕</button>
+      </div>
+    </div>
+  `).join("");
+  lista.querySelectorAll(".btn-sm").forEach(b=>b.addEventListener("click",()=>abrirForm(productos.find(p=>p.id===b.dataset.id))));
+  lista.querySelectorAll(".btn-del").forEach(b=>b.addEventListener("click",()=>eliminar(b.dataset.del)));
+}
+
+function eliminar(id){
+  if(!confirm("¿Eliminar este producto?")) return;
+  productos = productos.filter(p=>p.id!==id);
+  guardarLocal(); renderStats(); renderLista(document.getElementById("filtroLista").value); buildFiltro();
+}
+
+// ── FORMULARIO ──
+document.getElementById("nuevoBtn").addEventListener("click",()=>abrirForm(null));
+document.getElementById("cancelarBtn").addEventListener("click",cerrarForm);
+
+function abrirForm(p){
+  document.getElementById("panel").style.display="none";
+  document.getElementById("form-producto").style.display="block";
+  document.getElementById("formH").textContent = p?"Editar producto":"Nuevo producto";
+  editandoId=p?p.id:null;
+  imagenActual=p?(p.imagen||""):"";
+  archivoPendiente=null; archivoNombre="";
+  document.getElementById("campoCategoria").value=p?(p.categoria||""):"";
+  document.getElementById("campoNombre").value=p?(p.nombre||""):"";
+  document.getElementById("campoPrecio").value=p?(p.precio||""):"";
+  document.getElementById("campoMoneda").value=p?(p.moneda||"USD"):"USD";
+  document.getElementById("campoDescripcion").value=p?(p.descripcion||""):"";
+  const av=document.getElementById("avisoArchivo");
+  av.style.display="none"; av.innerHTML="";
+  actualizarPicker(p&&p.imagen?p.imagen:null);
+  if(p&&p.imagen){ av.style.display="block"; av.innerHTML=`📌 Foto actual: <code>${p.imagen}</code>`; }
+  window.scrollTo({top:0,behavior:"smooth"});
+}
+
+function cerrarForm(){
+  document.getElementById("form-producto").style.display="none";
+  document.getElementById("panel").style.display="block";
+}
+
+function actualizarPicker(src){
+  const pk=document.getElementById("imgPicker");
+  pk.innerHTML=src
+    ?`<img src="${src}" alt="vista previa" onerror="this.parentElement.innerHTML='<div class=\\'img-ph\\'><span style=\\'font-size:32px;\\'>🖼️</span><span>Foto pendiente de subir a GitHub</span></div>'">`
+    :`<div class="img-ph"><span style="font-size:32px;">🖼️</span><span>Tocar para elegir foto</span></div>`;
+}
+
+document.getElementById("imgPicker").addEventListener("click",()=>document.getElementById("fileInput").click());
+
+document.getElementById("fileInput").addEventListener("change",e=>{
+  const file=e.target.files?.[0]; if(!file) return;
+  if(file.size>8*1024*1024){ alert("Imagen muy grande. Usa menos de 8MB."); return; }
+  const ext=(file.name.split(".").pop()||"jpg").toLowerCase().replace(/[^a-z0-9]/g,"")||"jpg";
+  const nombre=document.getElementById("campoNombre").value.trim();
+  const base=nombre?nombre.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g,"").replace(/[^a-z0-9]+/g,"-").replace(/^-+|-+$/g,""):"producto";
+  archivoNombre=`${base}-${Date.now()}.${ext}`;
+  imagenActual=`imagenes/${archivoNombre}`;
+  archivoPendiente=file;
+  const reader=new FileReader();
+  reader.onload=()=>actualizarPicker(reader.result);
+  reader.readAsDataURL(file);
+  const av=document.getElementById("avisoArchivo");
+  av.style.display="block";
+  av.innerHTML=`📌 Nombre exacto para subir a la carpeta <code>imagenes/</code>:<br><code>${archivoNombre}</code><br><button class="btn-dl-foto" id="btnDlFoto">⬇ Descargar foto renombrada</button>`;
+  document.getElementById("btnDlFoto").addEventListener("click",()=>{
+    if(!archivoPendiente) return;
+    const url=URL.createObjectURL(archivoPendiente);
+    const a=document.createElement("a"); a.href=url; a.download=archivoNombre;
+    document.body.appendChild(a); a.click(); document.body.removeChild(a); URL.revokeObjectURL(url);
+  });
+});
+
+document.getElementById("guardarBtn").addEventListener("click",()=>{
+  const cat=document.getElementById("campoCategoria").value;
+  const nombre=document.getElementById("campoNombre").value.trim();
+  if(!cat){ alert("Selecciona una categoría."); return; }
+  if(!nombre){ alert("Ponle un nombre al producto."); return; }
+  const datos={
+    id:editandoId||("p_"+Date.now()),
+    categoria:cat, nombre,
+    precio:document.getElementById("campoPrecio").value.trim(),
+    moneda:document.getElementById("campoMoneda").value.trim(),
+    descripcion:document.getElementById("campoDescripcion").value.trim(),
+    imagen:imagenActual,
+  };
+  const idx=productos.findIndex(p=>p.id===datos.id);
+  if(idx>=0) productos[idx]=datos; else productos.push(datos);
+  guardarLocal(); renderStats(); buildFiltro(); cerrarForm();
+  renderLista(document.getElementById("filtroLista").value);
+});
+
+// ── DESCARGAR JSON ──
+document.getElementById("descargarBtn").addEventListener("click",()=>{
+  const blob=new Blob([JSON.stringify(productos,null,2)],{type:"application/json"});
+  const url=URL.createObjectURL(blob);
+  const a=document.createElement("a"); a.href=url; a.download="productos.json";
+  document.body.appendChild(a); a.click(); document.body.removeChild(a); URL.revokeObjectURL(url);
+  alert("✅ Descargado.\n\n1. Sube el productos.json a GitHub (reemplaza el viejo).\n2. Sube las fotos nuevas a la carpeta imagenes/.");
+});
+</script>
+</body>
+</html>
