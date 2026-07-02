@@ -1,1 +1,74 @@
-[]
+[
+  {
+    "id": "p_1782960062127",
+    "categoria": "electricidad",
+    "nombre": "🔥 Transfer automático AC 110V 125A/2P 🔥",
+    "precio": "45",
+    "moneda": "USD",
+    "descripcion": "🛡️ Garantía no tiene es nuevo en caja\n🚚 ¡DOMICILIO GRATIS en la ciudad de Cienfuegos!",
+    "imagen": "imagenes/transfer-automatico-ac-110v-125a-2p-1782960053004.jpeg"
+  },
+  {
+    "id": "p_1782960207079",
+    "categoria": "solar",
+    "nombre": "🔥 Inversor de corriente de 12V a 110V Potencia 2500W pico 5000W 🔥",
+    "precio": "220",
+    "moneda": "USD",
+    "descripcion": "✅ Onda pura\n✅ Pantalla frontal muestra Voltaje de batería, Voltaje de salida y Consumo en W\n🛡️ Garantía no tiene es nuevo en caja y se deja probado\n🚚 ¡DOMICILIO GRATIS en la ciudad de Cienfuegos!",
+    "imagen": "imagenes/inversor-de-corriente-de-12v-a-110v-potencia-2500w-pico-5000w-1782960198292.jpeg"
+  },
+  {
+    "id": "p_1782960277527",
+    "categoria": "moviles",
+    "nombre": "🔥 Powerbank o Cargador portátil de 10000 mAh 🔥",
+    "precio": "10",
+    "moneda": "USD",
+    "descripcion": "✅ 2 puertos de salida USB\n✅ Entrada de carga Tipo C\n🛡️ Garantía 72 horas solo la batería\n🚚 ¡DOMICILIO GRATIS en la ciudad de Cienfuegos!",
+    "imagen": "imagenes/powerbank-o-cargador-portatil-de-10000-mah-1782960272862.jpeg"
+  },
+  {
+    "id": "p_1782960362678",
+    "categoria": "electrodomesticos",
+    "nombre": "🔥 Olla de presión marca SACO 🔥",
+    "precio": "40",
+    "moneda": "USD",
+    "descripcion": "✅ 5 litros\n✅ Sirve para inducción\n🛡️ Garantía de 7 días\n🚚 ¡DOMICILIO GRATIS en la ciudad de Cienfuegos!",
+    "imagen": "imagenes/producto-1782960302301.jpeg"
+  },
+  {
+    "id": "p_1782960461783",
+    "categoria": "audio",
+    "nombre": "🔥 Bocina Bluetooth Portátil marca SACO (30W) 🔥",
+    "precio": "80",
+    "moneda": "USD",
+    "descripcion": "✅ 2 bocinas de 8 pulgadas con salida 30 W\n✅ Incluye micrófono y mando a distancia\n✅ Tarjeta SD de hasta 32 GB\n✅ Batería 3600 mAh para una duración de 2 a 3 horas dependiendo del volumen\n✅ Tamaño 24.1 x 20.3 x 59.3 cm\n🛡️ No tiene garantía, son nuevas y se le dejan probadas al cliente\n🚚 ¡DOMICILIO GRATIS en la ciudad de Cienfuegos!",
+    "imagen": "imagenes/producto-1782960413719.jpeg"
+  },
+  {
+    "id": "p_1782960543910",
+    "categoria": "iluminacion",
+    "nombre": "🔥 Lámpara recargable (10x10 cm) 🔥",
+    "precio": "10",
+    "moneda": "USD",
+    "descripcion": "✅ Duración de carga 5 horas aproximadamente\n✅ Baterías de litio 2400 mAh\n✅ Panel solar para cargar\n✅ Varios niveles de luz\n✅ Funciona como powerbank\n✅ Tiene soporte, para engancharla e imanes\n✅ Incluye cable USB para cargarla, Dimensiones 10x10 cm\n🛡️ Garantía 72 horas\n🚚 ¡DOMICILIO GRATIS en la ciudad de Cienfuegos!",
+    "imagen": "imagenes/producto-1782960494069.jpeg"
+  },
+  {
+    "id": "p_1782960644182",
+    "categoria": "herramientas",
+    "nombre": "🔥 Pesa digital de gancho marca SACO 🔥",
+    "precio": "45",
+    "moneda": "USD",
+    "descripcion": "✅ Hasta 300 kG\n🛡️ Garantía no tiene es nuevo y se deja probado\n🚚 ¡DOMICILIO GRATIS en la ciudad de Cienfuegos!",
+    "imagen": "imagenes/pesa-digital-de-gancho-marca-saco-1782960638998.jpeg"
+  },
+  {
+    "id": "p_1782960706646",
+    "categoria": "miscelaneos",
+    "nombre": "🔥 Cepillo blower secador y modelador 🔥",
+    "precio": "15",
+    "moneda": "USD",
+    "descripcion": "✅ 3 en 1 plancha + cepillo + secador\n✅ 2800 W\n✅ Color verde, violeta y rosado\n🛡️ Garantía no tiene se deja probado\n🚚 ¡DOMICILIO GRATIS en la ciudad de Cienfuegos!",
+    "imagen": "imagenes/cepillo-blower-secador-y-modelador-1782960693469.jpeg"
+  }
+]
