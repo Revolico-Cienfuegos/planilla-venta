@@ -20,6 +20,27 @@
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <link rel="apple-touch-icon" href="icon-192.png">
+
+<!-- ===== ESTILOS PARA LA PÁGINA DE GARANTÍA Y DOMICILIO ===== -->
+<style>
+  .landing-section { max-width:1100px; margin:16px auto; padding:0 14px; }
+  .landing-card { background:#fff; border-radius:12px; box-shadow:0 4px 20px rgba(0,0,0,0.06); padding:24px 20px; margin-bottom:20px; border:1px solid #e0d5c0; }
+  .landing-title { font-size:20px; font-weight:800; color:#1a3a5c; display:flex; align-items:center; gap:10px; margin-bottom:12px; }
+  .landing-title .ico { font-size:28px; }
+  .grid-municipios { display:grid; grid-template-columns:repeat(auto-fill,minmax(200px,1fr)); gap:6px 12px; background:#fdfaf4; padding:12px 16px; border-radius:8px; border:1px solid #e0d5c0; }
+  .grid-municipios .item { display:flex; justify-content:space-between; padding:4px 0; border-bottom:1px dashed #e8e0d0; font-size:13px; }
+  .grid-municipios .item:last-child { border-bottom:none; }
+  .grid-municipios .municipio { font-weight:600; color:#1a3a5c; }
+  .grid-municipios .precio { font-weight:700; color:#c8922a; }
+  .precio-usd { color:#1a3a5c; font-weight:700; }
+  .garantia-box { background:#fdfaf4; border-left:4px solid #c8922a; padding:16px 18px; border-radius:0 8px 8px 0; margin-top:10px; }
+  .garantia-box ul { list-style:none; padding:0; margin:8px 0; }
+  .garantia-box ul li { padding:4px 0 4px 24px; position:relative; font-size:13px; line-height:1.5; color:#1e2d1e; }
+  .garantia-box ul li::before { content:"✅"; position:absolute; left:0; top:4px; }
+  .badge-gratis { display:inline-block; background:#c8922a; color:#fff; padding:2px 12px; border-radius:20px; font-size:12px; font-weight:700; margin-left:8px; }
+  .highlight { background:#f5efe4; padding:2px 8px; border-radius:4px; font-weight:600; }
+  @media(max-width:600px){ .grid-municipios { grid-template-columns:1fr 1fr; } .landing-title { font-size:17px; } }
+</style>
 </head>
 <body>
 
@@ -94,7 +115,7 @@
   <div id="contenido" style="display:none;"></div>
 
   <!-- ===== CONTENEDOR DE GARANTÍA Y DOMICILIO ===== -->
-  <div id="contenidoGarantia" style="display:none; max-width:1100px; margin:0 auto; padding:0 14px;"></div>
+  <div id="contenidoGarantia" style="display:none;"></div>
 
   <div id="resultadosBusqueda" style="display:none;"></div>
   <div id="vacio" class="empty" style="display:none;">
@@ -516,13 +537,17 @@ document.getElementById("currencySelect").addEventListener("change", (e)=>{
 });
 
 // ============================================================
-//  RENDERIZADO PRINCIPAL
+//  RENDERIZADO PRINCIPAL (con ocultación de skeletons)
 // ============================================================
 function renderizarContenido(){
   const contenido = document.getElementById("contenido");
   const contenidoGarantia = document.getElementById("contenidoGarantia");
   const vacio = document.getElementById("vacio");
   const resultadosBusqueda = document.getElementById("resultadosBusqueda");
+  const skeletons = document.getElementById("skeletons");
+
+  // Ocultar skeletons siempre
+  skeletons.style.display = "none";
 
   // Ocultar todo
   contenido.style.display = "none";
@@ -578,30 +603,10 @@ function renderizarContenido(){
 }
 
 // ============================================================
-//  RENDER GARANTÍA Y DOMICILIO
+//  RENDER GARANTÍA Y DOMICILIO (sin duplicar estilos)
 // ============================================================
 function renderGarantiaDomicilio() {
   return `
-    <style>
-      .landing-section { max-width:1100px; margin:16px auto; padding:0 14px; }
-      .landing-card { background:#fff; border-radius:12px; box-shadow:0 4px 20px rgba(0,0,0,0.06); padding:24px 20px; margin-bottom:20px; border:1px solid #e0d5c0; }
-      .landing-title { font-size:20px; font-weight:800; color:#1a3a5c; display:flex; align-items:center; gap:10px; margin-bottom:12px; }
-      .landing-title .ico { font-size:28px; }
-      .grid-municipios { display:grid; grid-template-columns:repeat(auto-fill,minmax(200px,1fr)); gap:6px 12px; background:#fdfaf4; padding:12px 16px; border-radius:8px; border:1px solid #e0d5c0; }
-      .grid-municipios .item { display:flex; justify-content:space-between; padding:4px 0; border-bottom:1px dashed #e8e0d0; font-size:13px; }
-      .grid-municipios .item:last-child { border-bottom:none; }
-      .grid-municipios .municipio { font-weight:600; color:#1a3a5c; }
-      .grid-municipios .precio { font-weight:700; color:#c8922a; }
-      .precio-usd { color:#1a3a5c; font-weight:700; }
-      .garantia-box { background:#fdfaf4; border-left:4px solid #c8922a; padding:16px 18px; border-radius:0 8px 8px 0; margin-top:10px; }
-      .garantia-box ul { list-style:none; padding:0; margin:8px 0; }
-      .garantia-box ul li { padding:4px 0 4px 24px; position:relative; font-size:13px; line-height:1.5; color:#1e2d1e; }
-      .garantia-box ul li::before { content:"✅"; position:absolute; left:0; top:4px; }
-      .badge-gratis { display:inline-block; background:#c8922a; color:#fff; padding:2px 12px; border-radius:20px; font-size:12px; font-weight:700; margin-left:8px; }
-      .highlight { background:#f5efe4; padding:2px 8px; border-radius:4px; font-weight:600; }
-      @media(max-width:600px){ .grid-municipios { grid-template-columns:1fr 1fr; } .landing-title { font-size:17px; } }
-    </style>
-
     <div class="landing-section">
 
       <!-- ===== 1. GARANTÍA ===== -->
@@ -774,7 +779,9 @@ function renderBusqueda(q){
   const contenido = document.getElementById("contenido");
   const contenidoGarantia = document.getElementById("contenidoGarantia");
   const label = document.getElementById("searchLabel");
+  const skeletons = document.getElementById("skeletons");
 
+  skeletons.style.display = "none";
   contenido.style.display = "none";
   contenidoGarantia.style.display = "none";
   document.getElementById("vacio").style.display = "none";
