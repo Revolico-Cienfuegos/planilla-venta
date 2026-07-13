@@ -38,10 +38,10 @@
     <div class="header-actions">
       <div class="moneda-selector">
         <select id="currencySelect">
-          <option value="MN" selected>MN</option>
-          <option value="USD">USD</option>
+          <option value="MN">MN</option>
+          <option value="USD" selected>USD</option>
         </select>
-      </div>
+     </div>
       <button class="cart-icon" id="cartToggle" aria-label="Carrito">
         🛒
         <span class="cart-badge" id="cartBadge">0</span>
@@ -147,7 +147,7 @@
     <div class="cart-footer" id="cartFooter" style="display:none;">
       <div class="cart-total">
         <span class="label">Total:</span>
-        <span id="cartTotal">0.00 MN</span>
+        <span id="cartTotal">0.00 USD</span>
       </div>
       <div class="cart-buttons">
         <button class="btn btn-secondary" id="cartClear">Vaciar</button>
@@ -202,7 +202,7 @@
 //  CONFIGURACIÓN
 // ============================================================
 const WA = "5354571729";
-const TASA_CUP = 620; // 1 USD = 620 MN
+const TASA_CUP = 640; // 1 USD = 640 MN
 
 const CATEGORIAS = [
   { id:"electricidad",    nombre:"Electricidad y Protección",            ico:"⚡" },
@@ -225,7 +225,7 @@ const IMG_PH_ICO = `<svg width="32" height="32" viewBox="0 0 24 24" fill="none" 
 // ============================================================
 let DATA = [];
 let catActiva = "todas";
-let monedaActual = "MN"; // MONEDA POR DEFECTO: MN
+let monedaActual = "USD"; // MONEDA POR DEFECTO: USD
 let carrito = [];
 let productoParaPedir = null; // Producto seleccionado para pedido directo (desde tarjeta)
 

@@ -1,48 +1,12 @@
 [
   {
-    "id": "p_1782960062127",
-    "categoria": "electricidad",
-    "nombre": "🔥 Transfer automático AC 110V 125A/2P 🔥",
-    "precio": "45",
-    "moneda": "USD",
-    "descripcion": "🛡️ Garantía no tiene es nuevo en caja\n🚚 ¡DOMICILIO GRATIS en la ciudad de Cienfuegos!",
-    "imagen": "imagenes/transfer-automatico-ac-110v-125a-2p-1782960053004.jpeg"
-  },
-  {
-    "id": "p_1782960207079",
-    "categoria": "solar",
-    "nombre": "🔥 Inversor de corriente de 12V a 110V Potencia 2500W pico 5000W 🔥",
-    "precio": "220",
-    "moneda": "USD",
-    "descripcion": "✅ Onda pura\n✅ Pantalla frontal muestra Voltaje de batería, Voltaje de salida y Consumo en W\n🛡️ Garantía no tiene es nuevo en caja y se deja probado\n🚚 ¡DOMICILIO GRATIS en la ciudad de Cienfuegos!",
-    "imagen": "imagenes/inversor-de-corriente-de-12v-a-110v-potencia-2500w-pico-5000w-1782960198292.jpeg"
-  },
-  {
-    "id": "p_1782960277527",
-    "categoria": "moviles",
-    "nombre": "🔥 Powerbank o Cargador portátil de 10000 mAh 🔥",
-    "precio": "10",
-    "moneda": "USD",
-    "descripcion": "✅ 2 puertos de salida USB\n✅ Entrada de carga Tipo C\n🛡️ Garantía 72 horas solo la batería\n🚚 ¡DOMICILIO GRATIS en la ciudad de Cienfuegos!",
-    "imagen": "imagenes/powerbank-o-cargador-portatil-de-10000-mah-1782960272862.jpeg"
-  },
-  {
-    "id": "p_1782960362678",
-    "categoria": "electrodomesticos",
-    "nombre": "🔥 Olla de presión marca SACO 🔥",
-    "precio": "40",
-    "moneda": "USD",
-    "descripcion": "✅ 5 litros\n✅ Sirve para inducción\n🛡️ Garantía de 7 días\n🚚 ¡DOMICILIO GRATIS en la ciudad de Cienfuegos!",
-    "imagen": "imagenes/producto-1782960302301.jpeg"
-  },
-  {
     "id": "p_1782960461783",
     "categoria": "audio",
     "nombre": "🔥 Bocina Bluetooth Portátil marca SACO (30W) 🔥",
-    "precio": "80",
+    "precio": "70",
     "moneda": "USD",
     "descripcion": "✅ 2 bocinas de 8 pulgadas con salida 30 W\n✅ Incluye micrófono y mando a distancia\n✅ Tarjeta SD de hasta 32 GB\n✅ Batería 3600 mAh para una duración de 2 a 3 horas dependiendo del volumen\n✅ Tamaño 24.1 x 20.3 x 59.3 cm\n🛡️ No tiene garantía, son nuevas y se le dejan probadas al cliente\n🚚 ¡DOMICILIO GRATIS en la ciudad de Cienfuegos!",
-    "imagen": "imagenes/producto-1782960413719.jpeg"
+    "imagen": "imagenes/Bocina-01.jpeg"
   },
   {
     "id": "p_1782960543910",
@@ -70,5 +34,662 @@
     "moneda": "USD",
     "descripcion": "✅ 3 en 1 plancha + cepillo + secador\n✅ 2800 W\n✅ Color verde, violeta y rosado\n🛡️ Garantía no tiene se deja probado\n🚚 ¡DOMICILIO GRATIS en la ciudad de Cienfuegos!",
     "imagen": "imagenes/cepillo-blower-secador-y-modelador-1782960693469.jpeg"
+  },
+  {
+    "id": "p_1783022691062",
+    "categoria": "electricidad",
+    "nombre": "🔥 Transfer automático AC 110V 125A/2P 🔥",
+    "precio": "45",
+    "moneda": "USD",
+    "descripcion": "🛡️ Garantía no tiene es nuevo en caja",
+    "imagen": "imagenes/producto-1783022655068.jpeg"
+  },
+  {
+    "id": "p_1783046497053",
+    "categoria": "electricidad",
+    "nombre": "🔥 Transfer automático AC 110V 100A/3P marca Q7 🔥",
+    "precio": "55",
+    "moneda": "USD",
+    "descripcion": "🛡️ Garantía no tiene es nuevo en caja",
+    "imagen": "imagenes/Transfer-03.jpeg"
+  },
+  {
+    "id": "p_1783046626189",
+    "categoria": "electricidad",
+    "nombre": "🔥 Protectores de voltaje 110 V 15 A 🔥",
+    "precio": "9",
+    "moneda": "USD",
+    "descripcion": "🛡️ Garantía 72 horas",
+    "imagen": "imagenes/ProtectorV-01.jpeg"
+  },
+  {
+    "id": "p_1783046660589",
+    "categoria": "electricidad",
+    "nombre": "🔥 Protectores de voltaje 110 V 20 A 🔥",
+    "precio": "10",
+    "moneda": "USD",
+    "descripcion": "🛡️ Garantía 72 horas",
+    "imagen": "imagenes/ProtectorV-02.jpeg"
+  },
+  {
+    "id": "p_1783046879692",
+    "categoria": "electricidad",
+    "nombre": "🔥 Interruptor de cuchilla 2P-63A marca Voltage 🔥",
+    "precio": "12",
+    "moneda": "USD",
+    "descripcion": "✅ 600V, 100% cobre\n🛡️ Garantía no tiene",
+    "imagen": "imagenes/1.jpeg"
+  },
+  {
+    "id": "p_1783046915508",
+    "categoria": "electricidad",
+    "nombre": "🔥 Interruptor de cuchilla 3P-63A marca SACO 🔥",
+    "precio": "18",
+    "moneda": "USD",
+    "descripcion": "✅ 120V/240V\n🛡️ Garantía no tiene",
+    "imagen": "imagenes/1.jpeg"
+  },
+  {
+    "id": "p_1783046977069",
+    "categoria": "electricidad",
+    "nombre": "🔥 Interruptor de cuchilla 3P-63A marca Voltaje 🔥",
+    "precio": "20",
+    "moneda": "USD",
+    "descripcion": "✅ 600V, 100% cobre\n🛡️ Garantía no tiene",
+    "imagen": "imagenes/1.jpeg"
+  },
+  {
+    "id": "p_1783047030164_32a",
+    "categoria": "electricidad",
+    "nombre": "🔥 Breaker DC2P-32A 🔥",
+    "precio": "13",
+    "moneda": "USD",
+    "descripcion": "💵 Caja de 6 a 10 USD cada pieza\n🛡️ Garantía no tiene",
+    "imagen": "imagenes/2.jpeg"
+  },
+  {
+    "id": "p_1783047030164_63a",
+    "categoria": "electricidad",
+    "nombre": "🔥 Breaker DC2P-63A 🔥",
+    "precio": "16",
+    "moneda": "USD",
+    "descripcion": "💵 Caja de 6 a 12 USD cada pieza\n🛡️ Garantía no tiene",
+    "imagen": "imagenes/2.jpeg"
+  },
+  {
+    "id": "p_1783047123853",
+    "categoria": "electricidad",
+    "nombre": "🔥 Portafusible DC 1P con fusible de 32A 6W y de 25A 6W 🔥",
+    "precio": "10",
+    "moneda": "USD",
+    "descripcion": "✅Si compras mas de 10  \n💵 8 USD\n🛡️ Garantía no tiene",
+    "imagen": "imagenes/3.jpeg"
+  },
+  {
+    "id": "p_1783047170771",
+    "categoria": "electricidad",
+    "nombre": "🔥 Caja de distribución de 8 vías marca Q7 🔥",
+    "precio": "10",
+    "moneda": "USD",
+    "descripcion": "🛡️ Garantía no tiene es nuevo en caja",
+    "imagen": "imagenes/22.jpeg"
+  },
+  {
+    "id": "p_1783047395563",
+    "categoria": "solar",
+    "nombre": "🔥 Inversor de corriente de 24V a 110V 🔥",
+    "precio": "160",
+    "moneda": "USD",
+    "descripcion": "✅ Onda Pura\n✅ Potencia máxima 4000W / Potencia nominal 2000W\n✅ Levanta perfecto neveras, refrigerador, etc.\n🛡️ Garantía no tiene es nuevo en caja y se deja probado",
+    "imagen": "imagenes/Inversor-02.jpeg"
+  },
+  {
+    "id": "p_1783047515435",
+    "categoria": "solar",
+    "nombre": "🔥 Inversor de corriente de 24V a 110V Potencia 2500W pico 5000W 🔥",
+    "precio": "200",
+    "moneda": "USD",
+    "descripcion": "✅ Onda pura\n✅ Pantalla frontal muestra Voltaje de batería, Voltaje de salida y Consumo en W\n🛡️ Garantía no tiene es nuevo en caja y se deja probado",
+    "imagen": "imagenes/Inversor-05.jpeg"
+  },
+  {
+    "id": "p_1783047724563",
+    "categoria": "solar",
+    "nombre": "🔥 Inversor de corriente de 72V a 110V Potencia 1500W pico 3000W🔥",
+    "precio": "135",
+    "moneda": "USD",
+    "descripcion": "✅Para motorina\n✅ Onda Pura\n✅ Ideal para quien tiene motorina o triciclos y quiere alimentar la casa\n✅ Levanta refrigerador, nevera, luces, TV, etc.\n🛡️ Garantía no tiene es nuevo en caja y se deja probado",
+    "imagen": "imagenes/Inversor-04.jpeg"
+  },
+  {
+    "id": "p_1783048072042",
+    "categoria": "solar",
+    "nombre": "🔥 Cargador inteligente para batería de LiFeP04 de 12.8V – 50A 🔥",
+    "precio": "200",
+    "moneda": "USD",
+    "descripcion": "✅ No sirve para baterías ni de ácido ni de gel, solo LiFeP04\n🛡️ Garantía 3 días",
+    "imagen": "imagenes/Cargador Int-01.jpeg"
+  },
+  {
+    "id": "p_1783048211857",
+    "categoria": "solar",
+    "nombre": "🔥 Cargador inteligente de baterías de 12V/24V de 30A 🔥",
+    "precio": "125",
+    "moneda": "USD",
+    "descripcion": "✅ Baterías Autos, Motos, AGM, GEL, LiFeP04\n🛡️ Garantía 3 días",
+    "imagen": "imagenes/Cargador Int-02.jpeg"
+  },
+  {
+    "id": "p_1783048274914",
+    "categoria": "solar",
+    "nombre": "🔥 Cargador inteligente para batería de LiFeP04 de 12V – 22A 🔥",
+    "precio": "75",
+    "moneda": "USD",
+    "descripcion": "✅ No sirve para baterías ni de ácido ni de gel, solo LiFeP04\n🛡️ Garantía 3 días",
+    "imagen": "imagenes/Cargador Int-03.jpeg"
+  },
+  {
+    "id": "p_1783048309458",
+    "categoria": "solar",
+    "nombre": "🔥 Cargador inteligente de baterías de 12V 15A 🔥",
+    "precio": "70",
+    "moneda": "USD",
+    "descripcion": "✅ Baterías Autos, Motos, AGM, GEL, LiFeP04\n🛡️ Garantía 3 días",
+    "imagen": "imagenes/Cargador Int-04.jpeg"
+  },
+  {
+    "id": "p_1783048348826",
+    "categoria": "solar",
+    "nombre": "🔥 Cargador inteligente de baterías de 12V/24V de 10A 🔥",
+    "precio": "50",
+    "moneda": "USD",
+    "descripcion": "✅ Baterías Autos, Motos, AGM, GEL, LiFeP04\n🛡️ Garantía 3 días",
+    "imagen": "imagenes/Cargador Int-05.jpeg"
+  },
+  {
+    "id": "p_1783048392577",
+    "categoria": "solar",
+    "nombre": "🔥 Cargador inteligente de baterías de 12V - 10A 🔥",
+    "precio": "45",
+    "moneda": "USD",
+    "descripcion": "✅ Baterías Autos, Motos, AGM, GEL, LiFeP04\n🛡️ Garantía 72 horas",
+    "imagen": "imagenes/Cargador Int-06.jpeg"
+  },
+  {
+    "id": "p_1783048528137",
+    "categoria": "solar",
+    "nombre": "🔥 Conectores MC4 para paneles solares 🔥",
+    "precio": "4",
+    "moneda": "USD",
+    "descripcion": "✅ Por cantidad de 5 o más: 💵 Precio por unidad 3 USD\n✅ Por cantidad de 10 o más: 💵 Precio por unidad 2.50 USD\n🛡️ Garantía no tiene",
+    "imagen": "imagenes/Conector-01.jpeg"
+  },
+  {
+    "id": "p_1783048565298",
+    "categoria": "solar",
+    "nombre": "🔥 Cable de carga solar para ECOFLOW XT60i a MC4 🔥",
+    "precio": "20",
+    "moneda": "USD",
+    "descripcion": "✅ Se conecta del ECOFLOW a los cables de paneles solares\n✅ Longitud 30cm\n✅ Material del núcleo cobre puro\n✅ Calibre 10AWG, 6mm²\n✅ Corriente continua 30A y pico de 60A\n🛡️ Garantía no tien",
+    "imagen": "imagenes/Cable-01.jpeg"
+  },
+  {
+    "id": "p_1783048601601",
+    "categoria": "solar",
+    "nombre": "🔥 Cable de carga solar universal 4 en 1 MC4 a XT60 hembra, XT60 macho, ANDERSON y DC5525 🔥",
+    "precio": "25",
+    "moneda": "USD",
+    "descripcion": "✅ Compatibles con muchos modelos de estaciones de carga\n✅ Tamaño 60 cm\n🛡️ Garantía no tiene es nuevo",
+    "imagen": "imagenes/Cable-03.jpeg"
+  },
+  {
+    "id": "p_1783048674424",
+    "categoria": "solar",
+    "nombre": "🔥 Cable para conectar nauta hogar, router y cámaras de vigilancia a powerbank 🔥",
+    "precio": "5",
+    "moneda": "USD",
+    "descripcion": "✅ Voltaje de salida 5V, 9V y 12V\n✅ Entrada USB 5V\n🛡️ Garantía se deja probado",
+    "imagen": "imagenes/Cable-02.jpeg"
+  },
+  {
+    "id": "p_1783048730513",
+    "categoria": "moviles",
+    "nombre": "🔥 Powerbank o Cargador portátil de 10000 mAh 🔥",
+    "precio": "10",
+    "moneda": "USD",
+    "descripcion": "✅ 2 puertos de salida USB\n✅ Entrada de carga Tipo C\n🛡️ Garantía 72 horas solo la batería",
+    "imagen": "imagenes/Powerbank-01.jpeg"
+  },
+  {
+    "id": "p_1783048763769",
+    "categoria": "moviles",
+    "nombre": "🔥 Powerbank o Cargador portátil de 20000 mAh 🔥",
+    "precio": "18",
+    "moneda": "USD",
+    "descripcion": "✅ 2 puertos de salida USB\n✅ Puertos de entrada Tipo C y V8\n✅ Colores negro y blanco\n🛡️ Garantía 72 horas, solo cubre la batería",
+    "imagen": "imagenes/Powerbank-02.jpeg"
+  },
+  {
+    "id": "p_1783048795130",
+    "categoria": "moviles",
+    "nombre": "🔥 Powerbank o Cargador portátil de 20000 mAh con panel solar 🔥",
+    "precio": "26",
+    "moneda": "USD",
+    "descripcion": "✅ Cables integrados iPhone, tipo C, V8 y tipo A\n✅ 2 puertos de salida USB\n✅ Entrada tipo C y V8\n✅ Linterna\n🛡️ Garantía 72 horas, solo cubre la batería",
+    "imagen": "imagenes/Powerbank-03.jpeg"
+  },
+  {
+    "id": "p_1783048828512",
+    "categoria": "moviles",
+    "nombre": "🔥 Powerbank o Cargador portátil de 30000 mAh 🔥",
+    "precio": "35",
+    "moneda": "USD",
+    "descripcion": "✅ Panel solar\n✅ Cables integrados iPhone, tipo C, V8 y tipo A\n✅ 2 puertos de salida USB, 1 puerto salida Tipo C\n✅ Puertos de entrada Tipo C y V8\n✅ Linterna\n🛡️ Garantía 72 horas, solo cubre la batería",
+    "imagen": "imagenes/Powerbank-04.jpeg"
+  },
+  {
+    "id": "p_1783048948857",
+    "categoria": "moviles",
+    "nombre": "🔥 Powerbank o Cargador portátil de 40000 mAh 🔥",
+    "precio": "35",
+    "moneda": "USD",
+    "descripcion": "✅ Carga rápida 66W\n✅ Cables integrados iPhone y tipo C\n✅ 1 puerto de salida USB, 1 puerto de salida Tipo C\n✅ Puerto de entrada de carga Tipo C y V8\n✅ Linterna\n🛡️ Garantía 72 horas, solo cubre la batería",
+    "imagen": "imagenes/Powerbank-05.jpeg"
+  },
+  {
+    "id": "p_1783049159441",
+    "categoria": "moviles",
+    "nombre": "🔥 Powerbank o Cargador portátil de 50000 mAh 🔥",
+    "precio": "45",
+    "moneda": "USD",
+    "descripcion": "✅ Carga rápida 66W\n✅ Cables integrados iPhone, tipo C, V8 y tipo A\n✅ 4 puertos de salida USB, 1 puerto salida Tipo C\n✅ Puertos de entrada Tipo C y V8\n🛡️ Garantía 72 horas, solo cubre la batería",
+    "imagen": "imagenes/Powerbank-07.jpeg"
+  },
+  {
+    "id": "p_1783049376055",
+    "categoria": "moviles",
+    "nombre": "🔥 Cargador de carga rápida de 35W 🔥",
+    "precio": "10",
+    "moneda": "USD",
+    "descripcion": "✅ 2 Salidas: 1 USB y 1 Tipo C\n✅ Incluye 2 cables: uno Tipo C - Tipo C y otro USB - V8\n🛡️ Garantía no tiene es nuevo y se deja probado",
+    "imagen": "imagenes/5.jpeg"
+  },
+  {
+    "id": "p_1783049488158",
+    "categoria": "electrodomesticos",
+    "nombre": "🔥 Olla de presión marca SACO 🔥",
+    "precio": "40",
+    "moneda": "USD",
+    "descripcion": "✅ 5 litros\n✅ Sirve para inducción\n🛡️ Garantía de 7 días",
+    "imagen": "imagenes/Olla-01.jpeg"
+  },
+  {
+    "id": "p_1783049634591",
+    "categoria": "electrodomesticos",
+    "nombre": "🔥 Olla eléctrica multifuncional 1.8 L marca Royal 🔥",
+    "precio": "60",
+    "moneda": "USD",
+    "descripcion": "✅ Botones táctiles\n✅ Modos de arroz, hot pot, potaje y sopa\n✅ Colores: negro, piel, amarillo, gris\n✅ Potencia de 350W\n✅ Antiadherentes\n✅ Son ideales para ECOFLOW y paneles solares\n✅ Tienen un alto ahorro de energía\n🛡️ Garantía 3 días",
+    "imagen": "imagenes/Olla-02.jpeg"
+  },
+  {
+    "id": "p_1783049661623",
+    "categoria": "electrodomesticos",
+    "nombre": "🔥 Olla eléctrica multifuncional 3 L marca VENEZIA 🔥",
+    "precio": "70",
+    "moneda": "USD",
+    "descripcion": "✅ Color: blanco\n✅ Potencia de 500-900W\n✅ Antiadherentes\n✅ Son ideales para ECOFLOW y paneles solares\n✅ Tienen un alto ahorro de energía\n🛡️ Garantía 3 días",
+    "imagen": "imagenes/Olla-03.jpeg"
+  },
+  {
+    "id": "p_1783049798207",
+    "categoria": "electrodomesticos",
+    "nombre": "🔥 Olla de presión de 4 L 🔥",
+    "precio": "32",
+    "moneda": "USD",
+    "descripcion": "✅ Sirve para inducción\n✅ Incluye plato de cocinar al vapor\n🛡️ Garantía 7 días",
+    "imagen": "imagenes/Olla-05.jpeg"
+  },
+  {
+    "id": "p_1783049829894",
+    "categoria": "electrodomesticos",
+    "nombre": "🔥 Hornilla eléctrica marca SACO 🔥",
+    "precio": "35",
+    "moneda": "USD",
+    "descripcion": "✅ 2 resistencias\n✅ Potencia 2000 W\n✅ Color negro y blanco\n🛡️ Garantía 7 días",
+    "imagen": "imagenes/Hornilla-01.jpeg"
+  },
+  {
+    "id": "p_1783049864886",
+    "categoria": "electrodomesticos",
+    "nombre": "🔥 Hornilla eléctrica de 1 resistencia marca Saco 🔥",
+    "precio": "16",
+    "moneda": "USD",
+    "descripcion": "✅ Potencia 1000W\n✅ Color blanco y negro\n🛡️ Garantía 7 días",
+    "imagen": "imagenes/Hornilla-02.jpeg"
+  },
+  {
+    "id": "p_1783049900310",
+    "categoria": "electrodomesticos",
+    "nombre": "🔥 Resistencia de hornillas eléctricas 🔥",
+    "precio": "6",
+    "moneda": "USD",
+    "descripcion": "✅ 4 vueltas\n✅ Diámetro 14.7 cm\n🛡️ Garantía 72 horas",
+    "imagen": "imagenes/resistencia.jpeg"
+  },
+  {
+    "id": "p_1783049936542",
+    "categoria": "electrodomesticos",
+    "nombre": "🔥 Fritera de aceite marca Royal 🔥",
+    "precio": "60",
+    "moneda": "USD",
+    "descripcion": "✅ Capacidad 3 litros\n✅ Consumo 1500 W\n✅ Control de temperatura hasta 190°\n✅ Olla desmontable de fácil limpieza\n🛡️ Garantía 3 días",
+    "imagen": "imagenes/freitera.jpeg"
+  },
+  {
+    "id": "p_1783050069173",
+    "categoria": "audio",
+    "nombre": "🔥 Audífonos inalámbricos de casco 🔥",
+    "precio": "12",
+    "moneda": "USD",
+    "descripcion": "✅ Duración 4 horas\n🛡️ Garantía no tiene es nuevo y se deja probado",
+    "imagen": "imagenes/16.jpeg"
+  },
+  {
+    "id": "p_1783050113677",
+    "categoria": "audio",
+    "nombre": "🔥 Soporte de TV de 26''-55'' marca Voltage 🔥",
+    "precio": "25",
+    "moneda": "USD",
+    "descripcion": "✅ Capacidad máxima 50 kg\n✅ Material Acero laminado en frío\n🛡️ Garantía no tiene es nuevo en caja",
+    "imagen": "imagenes/6.jpeg"
+  },
+  {
+    "id": "p_1783048291308",
+    "categoria": "miscelaneos",
+    "nombre": "🔥 Pomo de tinta universal de impresoras de 1 litro color NEGRO marca Zoecan 🔥",
+    "precio": "40",
+    "moneda": "USD",
+    "descripcion": "✅ Compatible con impresoras Canon, Epson y HP\n🛡️ Garantía no tiene, el cliente debe saber utilizarla e informarle, no nos hacemos responsables",
+    "imagen": "imagenes/8.jpeg"
+  },
+  {
+    "id": "p_1783048351870",
+    "categoria": "miscelaneos",
+    "nombre": "🔥 Timbre inalámbrico marca Voltage 🔥",
+    "precio": "7",
+    "moneda": "USD",
+    "descripcion": "✅ 32 tonos de timbre\n✅ Batería 23A de 12V que puede durar 1 año con 20 pulsaciones por día o más si se utiliza menos\n✅ La parte que va afuera de la casa es de pilas y la de adentro que suena se conecta a un toma corriente de 110V (no es recargable)\n🛡️ Garantía no tiene es nuevo y se deja probado",
+    "imagen": "imagenes/9.jpeg"
+  },
+  {
+    "id": "p_1783048415900",
+    "categoria": "miscelaneos",
+    "nombre": "🔥 Detector de billetes falsos marca Saco 🔥",
+    "precio": "100",
+    "moneda": "USD",
+    "descripcion": "✅ Monedas USD, EUR, CAD, MXN, etc.\n✅ Tiene batería recargable de litio para uso portátil\n✅ Pantalla táctil\n✅ Funciona como contadora de billetes\n🛡️ Garantía no tiene es nuevo en caja y se deja probado",
+    "imagen": "imagenes/15.jpeg"
+  },
+  {
+    "id": "p_1783048566252",
+    "categoria": "herramientas",
+    "nombre": "🔥 Pesa digital de plato marca SACO 🔥",
+    "precio": "60",
+    "moneda": "USD",
+    "descripcion": "✅ Hasta 40 KG\n✅ Tiene baterías recargables\n✅ Pantalla a ambos lados para que el cliente también pueda ver\n✅ Nuevas en caja\n🛡️ Garantía de 72 horas solo la batería, todo lo demás debe revisarlo al momento de la entrega",
+    "imagen": "imagenes/Pesa-01.jpeg"
+  },
+  {
+    "id": "p_1783048732268",
+    "categoria": "automotriz",
+    "nombre": "🔥 Compresor Digital Portátil marca Saco 🔥",
+    "precio": "25",
+    "moneda": "USD",
+    "descripcion": "✅ Entrada 12 V\n✅ Permite medir aire\n✅ Permite configurar la cantidad de aire que llevan las gomas para que cuando se llenen se detenga automáticamente\n✅ Trae múltiples boquillas\n✅ Hasta 125 psi\n🛡️ Garantía se deja probado",
+    "imagen": "imagenes/Compresor-02.jpeg"
+  },
+  {
+    "id": "p_1783048779413",
+    "categoria": "automotriz",
+    "nombre": "🔥 Mascara de Soldar con atenuación automática marca SACO 🔥",
+    "precio": "15",
+    "moneda": "USD",
+    "descripcion": "✅ Batería de litio\n🛡️ Garantía no tiene es nuevo y se deja probado",
+    "imagen": "imagenes/10.jpeg"
+  },
+  {
+    "id": "p_1783048825412",
+    "categoria": "herramientas",
+    "nombre": "🔥 Candado con alarma marca SACO 🔥",
+    "precio": "12",
+    "moneda": "USD",
+    "descripcion": "✅ Incluye pilas de repuesto\n✅ Ideal para poner en disco de freno de motos o triciclos\n🛡️ Garantía no tiene es nuevo en caja",
+    "imagen": "imagenes/Candado-01.jpeg"
+  },
+  {
+    "id": "p_1783048934333",
+    "categoria": "herramientas",
+    "nombre": "🔥 Presurizador 1/6 HP y 35 L/min marca SACO🔥",
+    "precio": "60",
+    "moneda": "USD",
+    "descripcion": "✅ Sistema de arranque automático con sensor de flujo\n✅ Entrada y salida de ½\n🛡️ Garantía 3 días",
+    "imagen": "imagenes/21.jpeg"
+  },
+  {
+    "id": "p_1783049047732",
+    "categoria": "iluminacion",
+    "nombre": "🔥 Lámpara recargable grande (17x15 cm) 🔥",
+    "precio": "20",
+    "moneda": "USD",
+    "descripcion": "✅ Duración de carga 5 horas aproximadamente\n✅ Baterías de litio 10000 mAh\n✅ Panel solar para cargar\n✅ 5 niveles de luz a seleccionar\n✅ Funciona como powerbank\n✅ Tiene soporte ajustable y para engancharla\n✅ Incluye cable USB para cargarla\n✅ Dimensiones 17x15 cm\n🛡️ Garantía 72 horas",
+    "imagen": "imagenes/Lámpara-02.jpeg"
+  },
+  {
+    "id": "p_1783049199860",
+    "categoria": "iluminacion",
+    "nombre": "🔥 Lámpara recargable (con linterna) 🔥",
+    "precio": "12",
+    "moneda": "USD",
+    "descripcion": "✅ Duración de carga de 6 a 7 horas aproximadamente\n✅ Baterías de litio\n✅ Panel solar para cargar\n✅ Linterna de un lado\n✅ Funciona como powerbank\n✅ Dimensiones 15x11 cm\n🛡️ Garantía 72 horas, solo cubre la batería",
+    "imagen": "imagenes/Lámpara-03.jpeg"
+  },
+  {
+    "id": "p_1783049545283",
+    "categoria": "iluminacion",
+    "nombre": "🔥 Lámpara led de 700W con panel solar (no incluye poste) 🔥",
+    "precio": "45",
+    "moneda": "USD",
+    "descripcion": "✅ Dimensiones 22 x 52 cm\n✅ No se conectan a la corriente, solo al panel\n✅ Cogen carga en el día y la batería dura toda la noche\n✅ Tienen sensor de movimiento\n✅ Tienen mando a distancia y pilas\n✅ Incluye panel solar\n✅ Se pueden poner a la intemperie, o sea se pueden mojar\n🛡️ Garantía 3 días",
+    "imagen": "imagenes/lampara-700.jpeg"
+  },
+  {
+    "id": "p_1783049686956",
+    "categoria": "audio",
+    "nombre": "🔥 Bocina Bluetooth Portátil marca SACO (16W) 🔥",
+    "precio": "45",
+    "moneda": "USD",
+    "descripcion": "✅ 2 Bocinas de 4 pulgadas con salida 16 W\n✅ Incluye micrófono y mando a distancia\n✅ Tarjeta SD de hasta 32 GB\n✅ Batería 1500 mAh para una duración de 2 a 3 horas dependiendo del volumen\n✅ Tamaño 17 x 15 x 40.7 cm\n🛡️ No tiene garantía, son nuevas y se le dejan probadas al cliente",
+    "imagen": "imagenes/Bocina-02.jpeg"
+  },
+  {
+    "id": "p_1783049891723",
+    "categoria": "audio",
+    "nombre": "🔥 Bocina Bluetooth Portátil marca T&G 🔥",
+    "precio": "50",
+    "moneda": "USD",
+    "descripcion": "✅ Alta calidad de audio\n✅ 2 Bocinas de 12W\n✅ Super calidad de audio\n✅ Bluetooth\n✅ Tarjeta SD de hasta 32 GB\n✅ Entrada USB\n✅ Batería 3600 mAh para una duración de 3 horas o más dependiendo del volumen\n✅ Tamaño 12 x 12 x 28 cm\n✅ Colores: Rojo, Negro, Gris, Naranja y Azul\n💵 Precio 50 USD\n🛡️ No tiene garantía, son nuevas y se le dejan probadas al cliente",
+    "imagen": "imagenes/Bocina-05.jpeg"
+  },
+  {
+    "id": "p_1783049941060",
+    "categoria": "audio",
+    "nombre": "🔥 Bocina Bluetooth Portátil marca GREATNICE 🔥",
+    "precio": "10",
+    "moneda": "USD",
+    "descripcion": "✅ Bocina de 3 pulgadas\n✅ Salida 5 W\n✅ Bluetooth\n✅ Tarjeta SD de hasta 32 GB\n✅ Batería 1500 mAh, duración en dependencia del volumen\n✅ Tamaño 10 x 8 x 14 cm\n🛡️ No tiene garantía, son nuevas y se le dejan probadas al cliente",
+    "imagen": "imagenes/Bocina-06.jpeg"
+  },
+  {
+    "id": "p_1783050034291",
+    "categoria": "audio",
+    "nombre": "🔥 Bocina con porta teléfono 🔥",
+    "precio": "15",
+    "moneda": "USD",
+    "descripcion": "✅ Pequeña pero muy potente y con mucha calidad de audio\n✅ Batería 800 mAh que dura 5 horas\n✅ Luces led de 5 modos y que se pueden apagar\n✅ Tamaño 87mm x 87mm\n✅ Potencia 5W con muy buena calidad de audio\n✅ Colores negro y rojo\n No tiene garantía, es nueva y se deja probada",
+    "imagen": "imagenes/Bocina-07.jpeg"
+  },
+  {
+    "id": "p_1783050105469",
+    "categoria": "audio",
+    "nombre": "🔥 Cajitas descodificadoras de TV - HD marca MBC 🔥",
+    "precio": "35",
+    "moneda": "USD",
+    "descripcion": "✅ Incluye antena de 15 cm, funciona perfecto en interiores donde la señal es buena\n✅ Incluye cable HDMI\n🛡️ Garantía 1 mes",
+    "imagen": "imagenes/23.jpeg"
+  },
+  {
+    "id": "p_1783484122065",
+    "categoria": "electrodomesticos",
+    "nombre": "OLLA ELÉCTRICA MULTIFUNCIONAL DE CABO JOROBADO 18 cm, ( 1L)",
+    "precio": "50",
+    "moneda": "USD",
+    "descripcion": "✅MARCA: Royal\n✅INCLUYE:  Vaporera \n✅CAPACIDAD: 1 LT\n✅COLOR: Cremita\n✅POTENCIA: 300-600W\n✅ANTIADHERENTES \n✅SON IDEALES PARA ECOFLOW Y PANELES,PUES TIENEN UN ALTO AHORRO DE ENERGÍA\n🛡️Garantia 3 días",
+    "imagen": "imagenes/olla-cabo.jpeg"
+  },
+  {
+    "id": "p_1783485384474",
+    "categoria": "electricidad",
+    "nombre": "Breaker DC2P-125A",
+    "precio": "20",
+    "moneda": "USD",
+    "descripcion": "💵Caja de 6 a 15 USD cada unidad\n🛡️Garantía no tiene",
+    "imagen": "imagenes/breake-125.jpeg"
+  },
+  {
+    "id": "p_1783486087777",
+    "categoria": "miscelaneos",
+    "nombre": "Nebulizador portátil",
+    "precio": "15",
+    "moneda": "USD",
+    "descripcion": "✅Se puede utilizar con 2 pilas AA o alimentándolo por un puerto Tipo C\n✅Ideal para utilizar cuando no hay corriente\n✅Trae 2 boquillas\n🛡️Garantía no tiene",
+    "imagen": "imagenes/nebulizador.jpeg"
+  },
+  {
+    "id": "p_1783486195681",
+    "categoria": "electrodomesticos",
+    "nombre": "Cocinas de petróleo o keroseno de 10 mechas con mechas de repuesto",
+    "precio": "18",
+    "moneda": "USD",
+    "descripcion": "Cocinas de petróleo o keroseno de 10 mechas con mechas de repuesto \n✅Capacidad del tanque 1L de queroseno\n✅Consumo 0.13 L/H\n✅Cantidad de mechas 10\n✅Material: Lámina de hierro con esmalte resistente\n✅Portátil y fácil de usar\n✅Dimensiones: 21 cm de altura y 17cm de diámetro\n🛡️Garantía: NO TIENE",
+    "imagen": "imagenes/Fogon-mecha.jpeg"
+  },
+  {
+    "id": "p_1783562803461",
+    "categoria": "solar",
+    "nombre": "🔥Rollo de Cable eléctrico 10 AWG🔥",
+    "precio": "170",
+    "moneda": "USD",
+    "descripcion": "Rollo de Cable eléctrico 10 AWG \n✅100% cobre marca Q7\n✅Longitud 100 M\n🛡️Garantía no tiene es nuevo en caja",
+    "imagen": "imagenes/rollo-01.jpeg"
+  },
+  {
+    "id": "p_1783563267484",
+    "categoria": "electricidad",
+    "nombre": "🔥Caja de distribución de 4 vías marca Q7🔥",
+    "precio": "10",
+    "moneda": "USD",
+    "descripcion": "🛡️Garantía no tiene es nuevo en caja",
+    "imagen": "imagenes/caja-q7.jpeg"
+  },
+  {
+    "id": "p_1783911168026",
+    "categoria": "solar",
+    "nombre": "Controlador Solar MPPT 30A marca Q7",
+    "precio": "170",
+    "moneda": "USD",
+    "descripcion": "- Corriente de carga máxima 30A\n- Voltaje Solar (PV) Max 230V DC\n- Voltaje de batería 12V, 24V, 36V, 48V, 60V, 72V, 84V, 96V.\n\n✅ Garantía no tiene es nuevo y se deja probado \n🛵 Domicilio gratis en Cienfuegos",
+    "imagen": "imagenes/controladorsola.jpeg"
+  },
+  {
+    "id": "p_1783911303677",
+    "categoria": "audio",
+    "nombre": "Audífonos inalámbricos de casco GX-5",
+    "precio": "15",
+    "moneda": "USD",
+    "descripcion": "- Duración aproximada 4 horas\n\n✅ Garantía no tiene es nuevo y se deja probado\n🛵 Domicilio en Cienfuegos",
+    "imagen": "imagenes/audifinosgx5.jpeg"
+  },
+  {
+    "id": "p_1783911438490",
+    "categoria": "electrodomesticos",
+    "nombre": "OLLA ELÉCTRICA MULTIFUNCIONAL 1.2 L 450W",
+    "precio": "45",
+    "moneda": "USD",
+    "descripcion": "- COLOR: ROJO Y VIOLETA\n- POTENCIA: 450W\n- ANTIADHERENTES \n- SON IDEALES PARA ECOFLOW Y PANELES,PUES TIENEN UN ALTO AHORRO DE ENERGÍA\n\n✅ Garantia 3 días\n🛵 Domicilio gratis en Cienfuegos",
+    "imagen": "imagenes/olla1.2.jpeg"
+  },
+  {
+    "id": "p_1783911662988",
+    "categoria": "electrodomesticos",
+    "nombre": "OLLA ELÉCTRICA MULTIFUNCIONAL 1.5 L 800W",
+    "precio": "60",
+    "moneda": "USD",
+    "descripcion": "- COLOR: AZUL\n- POTENCIA: 400W y 800W\n- ANTIADHERENTES \n- SON IDEALES PARA ECOFLOW Y PANELES,PUES TIENEN UN ALTO AHORRO DE ENERGÍA\n\n✅ Garantia 3 días\n🛵 Domicilio gratis en Cienfuegos",
+    "imagen": "imagenes/olla1.5l.jpeg"
+  },
+  {
+    "id": "p_1783911760843",
+    "categoria": "herramientas",
+    "nombre": "Camara Inteligente WIFI IP con carga por panel solar",
+    "precio": "80",
+    "moneda": "USD",
+    "descripcion": "- Modelo JT-8258PRO\n- Nivel de protección IP66 puede estar fuera de la casa \n- compatible con micro SD de hasta 128 GB \n- Incluye panel solar con base y cable \n- También se puede alimentar con 5V con un cargador de teléfono o con un powerbank para q funcione en los apagones\n- Se revisa desde una aplicación en el teléfono o desde la PC en cualquier parte del mundo 🌎 \n- Necesita tener conexión a internet a través de alguna wifi para transmitir\n\n✅ Garantía no tiene es nuevo en caja y el Cliente debe probarla cuando se la llevan\n🛵 Domicilio gratis en Cienfuegos \nℹ️ El Cliente debe saber lo que esta comprando y como funciona para cuando el repartidor se lo lleve evitar pérdidas de tiempo",
+    "imagen": "imagenes/camarainte.jpeg"
+  },
+  {
+    "id": "p_1783911833359",
+    "categoria": "herramientas",
+    "nombre": "Camara Inteligente WIFI IP con carga por panel solar",
+    "precio": "40",
+    "moneda": "USD",
+    "descripcion": "- Modelo JT-8292\n- Nivel de protección IP44\n- compatible con micro SD de hasta 256 GB \n- Incluye panel solar con base y cable \n- También se puede alimentar con 5V con un cargador de teléfono o con un powerbank para q funcione en los apagones\n- Se revisa desde una aplicación en el teléfono o desde la PC en cualquier parte del mundo 🌎 \n- Necesita tener conexión a internet a través de alguna wifi para transmitir\n\n✅ Garantía no tiene es nuevo en caja y el Cliente debe probarla cuando se la llevan\n🛵 Domicilio gratis en Cienfuegos \nℹ️ El Cliente debe saber lo que esta comprando y como funciona para cuando el repartidor se lo lleve evitar pérdidas de tiempo",
+    "imagen": "imagenes/camarawifi.jpeg"
+  },
+  {
+    "id": "p_1783912015591",
+    "categoria": "solar",
+    "nombre": "Inversor de corriente de 12V a 110V Potencia 2000W pico 4000W",
+    "precio": "180",
+    "moneda": "USD",
+    "descripcion": "- Onda pura\n- Pantalla frontal muestra Voltaje de bateria, Voltaje de salida y Consumo en W\n\n✅ Garantía no tiene es nuevo en caja y se deja probado\n🛺 Domicilio gratis en Cienfuegos",
+    "imagen": "imagenes/Inversor-08.jpeg"
+  },
+  {
+    "id": "p_1783912295687",
+    "categoria": "moviles",
+    "nombre": "RELOJ INTELIGENTE",
+    "precio": "25",
+    "moneda": "USD",
+    "descripcion": "- Incluye 7 manillas para que lo ajustes a cualquier estilo y nunca lo aburras\n- Aplicación para vincularlo con el teléfono\n- Colores NEGRO y DORADO \n\n✅ Garantía no tiene es nuevo y se deja probado\n🛵 Domicilio gratis en Cienfuegos",
+    "imagen": "imagenes/relojint.jpeg"
+  },
+  {
+    "id": "p_1783912413768",
+    "categoria": "electricidad",
+    "nombre": "Protector de voltaje digital 110V 63A",
+    "precio": "25",
+    "moneda": "USD",
+    "descripcion": "- Corriente ajustable 1A a 63A\n- Bajo Voltaje ajustable 70V a 110V\n- Alto voltaje ajustable 130V a 160V\nIdeal para las instalaciones de sistemas fotoboltaico o para quien quiere proteger toda la casa de los altos y bajos voltajes\n\n✅ Garantía no tiene es nuevo\n🛵 Domicilio gratis en Cienfuegos",
+    "imagen": "imagenes/protectorv-03.jpeg"
+  },
+  {
+    "id": "p_1783912822507",
+    "categoria": "miscelaneos",
+    "nombre": "Maleta de 12 Kg",
+    "precio": "40",
+    "moneda": "USD",
+    "descripcion": "- Doble zipper para mayor capacidad\n- Candado\n- Ruedas\n\n✅ Garantía no tiene es nueva\n🛵 Domicilio gratis en Cienfuegos",
+    "imagen": "imagenes/maleta.jpeg"
   }
 ]

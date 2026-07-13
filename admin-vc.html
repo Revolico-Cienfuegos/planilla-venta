@@ -43,6 +43,7 @@ button{cursor:pointer;font-family:inherit;}
 #panel,#form-producto{display:none;}
 .aviso{background:rgba(200,146,42,.1);border:1.5px solid rgba(200,146,42,.35);border-radius:8px;padding:12px 14px;font-size:12.5px;line-height:1.65;color:#5c4a14;margin-bottom:16px;}
 .aviso code{background:rgba(200,146,42,.2);padding:1px 5px;border-radius:3px;font-weight:700;}
+.aviso strong{color:var(--rojo);}
 .acciones-top{display:flex;flex-direction:column;gap:10px;margin-bottom:20px;}
 
 /* FILTRO CATEGORÍA */
@@ -52,7 +53,7 @@ button{cursor:pointer;font-family:inherit;}
 .lista{display:flex;flex-direction:column;gap:10px;}
 .item{display:flex;align-items:center;gap:12px;background:#fff;border:1px solid var(--linea);border-radius:10px;padding:12px;box-shadow:0 1px 4px rgba(26,58,92,.06);}
 .item-img{width:60px;height:60px;border-radius:8px;object-fit:cover;flex-shrink:0;background:var(--crema2);}
-.item-ph{width:60px;height:60px;border-radius:8px;flex-shrink:0;background:var(--crema2);display:flex;align-items:center;justify-content:center;font-size:22px;opacity:.4;}
+.item-img-ph{width:60px;height:60px;border-radius:8px;flex-shrink:0;background:var(--crema2);display:flex;align-items:center;justify-content:center;font-size:22px;opacity:.4;}
 .item-info{flex:1;min-width:0;}
 .item-cat{font-size:10.5px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:var(--dorado);margin-bottom:2px;}
 .item-nombre{font-size:14px;font-weight:700;color:var(--azul);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
@@ -62,7 +63,7 @@ button{cursor:pointer;font-family:inherit;}
 .btn-del{border:1.5px solid var(--rojo);background:transparent;color:var(--rojo);width:34px;height:34px;border-radius:6px;display:flex;align-items:center;justify-content:center;font-size:16px;}
 .empty-lista{text-align:center;padding:36px 20px;color:var(--suave);font-size:14px;}
 
-/* FORMULARIO */
+/* FORMULARIO (sin stock) */
 .form-h{font-size:18px;font-weight:800;color:var(--azul);margin-bottom:18px;}
 .form-group{margin-bottom:16px;}
 .form-row{display:flex;gap:12px;margin-bottom:16px;}
@@ -78,7 +79,7 @@ button{cursor:pointer;font-family:inherit;}
 .btn-dl-foto{margin-top:8px;background:var(--dorado);color:#fff;border:none;padding:8px 14px;border-radius:6px;font-size:12px;font-weight:700;font-family:inherit;}
 .sep{height:1px;background:var(--linea);margin:20px 0;}
 
-/* CONTADORES */
+/* CONTADORES (sin stock) */
 .stats{display:grid;grid-template-columns:repeat(2,1fr);gap:10px;margin-bottom:18px;}
 .stat{background:#fff;border:1px solid var(--linea);border-radius:10px;padding:14px;text-align:center;}
 .stat-n{font-size:24px;font-weight:800;color:var(--azul);}
@@ -116,7 +117,8 @@ button{cursor:pointer;font-family:inherit;}
     <div class="stats" id="stats"></div>
 
     <div class="aviso">
-      ⚠️ Cuando termines: descarga <code>productos.json</code> y súbelo a GitHub reemplazando el viejo. Las fotos nuevas súbelas a la carpeta <code>imagenes/</code> con el nombre que te indica el panel.
+      <strong>⚠️ Sincronización:</strong> Los productos que ves aquí están guardados en tu navegador (<code>localStorage</code>). Para que la tienda online los muestre, debes <strong>descargar <code>productos.json</code></strong> y <strong>subirlo a GitHub</strong> reemplazando el viejo. También sube las fotos nuevas a la carpeta <code>imagenes/</code> con el nombre exacto que te indica el panel.<br><br>
+      <strong>📌 IMPORTANTE:</strong> Después de subir los archivos a GitHub, <strong>recarga la tienda con <code>Ctrl+F5</code></strong> (o <code>Cmd+Shift+R</code> en Mac) para forzar la actualización.
     </div>
 
     <div class="acciones-top">
@@ -133,7 +135,7 @@ button{cursor:pointer;font-family:inherit;}
     <div class="lista" id="lista"></div>
   </div>
 
-  <!-- FORMULARIO -->
+  <!-- FORMULARIO (sin stock) -->
   <div id="form-producto">
     <div class="form-h" id="formH">Nuevo producto</div>
 
@@ -159,7 +161,6 @@ button{cursor:pointer;font-family:inherit;}
         <option value="herramientas">🔧 Herramientas</option>
         <option value="automotriz">🚗 Automotriz y Medición</option>
         <option value="miscelaneos">🏠 Misceláneos y Hogar</option>
-        <option value="planillas">📋 Planillas de Venta</option>
       </select>
     </div>
 
@@ -205,7 +206,6 @@ const CATS = [
   {id:"herramientas",nombre:"Herramientas",ico:"🔧"},
   {id:"automotriz",nombre:"Automotriz y Medición",ico:"🚗"},
   {id:"miscelaneos",nombre:"Misceláneos y Hogar",ico:"🏠"},
-  {id:"planillas",nombre:"Planillas de Venta",ico:"📋"},
 ];
 
 let productos=[], editandoId=null, imagenActual="", archivoPendiente=null, archivoNombre="";
@@ -231,16 +231,36 @@ function login(){
 // ── DATOS ──
 function cargar(){
   const local = localStorage.getItem(LS);
-  if(local){ try{ productos=JSON.parse(local); renderStats(); renderLista(); buildFiltro(); return; }catch(e){} }
-  fetch("productos.json?_="+Date.now()).then(r=>r.json()).then(d=>{
-    productos=Array.isArray(d)?d:[];
-    renderStats(); renderLista(); buildFiltro();
-  }).catch(()=>{ productos=[]; renderStats(); renderLista(); buildFiltro(); });
+  if(local){ 
+    try{ 
+      productos=JSON.parse(local); 
+      renderStats(); 
+      renderLista(); 
+      buildFiltro(); 
+      console.log(`✅ Productos cargados desde localStorage (${productos.length} items).`);
+      return; 
+    }catch(e){} 
+  }
+  fetch("productos.json?_="+Date.now())
+    .then(r=>r.json())
+    .then(d=>{
+      productos=Array.isArray(d)?d:[];
+      localStorage.setItem(LS, JSON.stringify(productos));
+      renderStats(); 
+      renderLista(); 
+      buildFiltro();
+    })
+    .catch(()=>{ 
+      productos=[]; 
+      renderStats(); 
+      renderLista(); 
+      buildFiltro(); 
+    });
 }
 
 function guardarLocal(){ localStorage.setItem(LS, JSON.stringify(productos)); }
 
-// ── STATS ──
+// ── STATS (sin stock) ──
 function renderStats(){
   const total = productos.length;
   const cats = new Set(productos.map(p=>p.categoria)).size;
@@ -270,9 +290,13 @@ function renderLista(filtro="todas"){
   const datos = filtro==="todas" ? productos : productos.filter(p=>p.categoria===filtro);
   if(!datos.length){ empty.style.display="block"; lista.innerHTML=""; return; }
   empty.style.display="none";
-  lista.innerHTML = datos.map(p=>`
+
+  lista.innerHTML = datos.map(p=>{
+    const hasImg = p.imagen && p.imagen.length > 0;
+    const imgHtml = hasImg ? `<div style="position:relative;"><img class="item-img" src="${p.imagen}" alt="${p.nombre}" loading="lazy" onerror="console.warn('Admin lista: imagen no encontrada:', this.src); this.style.display='none'; this.parentElement.querySelector('.item-img-ph').style.display='flex';"><div class="item-img-ph" style="display:none;">🖼️</div></div>` : `<div class="item-img-ph">🖼️</div>`;
+    return `
     <div class="item">
-      ${p.imagen?`<img class="item-img" src="${p.imagen}" alt="${p.nombre}" loading="lazy">`:`<div class="item-ph">🖼️</div>`}
+      ${imgHtml}
       <div class="item-info">
         <div class="item-cat">${catIco(p.categoria)} ${catNombre(p.categoria)}</div>
         <div class="item-nombre">${p.nombre||"(sin nombre)"}</div>
@@ -283,7 +307,8 @@ function renderLista(filtro="todas"){
         <button class="btn-del" data-del="${p.id}">✕</button>
       </div>
     </div>
-  `).join("");
+  `}).join("");
+
   lista.querySelectorAll(".btn-sm").forEach(b=>b.addEventListener("click",()=>abrirForm(productos.find(p=>p.id===b.dataset.id))));
   lista.querySelectorAll(".btn-del").forEach(b=>b.addEventListener("click",()=>eliminar(b.dataset.del)));
 }
@@ -324,9 +349,11 @@ function cerrarForm(){
 
 function actualizarPicker(src){
   const pk=document.getElementById("imgPicker");
-  pk.innerHTML=src
-    ?`<img src="${src}" alt="vista previa" onerror="this.parentElement.innerHTML='<div class=\\'img-ph\\'><span style=\\'font-size:32px;\\'>🖼️</span><span>Foto pendiente de subir a GitHub</span></div>'">`
-    :`<div class="img-ph"><span style="font-size:32px;">🖼️</span><span>Tocar para elegir foto</span></div>`;
+  if(src){
+    pk.innerHTML = `<img src="${src}" alt="vista previa" onerror="console.warn('Admin picker: imagen no encontrada:', this.src); this.style.display='none'; this.parentElement.querySelector('.img-ph').style.display='flex';"><div class="img-ph" style="display:none;"><span style="font-size:32px;">🖼️</span><span>Foto no encontrada</span></div>`;
+  } else {
+    pk.innerHTML = `<div class="img-ph"><span style="font-size:32px;">🖼️</span><span>Tocar para elegir foto</span></div>`;
+  }
 }
 
 document.getElementById("imgPicker").addEventListener("click",()=>document.getElementById("fileInput").click());
@@ -375,11 +402,15 @@ document.getElementById("guardarBtn").addEventListener("click",()=>{
 
 // ── DESCARGAR JSON ──
 document.getElementById("descargarBtn").addEventListener("click",()=>{
+  if(productos.length===0){
+    alert("No hay productos para descargar.");
+    return;
+  }
   const blob=new Blob([JSON.stringify(productos,null,2)],{type:"application/json"});
   const url=URL.createObjectURL(blob);
   const a=document.createElement("a"); a.href=url; a.download="productos.json";
   document.body.appendChild(a); a.click(); document.body.removeChild(a); URL.revokeObjectURL(url);
-  alert("✅ Descargado.\n\n1. Sube el productos.json a GitHub (reemplaza el viejo).\n2. Sube las fotos nuevas a la carpeta imagenes/.");
+  alert(`✅ Descargado ${productos.length} productos.\n\n1. Sube el archivo productos.json a GitHub (reemplaza el viejo).\n2. Sube las fotos nuevas a la carpeta imagenes/.\n3. Recarga la tienda con Ctrl+F5 para ver los cambios.`);
 });
 </script>
 </body>
