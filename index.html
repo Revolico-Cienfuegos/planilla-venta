@@ -4,6 +4,16 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes">
 <title>Ventas Cienfuegos</title>
+
+<!-- ===== GOOGLE ANALYTICS ===== -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-8PYG8LH258"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', 'G-8PYG8LH258');
+</script>
+
 <link rel="stylesheet" href="style.css">
 <link rel="manifest" href="manifest.json">
 <meta name="theme-color" content="#0f2a43">
@@ -41,7 +51,7 @@
           <option value="MN">MN</option>
           <option value="USD" selected>USD</option>
         </select>
-     </div>
+      </div>
       <button class="cart-icon" id="cartToggle" aria-label="Carrito">
         🛒
         <span class="cart-badge" id="cartBadge">0</span>
@@ -80,7 +90,12 @@
     </div>
   </div>
 
+  <!-- ===== CONTENEDOR DE PRODUCTOS ===== -->
   <div id="contenido" style="display:none;"></div>
+
+  <!-- ===== CONTENEDOR DE GARANTÍA Y DOMICILIO ===== -->
+  <div id="contenidoGarantia" style="display:none; max-width:1100px; margin:0 auto; padding:0 14px;"></div>
+
   <div id="resultadosBusqueda" style="display:none;"></div>
   <div id="vacio" class="empty" style="display:none;">
     <div class="ico">🛍️</div>
@@ -157,7 +172,7 @@
   </div>
 </div>
 
-<!-- ===== FORMULARIO DE PEDIDO (PLANILLA) SIN MÉTODO DE PAGO ===== -->
+<!-- ===== FORMULARIO DE PEDIDO (PLANILLA) ===== -->
 <div class="order-form-overlay" id="orderFormOverlay">
   <div class="order-form" id="orderForm">
     <h3>📋 Completá tu pedido</h3>
@@ -182,7 +197,6 @@
       <input type="text" id="ofReferencia" placeholder="Ej: cerca de la plaza, al lado de la farmacia">
       <div class="error" id="ofReferenciaErr">Completá el punto de referencia</div>
     </div>
-    <!-- CAMPO DE MÉTODO DE PAGO ELIMINADO -->
     <div class="field">
       <label>Observaciones (opcional)</label>
       <textarea id="ofObservaciones" placeholder="Algo más que quieras decirnos..."></textarea>
@@ -202,18 +216,31 @@
 //  CONFIGURACIÓN
 // ============================================================
 const WA = "5354571729";
-const TASA_CUP = 640; // 1 USD = 640 MN
 
+// Tasas de conversión desde USD
+const TASAS = {
+  USD: 1,
+  MN: 700,
+  Zelle: 1.05,
+  Tarjeta: 1.1,
+  Euro: 0.93
+};
+
+// ============================================================
+//  CATEGORÍAS (la primera es la especial de Garantía y Domicilio)
+// ============================================================
 const CATEGORIAS = [
-  { id:"electricidad",    nombre:"Electricidad y Protección",            ico:"⚡" },
-  { id:"solar",           nombre:"Energía Solar y Respaldo",             ico:"☀️" },
-  { id:"moviles",         nombre:"Dispositivos Móviles y Carga Portátil",ico:"📱" },
-  { id:"electrodomesticos",nombre:"Electrodomésticos y Cocina",          ico:"🍳" },
-  { id:"audio",           nombre:"Audio y Televisión",                   ico:"📺" },
-  { id:"iluminacion",     nombre:"Iluminación",                          ico:"💡" },
-  { id:"herramientas",    nombre:"Herramientas",                         ico:"🔧" },
-  { id:"automotriz",      nombre:"Automotriz y Medición",                ico:"🚗" },
-  { id:"miscelaneos",     nombre:"Misceláneos y Hogar",                  ico:"🏠" },
+  { id:"garantia-domicilio", nombre:"🛡️ Garantía y Domicilio", ico:"🛡️", especial:true },
+  { id:"todas",              nombre:"🏪 Todos",                  ico:"🏪", especial:false },
+  { id:"electricidad",       nombre:"Electricidad y Protección", ico:"⚡" },
+  { id:"solar",              nombre:"Energía Solar y Respaldo",  ico:"☀️" },
+  { id:"moviles",            nombre:"Dispositivos Móviles y Carga Portátil", ico:"📱" },
+  { id:"electrodomesticos",  nombre:"Electrodomésticos y Cocina", ico:"🍳" },
+  { id:"audio",              nombre:"Audio y Televisión",        ico:"📺" },
+  { id:"iluminacion",        nombre:"Iluminación",               ico:"💡" },
+  { id:"herramientas",       nombre:"Herramientas",              ico:"🔧" },
+  { id:"automotriz",         nombre:"Automotriz y Medición",     ico:"🚗" },
+  { id:"miscelaneos",        nombre:"Misceláneos y Hogar",       ico:"🏠" },
 ];
 
 const WA_ICO = `<svg width="13" height="13" viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347z"/><path d="M12 0C5.373 0 0 5.373 0 12c0 2.127.558 4.122 1.532 5.85L.057 23.5l5.797-1.52A11.95 11.95 0 0012 24c6.627 0 12-5.373 12-12S18.627 0 12 0zm0 22c-1.85 0-3.583-.497-5.073-1.365l-.363-.215-3.44.902.917-3.349-.236-.375A9.957 9.957 0 012 12C2 6.477 6.477 2 12 2s10 4.477 10 10-4.477 10-10 10z"/></svg>`;
@@ -224,10 +251,10 @@ const IMG_PH_ICO = `<svg width="32" height="32" viewBox="0 0 24 24" fill="none" 
 //  ESTADO GLOBAL
 // ============================================================
 let DATA = [];
-let catActiva = "todas";
-let monedaActual = "USD"; // MONEDA POR DEFECTO: USD
+let catActiva = "garantia-domicilio"; // <--- CATEGORÍA POR DEFECTO
+let monedaActual = "USD";
 let carrito = [];
-let productoParaPedir = null; // Producto seleccionado para pedido directo (desde tarjeta)
+let productoParaPedir = null;
 
 // ============================================================
 //  UTILIDADES
@@ -236,14 +263,15 @@ function isMobile(){ return /Android|iPhone|iPad|iPod/i.test(navigator.userAgent
 
 function fmt(p){
   const val = parseFloat(p) || 0;
-  const moneda = monedaActual === "MN" ? "MN" : "USD";
-  const tasa = monedaActual === "MN" ? TASA_CUP : 1;
-  return `${(val * tasa).toFixed(2)} ${moneda}`;
+  const factor = TASAS[monedaActual] || 1;
+  const total = (val * factor).toFixed(2);
+  return `${total} ${monedaActual}`;
 }
 
 function fmtRaw(p){
   const val = parseFloat(p) || 0;
-  return val * (monedaActual === "MN" ? TASA_CUP : 1);
+  const factor = TASAS[monedaActual] || 1;
+  return val * factor;
 }
 
 function nombreCat(id){ return CATEGORIAS.find(c=>c.id===id)?.nombre||id; }
@@ -272,7 +300,20 @@ function toast(msg, type="success"){
 }
 
 // ============================================================
-//  CARRITO (sin stock)
+//  GOOGLE ANALYTICS - EVENTOS PERSONALIZADOS
+// ============================================================
+function trackEvent(category, action, label, value){
+  if (typeof gtag === 'function') {
+    gtag('event', action, {
+      'event_category': category,
+      'event_label': label || undefined,
+      'value': value || undefined
+    });
+  }
+}
+
+// ============================================================
+//  CARRITO
 // ============================================================
 function cargarCarrito(){
   try {
@@ -300,6 +341,7 @@ function agregarAlCarrito(producto){
   }
   guardarCarrito();
   toast(`✅ ${producto.nombre} agregado al carrito`);
+  trackEvent('Carrito', 'add_to_cart', producto.nombre, parseFloat(producto.precio));
 }
 
 function eliminarDelCarrito(id){
@@ -380,33 +422,35 @@ document.getElementById("cartOverlay").addEventListener("click", (e)=>{
 document.getElementById("cartClear").addEventListener("click", vaciarCarrito);
 
 // ============================================================
-//  FORMULARIO DE PEDIDO (PLANILLA) - SIN MÉTODO DE PAGO
+//  FORMULARIO DE PEDIDO (PLANILLA)
 // ============================================================
-// Función para abrir la planilla con un producto específico (desde tarjeta)
 function abrirPlanilla(producto){
   productoParaPedir = producto;
   document.getElementById("orderFormOverlay").classList.add("open");
-  // Limpiar campos previos
   document.getElementById("ofNombre").value = "";
   document.getElementById("ofTelefono").value = "";
   document.getElementById("ofDireccion").value = "";
   document.getElementById("ofReferencia").value = "";
   document.getElementById("ofObservaciones").value = "";
   document.querySelectorAll(".order-form .error").forEach(e=>e.style.display="none");
+
+  if (producto) {
+    trackEvent('Checkout', 'begin_checkout', producto.nombre, parseFloat(producto.precio));
+  }
 }
 
-// Evento para "Finalizar pedido" desde el carrito (abre planilla sin producto específico)
 document.getElementById("cartCheckout").addEventListener("click", ()=>{
   if(carrito.length === 0){ toast("El carrito está vacío", "error"); return; }
-  productoParaPedir = null; // No hay producto específico, se usará el carrito
+  productoParaPedir = null;
   document.getElementById("orderFormOverlay").classList.add("open");
-  // Limpiar campos
   document.getElementById("ofNombre").value = "";
   document.getElementById("ofTelefono").value = "";
   document.getElementById("ofDireccion").value = "";
   document.getElementById("ofReferencia").value = "";
   document.getElementById("ofObservaciones").value = "";
   document.querySelectorAll(".order-form .error").forEach(e=>e.style.display="none");
+
+  trackEvent('Checkout', 'begin_checkout', 'Desde carrito', totalCarrito());
 });
 
 document.getElementById("ofCancel").addEventListener("click", ()=>{
@@ -435,11 +479,9 @@ document.getElementById("ofSend").addEventListener("click", ()=>{
 
   let items, total;
   if(productoParaPedir){
-    // Pedido de un solo producto desde la tarjeta
     items = `* ${productoParaPedir.nombre} x1`;
     total = fmtRaw(productoParaPedir.precio);
   } else {
-    // Pedido desde el carrito
     items = carrito.map(i => `* ${i.nombre} x${i.cantidad}`).join("\n");
     total = totalCarrito();
   }
@@ -457,6 +499,8 @@ ${items}
 📝 Observaciones: ${obs || "(Ninguna)"}
 Muchas gracias.`;
 
+  trackEvent('Checkout', 'purchase', 'Pedido completado', total);
+
   document.getElementById("orderFormOverlay").classList.remove("open");
   productoParaPedir = null;
   openWA(msg);
@@ -467,13 +511,216 @@ Muchas gracias.`;
 // ============================================================
 document.getElementById("currencySelect").addEventListener("change", (e)=>{
   monedaActual = e.target.value;
-  if(catActiva === "todas") renderCatalogo();
-  else renderCatalogo(catActiva);
+  renderizarContenido();
   renderCarrito();
 });
 
 // ============================================================
-//  RENDER CATÁLOGO (sin stock)
+//  RENDERIZADO PRINCIPAL
+// ============================================================
+function renderizarContenido(){
+  const contenido = document.getElementById("contenido");
+  const contenidoGarantia = document.getElementById("contenidoGarantia");
+  const vacio = document.getElementById("vacio");
+  const resultadosBusqueda = document.getElementById("resultadosBusqueda");
+
+  // Ocultar todo
+  contenido.style.display = "none";
+  contenidoGarantia.style.display = "none";
+  vacio.style.display = "none";
+  resultadosBusqueda.style.display = "none";
+
+  // Si es la categoría especial de garantía
+  if (catActiva === "garantia-domicilio") {
+    contenidoGarantia.style.display = "block";
+    contenidoGarantia.innerHTML = renderGarantiaDomicilio();
+    return;
+  }
+
+  // Si no hay productos
+  if (!DATA.length) {
+    vacio.style.display = "block";
+    return;
+  }
+
+  // Filtro para otras categorías
+  const datos = catActiva === "todas" ? DATA : DATA.filter(p => p.categoria === catActiva);
+  if (!datos.length) {
+    vacio.style.display = "block";
+    vacio.innerHTML = `<div class="ico">${icoCat(catActiva)}</div><div>Todavía no hay productos en "${nombreCat(catActiva)}".</div>`;
+    return;
+  }
+
+  // Renderizar productos
+  contenido.style.display = "block";
+  const porCat = {};
+  datos.forEach((p, i) => {
+    const cat = p.categoria || "miscelaneos";
+    if (!porCat[cat]) porCat[cat] = [];
+    porCat[cat].push({ p, idx: DATA.indexOf(p) });
+  });
+
+  const orden = CATEGORIAS.filter(c => c.id !== "garantia-domicilio" && c.id !== "todas").map(c => c.id).filter(id => porCat[id]);
+  contenido.innerHTML = orden.map(catId => {
+    const cat = CATEGORIAS.find(c => c.id === catId);
+    const items = porCat[catId];
+    return `<section class="seccion" id="cat-${catId}">
+      <div class="seccion-header">
+        <span class="seccion-ico">${cat.ico}</span>
+        <span class="seccion-titulo">${cat.nombre}</span>
+        <span class="seccion-count">${items.length} producto${items.length!==1?"s":""}</span>
+      </div>
+      <div class="grid">${items.map(({p, idx}) => cardHTML(p, idx, false)).join("")}</div>
+    </section>`;
+  }).join("");
+
+  bindCards(contenido);
+}
+
+// ============================================================
+//  RENDER GARANTÍA Y DOMICILIO
+// ============================================================
+function renderGarantiaDomicilio() {
+  return `
+    <style>
+      .landing-section { max-width:1100px; margin:16px auto; padding:0 14px; }
+      .landing-card { background:#fff; border-radius:12px; box-shadow:0 4px 20px rgba(0,0,0,0.06); padding:24px 20px; margin-bottom:20px; border:1px solid #e0d5c0; }
+      .landing-title { font-size:20px; font-weight:800; color:#1a3a5c; display:flex; align-items:center; gap:10px; margin-bottom:12px; }
+      .landing-title .ico { font-size:28px; }
+      .grid-municipios { display:grid; grid-template-columns:repeat(auto-fill,minmax(200px,1fr)); gap:6px 12px; background:#fdfaf4; padding:12px 16px; border-radius:8px; border:1px solid #e0d5c0; }
+      .grid-municipios .item { display:flex; justify-content:space-between; padding:4px 0; border-bottom:1px dashed #e8e0d0; font-size:13px; }
+      .grid-municipios .item:last-child { border-bottom:none; }
+      .grid-municipios .municipio { font-weight:600; color:#1a3a5c; }
+      .grid-municipios .precio { font-weight:700; color:#c8922a; }
+      .precio-usd { color:#1a3a5c; font-weight:700; }
+      .garantia-box { background:#fdfaf4; border-left:4px solid #c8922a; padding:16px 18px; border-radius:0 8px 8px 0; margin-top:10px; }
+      .garantia-box ul { list-style:none; padding:0; margin:8px 0; }
+      .garantia-box ul li { padding:4px 0 4px 24px; position:relative; font-size:13px; line-height:1.5; color:#1e2d1e; }
+      .garantia-box ul li::before { content:"✅"; position:absolute; left:0; top:4px; }
+      .badge-gratis { display:inline-block; background:#c8922a; color:#fff; padding:2px 12px; border-radius:20px; font-size:12px; font-weight:700; margin-left:8px; }
+      .highlight { background:#f5efe4; padding:2px 8px; border-radius:4px; font-weight:600; }
+      @media(max-width:600px){ .grid-municipios { grid-template-columns:1fr 1fr; } .landing-title { font-size:17px; } }
+    </style>
+
+    <div class="landing-section">
+
+      <!-- ===== 1. GARANTÍA ===== -->
+      <div class="landing-card" style="border-color:#c0392b; border-width:2px;">
+        <div class="landing-title" style="color:#c0392b;">
+          <span class="ico">🛡️</span> Política de Garantía
+          <span style="font-size:12px; font-weight:400; color:#6b6050; margin-left:8px;">(Leer atentamente)</span>
+        </div>
+        <div style="background:#fdfaf4; border-radius:8px; padding:16px; border:1px solid #e0d5c0;">
+          <p style="font-size:14px; font-weight:700; color:#1a3a5c; margin-bottom:6px;">❌ <span style="color:#c0392b;">NO CUBRE</span> daños por:</p>
+          <ul style="list-style:none; padding:0; margin:0 0 12px 0;">
+            <li style="padding:2px 0 2px 20px; position:relative; font-size:13px;">• Mal uso del equipo</li>
+            <li style="padding:2px 0 2px 20px; position:relative; font-size:13px;">• Golpes, roturas, arañazos</li>
+            <li style="padding:2px 0 2px 20px; position:relative; font-size:13px;">• Deterioro por agua u otros productos nocivos</li>
+            <li style="padding:2px 0 2px 20px; position:relative; font-size:13px;">• Altos voltajes por variaciones eléctricas o instalaciones incorrectas</li>
+            <li style="padding:2px 0 2px 20px; position:relative; font-size:13px;">• Mal uso causado por el cliente <span style="font-size:11px; opacity:0.7;">(recomendamos usar protector de voltaje)</span></li>
+          </ul>
+          <p style="font-size:14px; font-weight:700; color:#1a3a5c;">✅ <span style="color:#1a8a4a;">SOLO CUBRE</span> defecto de fábrica del equipo.</p>
+          <div class="garantia-box">
+            <p style="font-weight:700; color:#1a3a5c; margin-bottom:4px;">📋 Procedimiento:</p>
+            <ul>
+              <li>El CLIENTE debe contactarnos y traer el equipo para que sea revisado por nuestros técnicos especializados, en un plazo de <strong>7 días hábiles</strong>.</li>
+              <li>Siempre se trata de resolver el problema lo antes posible, somos conscientes de las necesidades de cada cual.</li>
+              <li>Si el equipo no tiene solución, se procede al <strong>cambio por otro igual</strong>.</li>
+              <li>Si no hay equipos de reposición, se procede a la <strong>devolución del dinero</strong>.</li>
+            </ul>
+          </div>
+          <div style="margin-top:14px; background:#f5efe4; border-radius:8px; padding:14px 16px;">
+            <p style="font-weight:700; color:#1a3a5c; margin-bottom:4px;">📦 Para hacer efectiva la garantía:</p>
+            <ul style="list-style:none; padding:0; margin:0;">
+              <li style="padding:4px 0 4px 28px; position:relative; font-size:13px;">✅ Presentar el equipo en su <strong>embalaje original</strong> perfectamente conservado (nylon, corchos, cintas, protectores y todos sus accesorios).</li>
+              <li style="padding:4px 0 4px 28px; position:relative; font-size:13px;">✅ El equipo <strong>NO puede haber sido manipulado</strong> por nadie (solo nuestros técnicos autorizados).</li>
+            </ul>
+            <div style="background:#c8922a20; border-left:4px solid #c8922a; padding:10px 14px; margin-top:10px; border-radius:0 6px 6px 0;">
+              <span style="font-weight:700; color:#1a3a5c;">🧏🏻‍♀️ Pierde la garantía si incumple con cualquiera de estos parámetros.</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- PRODUCTOS SIN GARANTÍA -->
+        <div style="margin-top:16px; background:#fff5f4; border-radius:8px; padding:16px; border:2px solid #c0392b;">
+          <p style="font-size:15px; font-weight:700; color:#c0392b; text-align:center; margin-bottom:8px;">
+            🚨 <span style="background:#c0392b; color:#fff; padding:0 10px; border-radius:4px;">PRODUCTOS QUE NO TIENEN GARANTÍA</span>
+          </p>
+          <p style="font-size:14px; line-height:1.6; color:#1e2d1e; text-align:center;">
+            El Cliente debe <strong>probar y revisar TODO LO QUE QUIERA</strong> el producto en la tienda o cuando el repartidor se lo lleva.
+          </p>
+          <div style="background:#c0392b; color:#fff; padding:12px; border-radius:6px; margin-top:10px; text-align:center; font-size:16px; font-weight:800; letter-spacing:0.5px;">
+            🚫 UNA VEZ PAGADOS, NO SE ACEPTAN DEVOLUCIONES, NI CAMBIOS, NI RECLAMOS DE NINGÚN TIPO.
+          </div>
+        </div>
+      </div>
+
+      <!-- ===== 2. DOMICILIO GRATIS ===== -->
+      <div class="landing-card" style="background:linear-gradient(135deg, #0f2a43, #1a3a5c); color:#fff; border-color:#c8922a; text-align:center; padding:20px;">
+        <div style="display:flex; align-items:center; justify-content:center; gap:12px; flex-wrap:wrap;">
+          <span style="font-size:36px;">🚚</span>
+          <div>
+            <span style="font-size:22px; font-weight:800; color:#e8ad48;">¡DOMICILIO GRATIS!</span>
+            <span style="font-size:16px; margin-left:10px;">en Cienfuegos · De 9:00 AM a 6:00 PM (Lunes a Domingo)</span>
+          </div>
+          <span style="background:#c8922a; color:#0f2a43; padding:4px 16px; border-radius:20px; font-size:13px; font-weight:700;">¡APROVECHA!</span>
+        </div>
+        <div style="font-size:12px; opacity:0.7; margin-top:6px;">⏳ Sujeto a disponibilidad de repartidores y condiciones climáticas</div>
+      </div>
+
+      <!-- ===== 3. PRECIOS POR MUNICIPIO ===== -->
+      <div class="landing-card">
+        <div class="landing-title">
+          <span class="ico">🚨</span> Listado de precios de domicilio a Municipios
+          <span class="badge-gratis">Actualizado</span>
+        </div>
+        <div class="landing-sub">📍 <strong>Precios en CUP</strong> (a menos que se indique <span class="highlight">USD</span>)</div>
+        <div class="grid-municipios">
+          <div class="item"><span class="municipio">Palmira</span><span class="precio">2,000 CUP</span></div>
+          <div class="item"><span class="municipio">Espartaco</span><span class="precio">7,000 CUP</span></div>
+          <div class="item"><span class="municipio">Paradero</span><span class="precio">7,000 CUP</span></div>
+          <div class="item"><span class="municipio">Camarones</span><span class="precio">9,000 CUP</span></div>
+          <div class="item"><span class="municipio">Cruces</span><span class="precio">11,000 CUP</span></div>
+          <div class="item"><span class="municipio">Lajas</span><span class="precio">11,000 CUP</span></div>
+          <div class="item"><span class="municipio">Ranchuelo</span><span class="precio">17,000 CUP</span></div>
+          <div class="item"><span class="municipio">Santa Clara</span><span class="precio-usd">100 USD</span></div>
+          <div class="item"><span class="municipio">Rancho Luna</span><span class="precio">7,000 CUP</span></div>
+          <div class="item"><span class="municipio">Pasa Caballo</span><span class="precio">11,000 CUP</span></div>
+          <div class="item"><span class="municipio">Pepito Tey</span><span class="precio">7,000 CUP</span></div>
+          <div class="item"><span class="municipio">Guao</span><span class="precio">7,000 CUP</span></div>
+          <div class="item"><span class="municipio">Cumanayagua</span><span class="precio">11,000 CUP</span></div>
+          <div class="item"><span class="municipio">Barajagua</span><span class="precio">14,000 CUP</span></div>
+          <div class="item"><span class="municipio">Manicaragua</span><span class="precio">17,000 CUP</span></div>
+          <div class="item"><span class="municipio">Abreus</span><span class="precio">7,000 CUP</span></div>
+          <div class="item"><span class="municipio">Rodas</span><span class="precio">11,000 CUP</span></div>
+          <div class="item"><span class="municipio">Ariza</span><span class="precio">3,000 CUP</span></div>
+          <div class="item"><span class="municipio">Cartagena</span><span class="precio">17,000 CUP</span></div>
+          <div class="item"><span class="municipio">Turquino</span><span class="precio">17,000 CUP</span></div>
+          <div class="item"><span class="municipio">Constancia</span><span class="precio">9,000 CUP</span></div>
+          <div class="item"><span class="municipio">Charca</span><span class="precio">9,000 CUP</span></div>
+          <div class="item"><span class="municipio">Horquitas</span><span class="precio">11,000 CUP</span></div>
+          <div class="item"><span class="municipio">Camposeco de Horquitas</span><span class="precio">12,000 CUP</span></div>
+          <div class="item"><span class="municipio">Yaguaramas</span><span class="precio">9,000 CUP</span></div>
+          <div class="item"><span class="municipio">Aguadas</span><span class="precio">15,000 CUP</span></div>
+          <div class="item"><span class="municipio">Campiña</span><span class="precio">15,000 CUP</span></div>
+          <div class="item"><span class="municipio">Covadonga</span><span class="precio">17,000 CUP</span></div>
+          <div class="item"><span class="municipio">Ciego Montero</span><span class="precio">5,000 CUP</span></div>
+          <div class="item"><span class="municipio">Trinidad</span><span class="precio-usd">120 USD</span></div>
+          <div class="item"><span class="municipio">Yaguanabo</span><span class="precio">19,000 CUP</span></div>
+          <div class="item"><span class="municipio">Gavilán</span><span class="precio">14,000 CUP</span></div>
+          <div class="item"><span class="municipio">Sierrita</span><span class="precio">11,000 CUP</span></div>
+          <div class="item"><span class="municipio">Arimao</span><span class="precio">7,000 CUP</span></div>
+        </div>
+        <div style="font-size:12px; color:#6b6050; margin-top:10px; text-align:right; border-top:1px solid #e0d5c0; padding-top:8px;">
+          🚕 *Precios sujetos a cambios sin previo aviso
+        </div>
+      </div>
+    </div>
+  `;
+}
+
+// ============================================================
+//  RENDER CATÁLOGO (productos)
 // ============================================================
 function cardHTML(p, idx, mostrarTag=false){
   const tag = mostrarTag ? `<div class="card-cat-tag">${icoCat(p.categoria)} ${nombreCat(p.categoria)}</div>` : "";
@@ -507,7 +754,6 @@ function bindCards(container){
     btn.addEventListener("click", e=>{
       e.stopPropagation();
       const producto = DATA[+btn.dataset.idx];
-      // Abrir la planilla en lugar del modal
       abrirPlanilla(producto);
     });
   });
@@ -520,55 +766,18 @@ function bindCards(container){
   });
 }
 
-function renderCatalogo(filtro=null){
-  const contenido = document.getElementById("contenido");
-  const vacio = document.getElementById("vacio");
-  document.getElementById("skeletons").style.display="none";
-  document.getElementById("resultadosBusqueda").style.display="none";
-
-  const datos = filtro!==null ? DATA.filter(p=>p.categoria===filtro) : DATA;
-  if(!datos.length){
-    vacio.style.display="block"; contenido.style.display="none";
-    vacio.innerHTML = filtro!==null
-      ? `<div class="ico">${icoCat(filtro)}</div><div>Todavía no hay productos en "${nombreCat(filtro)}".</div>`
-      : `<div class="ico">🛍️</div><div>Todavía no hay productos publicados.</div>`;
-    return;
-  }
-  vacio.style.display="none"; contenido.style.display="block";
-
-  const porCat = {};
-  datos.forEach((p,i)=>{
-    const cat = p.categoria||"miscelaneos";
-    if(!porCat[cat]) porCat[cat]=[];
-    porCat[cat].push({p, idx: DATA.indexOf(p)});
-  });
-
-  const orden = CATEGORIAS.map(c=>c.id).filter(id=>porCat[id]);
-  contenido.innerHTML = orden.map(catId=>{
-    const cat = CATEGORIAS.find(c=>c.id===catId);
-    const items = porCat[catId];
-    return `<section class="seccion" id="cat-${catId}">
-      <div class="seccion-header">
-        <span class="seccion-ico">${cat.ico}</span>
-        <span class="seccion-titulo">${cat.nombre}</span>
-        <span class="seccion-count">${items.length} producto${items.length!==1?"s":""}</span>
-      </div>
-      <div class="grid">${items.map(({p,idx})=>cardHTML(p,idx,false)).join("")}</div>
-    </section>`;
-  }).join("");
-
-  bindCards(contenido);
-}
-
 // ============================================================
-//  BÚSQUEDA (incluye precio y moneda)
+//  BÚSQUEDA
 // ============================================================
 function renderBusqueda(q){
   const rb = document.getElementById("resultadosBusqueda");
   const contenido = document.getElementById("contenido");
+  const contenidoGarantia = document.getElementById("contenidoGarantia");
   const label = document.getElementById("searchLabel");
-  contenido.style.display="none";
-  document.getElementById("vacio").style.display="none";
+
+  contenido.style.display = "none";
+  contenidoGarantia.style.display = "none";
+  document.getElementById("vacio").style.display = "none";
 
   const ql = q.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g,"");
   const res = DATA.map((p,idx)=>({p,idx})).filter(({p})=>{
@@ -597,8 +806,11 @@ function buildCatsNav(){
   const inner = document.getElementById("catsInner");
   nav.style.display="block";
 
-  inner.innerHTML = `<button class="cat-btn active" data-cat="todas">🏪 Todo</button>` +
-    CATEGORIAS.map(c=>`<button class="cat-btn" data-cat="${c.id}"><span class="cat-ico">${c.ico}</span>${c.nombre}</button>`).join("");
+  inner.innerHTML = CATEGORIAS.map(c =>
+    `<button class="cat-btn ${catActiva === c.id ? 'active' : ''}" data-cat="${c.id}">
+      <span class="cat-ico">${c.ico}</span>${c.nombre}
+    </button>`
+  ).join("");
 
   inner.querySelectorAll(".cat-btn").forEach(btn=>{
     btn.addEventListener("click",()=>{
@@ -606,11 +818,12 @@ function buildCatsNav(){
       btn.classList.add("active");
       catActiva = btn.dataset.cat;
       limpiarBusqueda();
-      if(catActiva==="todas") renderCatalogo();
-      else {
-        renderCatalogo(catActiva);
+      renderizarContenido();
+
+      // Scroll suave si es una categoría de productos
+      if (catActiva !== "garantia-domicilio" && catActiva !== "todas") {
         const sec = document.getElementById(`cat-${catActiva}`);
-        if(sec) sec.scrollIntoView({behavior:"smooth",block:"start"});
+        if(sec) sec.scrollIntoView({behavior:"smooth", block:"start"});
       }
     });
   });
@@ -637,12 +850,11 @@ function limpiarBusqueda(){
   clearBtn.style.display="none";
   document.getElementById("searchLabel").style.display="none";
   document.getElementById("resultadosBusqueda").style.display="none";
-  if(catActiva==="todas") renderCatalogo();
-  else renderCatalogo(catActiva);
+  renderizarContenido();
 }
 
 // ============================================================
-//  MODAL (mejorado: sin stock y sin ruta de imagen fallida)
+//  MODAL
 // ============================================================
 let _modalProducto = null;
 function abrirModal(p){
@@ -666,7 +878,6 @@ function abrirModal(p){
   `;
 
   document.getElementById("mPedir").onclick = ()=>{
-    // Al hacer clic en "Pedir por WhatsApp" en el modal, abrimos la planilla con ese producto
     abrirPlanilla(p);
   };
   document.getElementById("overlay").classList.add("open");
@@ -684,13 +895,10 @@ let ty=0;
 document.getElementById("modal").addEventListener("touchstart",e=>{ty=e.touches[0].clientY;},{passive:true});
 document.getElementById("modal").addEventListener("touchmove",e=>{ if(e.touches[0].clientY-ty>60) cerrarModal(); },{passive:true});
 
-// Eliminamos la función pedirProducto porque ahora usamos abrirPlanilla
-
 // ============================================================
-//  CARGA DE PRODUCTOS (con fallback a localStorage y manejo de errores)
+//  CARGA DE PRODUCTOS
 // ============================================================
 function cargarProductos(){
-  // Intentar cargar desde localStorage primero (en caso de que el admin haya guardado)
   const local = localStorage.getItem("vc_admin_productos");
   if(local) {
     try {
@@ -698,14 +906,13 @@ function cargarProductos(){
       if(Array.isArray(datos) && datos.length > 0) {
         DATA = datos;
         buildCatsNav();
-        renderCatalogo();
+        renderizarContenido();
         console.log("✅ Productos cargados desde localStorage (fallback)");
         return;
       }
     } catch(e) {}
   }
 
-  // Si no hay localStorage, cargar desde el servidor
   const url = "productos.json?_=" + Date.now();
   fetch(url, { 
     cache: "no-store",
@@ -718,10 +925,9 @@ function cargarProductos(){
     .then(data => {
       if (Array.isArray(data) && data.length > 0) {
         DATA = data;
-        // Guardar en localStorage como respaldo
         localStorage.setItem("vc_admin_productos", JSON.stringify(DATA));
         buildCatsNav();
-        renderCatalogo();
+        renderizarContenido();
         console.log("✅ Productos cargados desde el servidor");
       } else {
         throw new Error("El archivo productos.json está vacío o no es válido");
@@ -729,7 +935,6 @@ function cargarProductos(){
     })
     .catch(err => {
       console.error("❌ Error cargando productos:", err);
-      // Mostrar mensaje amigable
       document.getElementById("skeletons").style.display = "none";
       document.getElementById("vacio").style.display = "block";
       document.getElementById("vacio").innerHTML = `
@@ -746,7 +951,17 @@ function cargarProductos(){
 //  FOOTER & CONTACTOS
 // ============================================================
 document.getElementById("anioActual").textContent = new Date().getFullYear();
-document.getElementById("footerCats").innerHTML = CATEGORIAS.map(c=>`<li><a href="#cat-${c.id}">${c.ico} ${c.nombre}</a></li>`).join("");
+document.getElementById("footerCats").innerHTML = CATEGORIAS.filter(c => c.id !== "garantia-domicilio").map(c => `<li><a href="#" data-cat="${c.id}">${c.ico} ${c.nombre}</a></li>`).join("");
+
+document.querySelectorAll("#footerCats a").forEach(a => {
+  a.addEventListener("click", e => {
+    e.preventDefault();
+    const catId = a.dataset.cat;
+    const btn = document.querySelector(`.cat-btn[data-cat="${catId}"]`);
+    if(btn) btn.click();
+  });
+});
+
 document.getElementById("footerWA").addEventListener("click", e=>{ e.preventDefault(); openWA("Hola, quisiera más información sobre sus productos."); });
 document.getElementById("headerContact").addEventListener("click", ()=>openWA("Hola, quisiera más información sobre sus productos."));
 
@@ -759,7 +974,6 @@ if ("serviceWorker" in navigator) {
   navigator.serviceWorker.register("sw.js").catch(()=>{});
 }
 
-// Cargar productos
 cargarProductos();
 </script>
 </body>
