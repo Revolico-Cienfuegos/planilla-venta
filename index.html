@@ -70,11 +70,11 @@
       <!-- ===== SELECTOR DE MONEDA (con las tasas que pediste) ===== -->
       <div class="moneda-selector">
         <select id="currencySelect">
-          <option value="MN">MN</option>
           <option value="USD" selected>USD</option>
-          <option value="Zelle">Zelle</option>
-          <option value="Tarjeta">Tarjeta</option>
-          <option value="Euro">Euro</option>
+          <option value="MN">MN (680)</option>
+          <option value="Zelle">Zelle (1.05)</option>
+          <option value="Tarjeta">Tarjeta (1.1)</option>
+          <option value="Euro">Euro (0.93)</option>
         </select>
       </div>
       <button class="cart-icon" id="cartToggle" aria-label="Carrito">
@@ -246,18 +246,18 @@ const WA = "5354571729";
 // Tasas de conversión desde USD (para el selector de moneda)
 const TASAS = {
   USD: 1,
-  MN: 700,
-  Zelle: 1.05,
-  Tarjeta: 1.1,
-  Euro: 0.93
+  MN: 680,          // 1 USD = 680 MN
+  Zelle: 1.05,      // 1 USD = 1.05 (recargo Zelle)
+  Tarjeta: 1.1,     // 1 USD = 1.1 (recargo tarjeta)
+  Euro: 0.93        // 1 USD = 0.93 EUR
 };
 
 // ============================================================
 //  CATEGORÍAS (con "Garantía y Domicilio" primero)
 // ============================================================
 const CATEGORIAS = [
-  { id:"garantia-domicilio", nombre:"🛡️ Garantía y Domicilio", ico:"🛡️", especial:true },
-  { id:"todas",              nombre:"🏪 Todos",                  ico:"🏪", especial:false },
+  { id:"garantia-domicilio", nombre:"Garantía y Domicilio", ico:"🛡️", especial:true },
+  { id:"todas",              nombre:"Todos",                  ico:"🏪", especial:false },
   { id:"electricidad",       nombre:"Electricidad y Protección", ico:"⚡" },
   { id:"solar",              nombre:"Energía Solar y Respaldo",  ico:"☀️" },
   { id:"moviles",            nombre:"Dispositivos Móviles y Carga Portátil", ico:"📱" },
