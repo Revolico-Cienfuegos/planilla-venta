@@ -71,6 +71,9 @@
         <select id="currencySelect">
           <option value="MN">MN</option>
           <option value="USD" selected>USD</option>
+          <option value="Zelle">Zelle</option>
+          <option value="Tarjeta">Tarjeta</option>
+          <option value="Euro">Euro</option>
         </select>
       </div>
       <button class="cart-icon" id="cartToggle" aria-label="Carrito">
@@ -193,7 +196,7 @@
   </div>
 </div>
 
-<!-- ===== FORMULARIO DE PEDIDO (PLANILLA) ===== -->
+<!-- ===== FORMULARIO DE PEDIDO (PLANILLA) CON MÉTODO DE PAGO ===== -->
 <div class="order-form-overlay" id="orderFormOverlay">
   <div class="order-form" id="orderForm">
     <h3>📋 Completá tu pedido</h3>
@@ -218,6 +221,16 @@
       <input type="text" id="ofReferencia" placeholder="Ej: cerca de la plaza, al lado de la farmacia">
       <div class="error" id="ofReferenciaErr">Completá el punto de referencia</div>
     </div>
+    <!-- ===== CAMPO MÉTODO DE PAGO (AGREGADO) ===== -->
+    <div class="field">
+      <label>Método de pago *</label>
+      <select id="ofMetodoPago" style="width:100%; border:1.5px solid var(--linea); border-radius:8px; padding:10px 12px; font-size:13.5px; font-family:inherit; background:#fff; color:var(--texto);">
+        <option value="Efectivo">💵 Efectivo</option>
+        <option value="Transferencia bancaria">🏦 Transferencia bancaria</option>
+        <option value="Transferencia Zelle">🏦 Transferencia Zelle</option>
+        <option value="Transferencia PayPal">🏦 Transferencia PayPal</option>
+      </select>
+    </div>
     <div class="field">
       <label>Observaciones (opcional)</label>
       <textarea id="ofObservaciones" placeholder="Algo más que quieras decirnos..."></textarea>
@@ -238,7 +251,7 @@
 // ============================================================
 const WA = "5354571729";
 
-// Tasas de conversión desde USD
+// Tasas de conversión desde USD para el selector de moneda
 const TASAS = {
   USD: 1,
   MN: 700,
@@ -251,8 +264,8 @@ const TASAS = {
 //  CATEGORÍAS (la primera es la especial de Garantía y Domicilio)
 // ============================================================
 const CATEGORIAS = [
-  { id:"garantia-domicilio", nombre:"Garantía y Domicilio", ico:"🛡️", especial:true },
-  { id:"todas",              nombre:"Todos",                  ico:"🏪", especial:false },
+  { id:"garantia-domicilio", nombre:"🛡️ Garantía y Domicilio", ico:"🛡️", especial:true },
+  { id:"todas",              nombre:"🏪 Todos",                  ico:"🏪", especial:false },
   { id:"electricidad",       nombre:"Electricidad y Protección", ico:"⚡" },
   { id:"solar",              nombre:"Energía Solar y Respaldo",  ico:"☀️" },
   { id:"moviles",            nombre:"Dispositivos Móviles y Carga Portátil", ico:"📱" },
@@ -272,7 +285,7 @@ const IMG_PH_ICO = `<svg width="32" height="32" viewBox="0 0 24 24" fill="none" 
 //  ESTADO GLOBAL
 // ============================================================
 let DATA = [];
-let catActiva = "garantia-domicilio"; // <--- CATEGORÍA POR DEFECTO
+let catActiva = "garantia-domicilio";
 let monedaActual = "USD";
 let carrito = [];
 let productoParaPedir = null;
@@ -321,7 +334,7 @@ function toast(msg, type="success"){
 }
 
 // ============================================================
-//  GOOGLE ANALYTICS - EVENTOS PERSONALIZADOS
+//  GOOGLE ANALYTICS
 // ============================================================
 function trackEvent(category, action, label, value){
   if (typeof gtag === 'function') {
@@ -334,7 +347,7 @@ function trackEvent(category, action, label, value){
 }
 
 // ============================================================
-//  CARRITO
+//  CARRITO (sin stock)
 // ============================================================
 function cargarCarrito(){
   try {
@@ -443,7 +456,7 @@ document.getElementById("cartOverlay").addEventListener("click", (e)=>{
 document.getElementById("cartClear").addEventListener("click", vaciarCarrito);
 
 // ============================================================
-//  FORMULARIO DE PEDIDO (PLANILLA)
+//  FORMULARIO DE PEDIDO (CON MÉTODO DE PAGO)
 // ============================================================
 function abrirPlanilla(producto){
   productoParaPedir = producto;
@@ -453,6 +466,8 @@ function abrirPlanilla(producto){
   document.getElementById("ofDireccion").value = "";
   document.getElementById("ofReferencia").value = "";
   document.getElementById("ofObservaciones").value = "";
+  // Reiniciar el select de método de pago a la primera opción
+  document.getElementById("ofMetodoPago").selectedIndex = 0;
   document.querySelectorAll(".order-form .error").forEach(e=>e.style.display="none");
 
   if (producto) {
@@ -469,6 +484,7 @@ document.getElementById("cartCheckout").addEventListener("click", ()=>{
   document.getElementById("ofDireccion").value = "";
   document.getElementById("ofReferencia").value = "";
   document.getElementById("ofObservaciones").value = "";
+  document.getElementById("ofMetodoPago").selectedIndex = 0;
   document.querySelectorAll(".order-form .error").forEach(e=>e.style.display="none");
 
   trackEvent('Checkout', 'begin_checkout', 'Desde carrito', totalCarrito());
@@ -485,6 +501,7 @@ document.getElementById("ofSend").addEventListener("click", ()=>{
   const telefono = document.getElementById("ofTelefono").value.trim();
   const direccion = document.getElementById("ofDireccion").value.trim();
   const referencia = document.getElementById("ofReferencia").value.trim();
+  const metodoPago = document.getElementById("ofMetodoPago").value;
   const obs = document.getElementById("ofObservaciones").value.trim();
 
   document.querySelectorAll(".order-form .error").forEach(e=>e.style.display="none");
@@ -514,6 +531,7 @@ document.getElementById("ofSend").addEventListener("click", ()=>{
 📦 Equipo(s) a comprar:
 ${items}
 💵 Cantidad y tipo de moneda: ${total.toFixed(2)} ${moneda}
+💳 Método de pago: ${metodoPago}
 💵 Cambio: 
 🗺️ Dirección: ${direccion}
 🗺️ Punto de referencia: ${referencia}
@@ -528,7 +546,7 @@ Muchas gracias.`;
 });
 
 // ============================================================
-//  MONEDA
+//  MONEDA (selector en header)
 // ============================================================
 document.getElementById("currencySelect").addEventListener("change", (e)=>{
   monedaActual = e.target.value;
@@ -537,7 +555,7 @@ document.getElementById("currencySelect").addEventListener("change", (e)=>{
 });
 
 // ============================================================
-//  RENDERIZADO PRINCIPAL (con ocultación de skeletons)
+//  RENDERIZADO PRINCIPAL (con orden alfabético)
 // ============================================================
 function renderizarContenido(){
   const contenido = document.getElementById("contenido");
@@ -546,29 +564,23 @@ function renderizarContenido(){
   const resultadosBusqueda = document.getElementById("resultadosBusqueda");
   const skeletons = document.getElementById("skeletons");
 
-  // Ocultar skeletons siempre
   skeletons.style.display = "none";
-
-  // Ocultar todo
   contenido.style.display = "none";
   contenidoGarantia.style.display = "none";
   vacio.style.display = "none";
   resultadosBusqueda.style.display = "none";
 
-  // Si es la categoría especial de garantía
   if (catActiva === "garantia-domicilio") {
     contenidoGarantia.style.display = "block";
     contenidoGarantia.innerHTML = renderGarantiaDomicilio();
     return;
   }
 
-  // Si no hay productos
   if (!DATA.length) {
     vacio.style.display = "block";
     return;
   }
 
-  // Filtro para otras categorías
   const datos = catActiva === "todas" ? DATA : DATA.filter(p => p.categoria === catActiva);
   if (!datos.length) {
     vacio.style.display = "block";
@@ -576,8 +588,7 @@ function renderizarContenido(){
     return;
   }
 
-  // Renderizar productos
-  contenido.style.display = "block";
+  // Agrupar por categoría
   const porCat = {};
   datos.forEach((p, i) => {
     const cat = p.categoria || "miscelaneos";
@@ -585,7 +596,14 @@ function renderizarContenido(){
     porCat[cat].push({ p, idx: DATA.indexOf(p) });
   });
 
+  // Orden alfabético dentro de cada categoría
+  for (const catId in porCat) {
+    porCat[catId].sort((a, b) => a.p.nombre.localeCompare(b.p.nombre, 'es', { sensitivity: 'base' }));
+  }
+
   const orden = CATEGORIAS.filter(c => c.id !== "garantia-domicilio" && c.id !== "todas").map(c => c.id).filter(id => porCat[id]);
+
+  contenido.style.display = "block";
   contenido.innerHTML = orden.map(catId => {
     const cat = CATEGORIAS.find(c => c.id === catId);
     const items = porCat[catId];
@@ -603,7 +621,7 @@ function renderizarContenido(){
 }
 
 // ============================================================
-//  RENDER GARANTÍA Y DOMICILIO (sin duplicar estilos)
+//  RENDER GARANTÍA Y DOMICILIO
 // ============================================================
 function renderGarantiaDomicilio() {
   return `
@@ -772,7 +790,7 @@ function bindCards(container){
 }
 
 // ============================================================
-//  BÚSQUEDA
+//  BÚSQUEDA (con orden alfabético)
 // ============================================================
 function renderBusqueda(q){
   const rb = document.getElementById("resultadosBusqueda");
@@ -792,6 +810,8 @@ function renderBusqueda(q){
     return hay.includes(ql);
   });
 
+  res.sort((a, b) => a.p.nombre.localeCompare(b.p.nombre, 'es', { sensitivity: 'base' }));
+
   label.style.display="block";
   label.textContent = res.length ? `${res.length} resultado${res.length!==1?"s":""} para "${q}"` : `Sin resultados para "${q}"`;
 
@@ -801,7 +821,7 @@ function renderBusqueda(q){
     return;
   }
   rb.style.display="block";
-  rb.innerHTML=`<div class="grid">${res.map(({p,idx})=>cardHTML(p,idx,true)).join("")}</div>`;
+  rb.innerHTML=`<div class="grid">${res.map(({p,idx}) => cardHTML(p, idx, true)).join("")}</div>`;
   bindCards(rb);
 }
 
@@ -827,7 +847,6 @@ function buildCatsNav(){
       limpiarBusqueda();
       renderizarContenido();
 
-      // Scroll suave si es una categoría de productos
       if (catActiva !== "garantia-domicilio" && catActiva !== "todas") {
         const sec = document.getElementById(`cat-${catActiva}`);
         if(sec) sec.scrollIntoView({behavior:"smooth", block:"start"});
