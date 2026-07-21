@@ -25,7 +25,7 @@
   <meta name="apple-mobile-web-app-capable" content="yes">
   <link rel="apple-touch-icon" href="icon-192.png">
 
-  <!-- ===== ESTILOS GENERALES ===== -->
+  <!-- ===== ESTILOS ===== -->
   <style>
     /* Reset y variables globales */
     * {
@@ -610,6 +610,26 @@
     }
     .card-add:active {
       transform: scale(0.92);
+    }
+
+    /* ===== BADGES ===== */
+    .badge {
+      display: inline-block;
+      font-size: 10px;
+      font-weight: 700;
+      text-transform: uppercase;
+      padding: 4px 10px;
+      border-radius: 20px;
+      color: #fff;
+      letter-spacing: 0.04em;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+      width: fit-content;
+    }
+    .badge-nuevo {
+      background: #2e86de;
+    }
+    .badge-mas-vendido {
+      background: #e67e22;
     }
 
     /* ===== EMPTY ===== */
@@ -1943,7 +1963,7 @@ function renderGarantiaDomicilio() {
 }
 
 // ============================================================
-//  RENDERIZADO PRINCIPAL
+//  RENDERIZADO PRINCIPAL (incluye sección "Lo más vendido")
 // ============================================================
 function renderizarContenido(){
   const contenido = document.getElementById("contenido");
@@ -1992,10 +2012,28 @@ function renderizarContenido(){
     });
   }
 
+  // ===== CONSTRUIR HTML =====
+  let htmlFinal = '';
+
+  // Solo para "Todos" mostramos la sección de Más Vendidos
+  if (catActiva === "todas") {
+    const masVendidos = datos.filter(p => p.esMasVendido === true);
+    if (masVendidos.length) {
+      htmlFinal += `<section class="seccion" id="seccion-mas-vendidos">
+        <div class="seccion-header">
+          <span class="seccion-ico">🔥</span>
+          <span class="seccion-titulo">Lo más vendido</span>
+          <span class="seccion-count">${masVendidos.length} productos</span>
+        </div>
+        <div class="grid">${masVendidos.map((p) => cardHTML(p, DATA.indexOf(p), true)).join("")}</div>
+      </section>`;
+    }
+  }
+
+  // Luego el resto de categorías (excepto "garantia-domicilio" y "todas")
   const orden = CATEGORIAS.filter(c => c.id !== "garantia-domicilio" && c.id !== "todas").map(c => c.id).filter(id => porCat[id]);
 
-  contenido.style.display = "block";
-  contenido.innerHTML = orden.map(catId => {
+  htmlFinal += orden.map(catId => {
     const cat = CATEGORIAS.find(c => c.id === catId);
     const items = porCat[catId];
     return `<section class="seccion" id="cat-${catId}">
@@ -2008,20 +2046,34 @@ function renderizarContenido(){
     </section>`;
   }).join("");
 
+  contenido.innerHTML = htmlFinal;
   bindCards(contenido);
   aplicarProteccionImagenes();
 }
 
 // ============================================================
-//  RENDER CATÁLOGO
+//  RENDER CATÁLOGO (tarjeta con badges)
 // ============================================================
 function cardHTML(p, idx, mostrarTag=false){
   const tag = mostrarTag ? `<div class="card-cat-tag">${icoCat(p.categoria)} ${nombreCat(p.categoria)}</div>` : "";
+  
+  // ===== BADGES =====
+  let badges = '';
+  if (p.esNuevo) {
+    badges += `<span class="badge badge-nuevo">✨ Nuevo</span>`;
+  }
+  if (p.esMasVendido) {
+    badges += `<span class="badge badge-mas-vendido">🔥 Más vendido</span>`;
+  }
+  
   const hasImg = p.imagen && p.imagen.length > 0;
   const imgSrc = hasImg ? p.imagen : "";
-  const imgWrap = `<div class="card-img-wrap">
-    ${hasImg ? `<img src="${imgSrc}" alt="${p.nombre}" loading="lazy" decoding="async" data-idx="${idx}" onerror="this.style.display='none'; this.parentElement.querySelector('.card-img-ph').style.display='flex';">` : ''}
+  const imgWrap = `<div class="card-img-wrap" style="position:relative;">
+    ${hasImg ? `<img class="card-img" src="${imgSrc}" alt="${p.nombre}" loading="lazy" decoding="async" data-idx="${idx}" onerror="this.style.display='none'; this.parentElement.querySelector('.card-img-ph').style.display='flex';">` : ''}
     <div class="card-img-ph" style="display:${hasImg ? 'none' : 'flex'};" data-idx="${idx}">${IMG_PH_ICO}<span>Sin foto</span></div>
+    <div style="position:absolute; top:8px; left:8px; display:flex; flex-direction:column; gap:4px; z-index:2;">
+      ${badges}
+    </div>
   </div>`;
 
   const precio = p.precio ? `<div class="card-precio">${fmt(p.precio)}</div>` : `<div class="card-precio" style="font-size:12px;color:var(--text-muted);">Consultar</div>`;
