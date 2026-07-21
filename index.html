@@ -49,10 +49,10 @@
 <header class="site-header">
   <div class="header-inner">
     <div class="logo">
-      <img src="imagenes/logo-ventacien.png" alt="VENTACIEN" style="height:40px; width:auto; margin-right:8px;">
+      <img src="imagenes/logo-tienda.png" alt="VENTACIEN" style="height:40px; width:auto; margin-right:8px;">
       <div>
         <div class="logo-nombre">VENTACIEN</div>
-        <span class="logo-sub">Todo lo que necesitas, cerca de ti</span>
+        <span class="logo-sub">TIENDA ONLINE</span>
       </div>
     </div>
 
@@ -132,8 +132,7 @@
   <div class="footer-inner">
     <div class="footer-col">
       <h4>VENTACIEN</h4>
-      <img src="imagenes/banner-ventacien.png" alt="VENTACIEN" style="max-width:100%; border-radius:8px; margin-top:8px;">
-      <p style="font-size:12px; color:rgba(255,255,255,0.5); margin-top:6px;">Garantía de calidad · Envíos disponibles · Atención personalizada · Compra segura</p>
+        <p style="font-size:12px; color:rgba(255,255,255,0.5); margin-top:6px;">Garantía de calidad · Envíos disponibles · Atención personalizada · Compra segura</p>
     </div>
     <div class="footer-col">
       <h4>Categorías</h4>
@@ -295,6 +294,75 @@ let carrito = [];
 let productoParaPedir = null;
 
 // ============================================================
+//  PROTECCIÓN DE IMÁGENES (se ejecuta después de cada renderizado)
+// ============================================================
+function aplicarProteccionImagenes() {
+  document.querySelectorAll('img').forEach(img => {
+    img.setAttribute('draggable', 'false');
+    // Evitar el menú contextual en imágenes
+    img.addEventListener('contextmenu', e => e.preventDefault());
+  });
+}
+
+// ============================================================
+//  PROTECCIÓN DE CONTENIDO (mejorada)
+// ============================================================
+(function protegerContenido() {
+  // Deshabilitar clic derecho en toda la página
+  document.addEventListener('contextmenu', function(e) {
+    e.preventDefault();
+    alert('🛡️ El contenido de esta web está protegido.');
+  });
+
+  // Deshabilitar atajos de teclado
+  document.addEventListener('keydown', function(e) {
+    // Bloquear Ctrl+C, Ctrl+U, Ctrl+S, Ctrl+P
+    if (e.ctrlKey && ['c', 'u', 's', 'p'].includes(e.key.toLowerCase())) {
+      e.preventDefault();
+      alert('🛡️ Esta acción no está permitida.');
+      return false;
+    }
+    // Bloquear Ctrl+Shift+I (Inspeccionar) y Ctrl+Shift+J (Consola)
+    if (e.ctrlKey && e.shiftKey && (e.key === 'I' || e.key === 'J')) {
+      e.preventDefault();
+      alert('🛡️ Esta acción no está permitida.');
+      return false;
+    }
+    // Bloquear F12
+    if (e.key === 'F12') {
+      e.preventDefault();
+      //alert('🛡️ Herramientas de desarrollador deshabilitadas.');
+      // Opcional: redirigir a la página principal para evitar pulsar F12 varias veces
+      // window.location.href = './index.html';
+      // O recargar la página actual
+       window.location.reload();
+      return false;
+    }
+  });
+
+  // Prevenir arrastre de cualquier imagen (delegado de eventos)
+  document.addEventListener('dragstart', function(e) {
+    if (e.target.tagName === 'IMG') {
+      e.preventDefault();
+      return false;
+    }
+  });
+
+  // Añadir crédito automático al copiar
+  document.addEventListener('copy', function(e) {
+    const seleccion = window.getSelection().toString();
+    if (seleccion.length > 10) {
+      const mensaje = seleccion + '\n\n📌 Fuente: VENTACIEN - https://revolico-cienfuegos.github.io/Catalogo-de-ventas/';
+      e.clipboardData.setData('text/plain', mensaje);
+      e.preventDefault();
+    }
+  });
+
+  // Proteger imágenes ya existentes al cargar la página
+  aplicarProteccionImagenes();
+})();
+
+// ============================================================
 //  UTILIDADES
 // ============================================================
 function isMobile(){ return /Android|iPhone|iPad|iPod/i.test(navigator.userAgent); }
@@ -440,6 +508,9 @@ function renderCarrito(){
       </div>
     </div>
   `).join("");
+
+  // Aplicar protección a las imágenes del carrito
+  aplicarProteccionImagenes();
 }
 
 // ============================================================
@@ -569,6 +640,8 @@ function renderizarContenido(){
   if (catActiva === "garantia-domicilio") {
     contenidoGarantia.style.display = "block";
     contenidoGarantia.innerHTML = renderGarantiaDomicilio();
+    // Aplicar protección a imágenes del contenido de garantía (si las hubiera)
+    aplicarProteccionImagenes();
     return;
   }
 
@@ -617,6 +690,8 @@ function renderizarContenido(){
   }).join("");
 
   bindCards(contenido);
+  // Proteger imágenes recién añadidas
+  aplicarProteccionImagenes();
 }
 
 // ============================================================
@@ -826,6 +901,8 @@ function renderBusqueda(q){
   rb.style.display="block";
   rb.innerHTML=`<div class="grid">${res.map(({p,idx}) => cardHTML(p, idx, true)).join("")}</div>`;
   bindCards(rb);
+  // Proteger imágenes de los resultados de búsqueda
+  aplicarProteccionImagenes();
 }
 
 // ============================================================
@@ -911,6 +988,9 @@ function abrirModal(p){
   };
   document.getElementById("overlay").classList.add("open");
   document.body.style.overflow="hidden";
+
+  // Proteger la imagen del modal
+  aplicarProteccionImagenes();
 }
 
 function cerrarModal(){
@@ -939,46 +1019,6 @@ function ajustarTopCategorias() {
 window.addEventListener('load', ajustarTopCategorias);
 window.addEventListener('resize', ajustarTopCategorias);
 window.addEventListener('scroll', ajustarTopCategorias);
-
-// ============================================================
-//  PROTECCIÓN DE CONTENIDO
-// ============================================================
-(function protegerContenido() {
-  // Deshabilitar clic derecho
-  document.addEventListener('contextmenu', function(e) {
-    e.preventDefault();
-    alert('🛡️ El contenido de esta web está protegido.');
-  });
-
-  // Deshabilitar atajos de teclado
-  document.addEventListener('keydown', function(e) {
-    const teclasProhibidas = ['c', 'u', 's', 'p'];
-    if (e.ctrlKey && teclasProhibidas.includes(e.key.toLowerCase())) {
-      e.preventDefault();
-      alert('🛡️ Esta acción no está permitida.');
-    }
-    if (e.key === 'F12') {
-      e.preventDefault();
-      alert('🛡️ Herramientas de desarrollador deshabilitadas.');
-    }
-  });
-
-  // Proteger imágenes (evitar arrastre)
-  document.querySelectorAll('img').forEach(img => {
-    img.setAttribute('draggable', 'false');
-    img.addEventListener('contextmenu', e => e.preventDefault());
-  });
-
-  // Añadir crédito automático al copiar
-  document.addEventListener('copy', function(e) {
-    const seleccion = window.getSelection().toString();
-    if (seleccion.length > 10) {
-      const mensaje = seleccion + '\n\n📌 Fuente: VENTACIEN - https://revolico-cienfuegos.github.io/Catalogo-de-ventas/';
-      e.clipboardData.setData('text/plain', mensaje);
-      e.preventDefault();
-    }
-  });
-})();
 
 // ============================================================
 //  ACTUALIZACIÓN AUTOMÁTICA DEL SERVICE WORKER
