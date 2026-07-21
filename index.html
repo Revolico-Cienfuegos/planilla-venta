@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes">
   <title>VENTACIEN · Tienda Online</title>
-  
+
   <!-- ===== GOOGLE ANALYTICS ===== -->
   <script async src="https://www.googletagmanager.com/gtag/js?id=G-8PYG8LH258"></script>
   <script>
@@ -25,7 +25,6 @@
   <meta name="apple-mobile-web-app-capable" content="yes">
   <link rel="apple-touch-icon" href="icon-192.png">
 
-  <!-- ===== ESTILOS ===== -->
   <style>
     /* Reset y variables globales */
     * {
@@ -1963,7 +1962,7 @@ function renderGarantiaDomicilio() {
 }
 
 // ============================================================
-//  RENDERIZADO PRINCIPAL (incluye sección "Lo más vendido")
+//  RENDERIZADO PRINCIPAL (con sección "Lo más vendido")
 // ============================================================
 function renderizarContenido(){
   const contenido = document.getElementById("contenido");
@@ -2015,7 +2014,7 @@ function renderizarContenido(){
   // ===== CONSTRUIR HTML =====
   let htmlFinal = '';
 
-  // Solo para "Todos" mostramos la sección de Más Vendidos
+  // Sección de más vendidos (solo para "Todos")
   if (catActiva === "todas") {
     const masVendidos = datos.filter(p => p.esMasVendido === true);
     if (masVendidos.length) {
@@ -2030,7 +2029,7 @@ function renderizarContenido(){
     }
   }
 
-  // Luego el resto de categorías (excepto "garantia-domicilio" y "todas")
+  // Categorías normales
   const orden = CATEGORIAS.filter(c => c.id !== "garantia-domicilio" && c.id !== "todas").map(c => c.id).filter(id => porCat[id]);
 
   htmlFinal += orden.map(catId => {
@@ -2056,8 +2055,8 @@ function renderizarContenido(){
 // ============================================================
 function cardHTML(p, idx, mostrarTag=false){
   const tag = mostrarTag ? `<div class="card-cat-tag">${icoCat(p.categoria)} ${nombreCat(p.categoria)}</div>` : "";
-  
-  // ===== BADGES =====
+
+  // BADGES (solo si existen)
   let badges = '';
   if (p.esNuevo) {
     badges += `<span class="badge badge-nuevo">✨ Nuevo</span>`;
@@ -2065,7 +2064,7 @@ function cardHTML(p, idx, mostrarTag=false){
   if (p.esMasVendido) {
     badges += `<span class="badge badge-mas-vendido">🔥 Más vendido</span>`;
   }
-  
+
   const hasImg = p.imagen && p.imagen.length > 0;
   const imgSrc = hasImg ? p.imagen : "";
   const imgWrap = `<div class="card-img-wrap" style="position:relative;">
@@ -2175,7 +2174,6 @@ function buildCatsNav(){
       limpiarBusqueda();
       renderizarContenido();
 
-      // Desplazar la barra para centrar el botón
       const navRect = nav.getBoundingClientRect();
       const btnRect = btn.getBoundingClientRect();
       const scrollLeft = btn.offsetLeft - (navRect.width / 2) + (btnRect.width / 2);
