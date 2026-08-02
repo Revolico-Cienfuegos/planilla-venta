@@ -3,18 +3,17 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Planilla de Venta · Profesional</title>
-  <!-- Fuente moderna desde Google Fonts -->
+  <meta name="theme-color" content="#2563eb" />
+  <title>Planilla · DT ETECSA Cienfuegos</title>
+  <link rel="manifest" href="manifest.json" />
+  <link rel="icon" href="icon-192.png" />
+  <link rel="apple-touch-icon" href="icon-192.png" />
+  <!-- Fuente moderna desde Google Fonts (con fallback local si no hay conexión) -->
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,400;14..32,500;14..32,600;14..32,700&display=swap" rel="stylesheet" />
   <style>
-    /* Reset y variables */
-    * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
-    }
+    * { margin: 0; padding: 0; box-sizing: border-box; }
 
     :root {
       --bg: #f4f6f9;
@@ -28,7 +27,10 @@
       --accent-hover: #1d4ed8;
       --accent-soft: #eff6ff;
       --success: #16a34a;
-      --shadow: 0 20px 40px -12px rgba(0, 0, 0, 0.12), 0 8px 24px -6px rgba(0, 0, 0, 0.05);
+      --success-soft: #f0fdf4;
+      --danger: #dc2626;
+      --danger-soft: #fef2f2;
+      --shadow: 0 20px 40px -12px rgba(0,0,0,0.12), 0 8px 24px -6px rgba(0,0,0,0.05);
       --radius: 16px;
       --radius-sm: 10px;
       --font: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
@@ -40,28 +42,81 @@
       color: var(--text-primary);
       min-height: 100vh;
       display: flex;
-      align-items: center;
+      align-items: flex-start;
       justify-content: center;
-      padding: 24px 16px;
-      margin: 0;
+      padding: 24px 16px 60px;
       line-height: 1.5;
     }
 
+    .app { max-width: 720px; width: 100%; }
+
+    /* Barra de estado de conexión */
+    .status-bar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+      padding: 10px 16px;
+      border-radius: var(--radius-sm);
+      margin-bottom: 14px;
+      font-size: 13px;
+      font-weight: 600;
+      background: var(--success-soft);
+      color: var(--success);
+      border: 1px solid rgba(22, 163, 74, 0.2);
+      transition: all 0.2s ease;
+    }
+    .status-bar.offline {
+      background: var(--danger-soft);
+      color: var(--danger);
+      border-color: rgba(220, 38, 38, 0.2);
+    }
+    .status-bar .dot { width: 8px; height: 8px; border-radius: 50%; background: currentColor; flex-shrink: 0; }
+    .status-left { display: flex; align-items: center; gap: 8px; }
+    .save-indicator { font-weight: 500; color: var(--text-muted); font-size: 12px; }
+
+    /* Selector de categoría */
+    .category-picker {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+      margin-bottom: 14px;
+    }
+    .cat-btn {
+      background: var(--card-bg);
+      border: 1.5px solid var(--border-light);
+      border-radius: var(--radius-sm);
+      padding: 14px 12px;
+      cursor: pointer;
+      text-align: left;
+      font-family: var(--font);
+      transition: border-color 0.15s, box-shadow 0.15s, transform 0.08s;
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+    }
+    .cat-btn:hover { border-color: #cbd5e1; }
+    .cat-btn:active { transform: scale(0.98); }
+    .cat-btn.active {
+      border-color: var(--accent);
+      background: var(--accent-soft);
+      box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.12);
+    }
+    .cat-btn .cat-title { font-size: 14px; font-weight: 700; color: var(--text-primary); display: flex; align-items: center; gap: 6px; }
+    .cat-btn .cat-sub { font-size: 12px; color: var(--text-muted); }
+    .cat-btn.active .cat-title { color: var(--accent-hover); }
+
     /* Contenedor principal */
     .ticket {
-      max-width: 720px;
-      width: 100%;
       background: var(--card-bg);
       border-radius: var(--radius);
       box-shadow: var(--shadow);
       overflow: hidden;
-      transition: box-shadow 0.2s ease;
-      border: 1px solid rgba(255, 255, 255, 0.5);
+      border: 1px solid rgba(255,255,255,0.5);
     }
 
-    /* Encabezado */
     header {
-      padding: 32px 32px 20px;
+      padding: 28px 32px 20px;
       border-bottom: 1px solid var(--border-light);
       display: flex;
       align-items: center;
@@ -69,430 +124,396 @@
       flex-wrap: wrap;
       gap: 12px;
     }
-
-    .header-left {
-      display: flex;
-      flex-direction: column;
-    }
-
+    .header-left { display: flex; flex-direction: column; }
     .badge {
-      display: inline-flex;
-      align-items: center;
-      gap: 6px;
-      background: var(--accent-soft);
-      color: var(--accent);
-      font-size: 12px;
-      font-weight: 600;
-      letter-spacing: 0.02em;
-      padding: 4px 12px;
-      border-radius: 30px;
-      width: fit-content;
-      margin-bottom: 6px;
-      border: 1px solid rgba(37, 99, 235, 0.15);
+      display: inline-flex; align-items: center; gap: 6px;
+      background: var(--accent-soft); color: var(--accent);
+      font-size: 12px; font-weight: 600; letter-spacing: 0.02em;
+      padding: 4px 12px; border-radius: 30px; width: fit-content;
+      margin-bottom: 6px; border: 1px solid rgba(37,99,235,0.15);
     }
-
-    h1 {
-      font-size: 24px;
-      font-weight: 700;
-      letter-spacing: -0.02em;
-      color: var(--text-primary);
-      margin: 0;
-    }
-
-    .sub {
-      font-size: 14px;
-      color: var(--text-secondary);
-      margin-top: 2px;
-      font-weight: 400;
-    }
-
+    h1 { font-size: 22px; font-weight: 700; letter-spacing: -0.02em; margin: 0; }
+    .sub { font-size: 14px; color: var(--text-secondary); margin-top: 2px; }
     .stamp {
-      background: #fef9e7;
-      border: 1px solid #fcd34d;
-      color: #b45309;
-      font-size: 11px;
-      font-weight: 700;
-      letter-spacing: 0.04em;
-      padding: 6px 16px;
-      border-radius: 30px;
-      text-transform: uppercase;
-      white-space: nowrap;
-      display: inline-flex;
-      align-items: center;
-      gap: 4px;
+      background: #fef9e7; border: 1px solid #fcd34d; color: #b45309;
+      font-size: 11px; font-weight: 700; letter-spacing: 0.04em;
+      padding: 6px 16px; border-radius: 30px; text-transform: uppercase;
+      white-space: nowrap; display: inline-flex; align-items: center; gap: 4px;
     }
+    .stamp::before { content: "●"; font-size: 8px; color: #f59e0b; }
 
-    .stamp::before {
-      content: "●";
-      font-size: 8px;
-      color: #f59e0b;
+    form { padding: 22px 32px 8px; }
+    .form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px 20px; }
+    .group { margin-bottom: 4px; }
+    .group.full-width { grid-column: 1 / -1; }
+    label { display: block; font-size: 13px; font-weight: 500; color: var(--text-secondary); margin-bottom: 4px; letter-spacing: -0.01em; }
+    label .opt { font-weight: 400; color: var(--text-muted); font-size: 12px; }
+
+    input, textarea, select {
+      width: 100%; border: 1px solid var(--border-light); border-radius: var(--radius-sm);
+      background: #fafbfc; font-family: var(--font); font-size: 14px;
+      padding: 10px 14px; color: var(--text-primary);
+      transition: border-color 0.2s, box-shadow 0.2s, background 0.2s; outline: none;
     }
-
-    /* Formulario */
-    form {
-      padding: 24px 32px 8px;
+    input:focus, textarea:focus, select:focus {
+      border-color: var(--border-focus); box-shadow: 0 0 0 3px rgba(37,99,235,0.1); background: #ffffff;
     }
+    input[readonly] { background: #f1f5f9; color: var(--text-secondary); border-color: #e2e8f0; cursor: default; }
+    input[readonly]:focus { box-shadow: none; border-color: #e2e8f0; }
+    select { cursor: pointer; appearance: none; background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath fill='%2394a3b8' d='M1 1l5 5 5-5'/%3E%3C/svg%3E"); background-repeat: no-repeat; background-position: right 14px center; padding-right: 34px; }
+    textarea { resize: vertical; min-height: 60px; }
 
-    .form-grid {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 16px 20px;
-    }
+    .section-break { margin-top: 22px; padding-top: 18px; border-top: 1px solid var(--border-light); }
+    .section-title { font-size: 14px; font-weight: 600; margin-bottom: 14px; display: flex; align-items: center; gap: 8px; }
+    .section-title .emoji { font-size: 18px; }
+    .zelle-box, .gestor-box { background: #f8fafc; border: 1px solid var(--border-light); border-radius: var(--radius-sm); padding: 16px 16px 4px; margin-top: 4px; }
+    .zelle-box .group:last-child, .gestor-box .group:last-child { margin-bottom: 0; }
 
-    .group {
-      margin-bottom: 4px;
-    }
+    .fijo-tag { font-weight: 400; font-size: 12px; color: var(--text-muted); }
 
-    .group.full-width {
-      grid-column: 1 / -1;
-    }
-
-    label {
-      display: block;
-      font-size: 13px;
-      font-weight: 500;
-      color: var(--text-secondary);
-      margin-bottom: 4px;
-      letter-spacing: -0.01em;
-    }
-
-    label .opt {
-      font-weight: 400;
-      color: var(--text-muted);
-      font-size: 12px;
-    }
-
-    input,
-    textarea {
-      width: 100%;
-      border: 1px solid var(--border-light);
-      border-radius: var(--radius-sm);
-      background: #fafbfc;
-      font-family: var(--font);
-      font-size: 14px;
-      padding: 10px 14px;
-      color: var(--text-primary);
-      transition: border-color 0.2s, box-shadow 0.2s, background 0.2s;
-      outline: none;
-    }
-
-    input:focus,
-    textarea:focus {
-      border-color: var(--border-focus);
-      box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
-      background: #ffffff;
-    }
-
-    input[readonly] {
-      background: #f1f5f9;
-      color: var(--text-secondary);
-      border-color: #e2e8f0;
-      cursor: default;
-    }
-
-    input[readonly]:focus {
-      box-shadow: none;
-      border-color: #e2e8f0;
-    }
-
-    textarea {
-      resize: vertical;
-      min-height: 60px;
-    }
-
-    /* Secciones especiales */
-    .section-break {
-      margin-top: 24px;
-      padding-top: 20px;
-      border-top: 1px solid var(--border-light);
-    }
-
-    .section-title {
-      font-size: 14px;
-      font-weight: 600;
-      color: var(--text-primary);
-      margin-bottom: 16px;
-      display: flex;
-      align-items: center;
-      gap: 8px;
-    }
-
-    .section-title .emoji {
-      font-size: 18px;
-    }
-
-    .zelle-box {
-      background: #f8fafc;
-      border: 1px solid var(--border-light);
-      border-radius: var(--radius-sm);
-      padding: 16px 16px 4px;
-      margin-top: 4px;
-    }
-
-    .zelle-box .group:last-child {
-      margin-bottom: 0;
-    }
-
-    /* Botones y área de envío */
-    .submit-area {
-      padding: 24px 32px 32px;
-      border-top: 1px solid var(--border-light);
-      margin-top: 8px;
-      display: flex;
-      flex-direction: column;
-      gap: 10px;
-    }
-
-    .btn-group {
-      display: flex;
-      gap: 10px;
-      flex-wrap: wrap;
-    }
-
+    .submit-area { padding: 22px 32px 32px; border-top: 1px solid var(--border-light); margin-top: 8px; display: flex; flex-direction: column; gap: 10px; }
+    .btn-group { display: flex; gap: 10px; flex-wrap: wrap; }
     .btn {
-      flex: 1;
-      min-width: 140px;
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      gap: 8px;
-      font-family: var(--font);
-      font-weight: 600;
-      font-size: 15px;
-      padding: 13px 20px;
-      border: none;
-      border-radius: var(--radius-sm);
-      cursor: pointer;
-      transition: background 0.2s, transform 0.08s, box-shadow 0.2s;
-      text-decoration: none;
-      color: #fff;
-      background: var(--accent);
-      letter-spacing: -0.01em;
+      flex: 1; min-width: 140px; display: inline-flex; align-items: center; justify-content: center; gap: 8px;
+      font-family: var(--font); font-weight: 600; font-size: 15px; padding: 13px 20px; border: none;
+      border-radius: var(--radius-sm); cursor: pointer; transition: background 0.2s, transform 0.08s, box-shadow 0.2s;
+      text-decoration: none; color: #fff; background: var(--accent); letter-spacing: -0.01em;
     }
+    .btn:active { transform: scale(0.97); }
+    .btn-primary { background: var(--accent); box-shadow: 0 4px 8px -4px rgba(37,99,235,0.3); }
+    .btn-primary:hover { background: var(--accent-hover); box-shadow: 0 8px 16px -6px rgba(37,99,235,0.35); }
+    .btn-outline { background: transparent; color: var(--text-primary); border: 1.5px solid var(--border-light); box-shadow: none; }
+    .btn-outline:hover { background: #f1f5f9; border-color: #cbd5e1; }
+    .btn-ghost { background: transparent; color: var(--text-muted); border: none; box-shadow: none; flex: none; min-width: auto; padding: 8px 10px; font-size: 13px; }
+    .btn-ghost:hover { color: var(--danger); }
 
-    .btn:active {
-      transform: scale(0.97);
-    }
+    .hint { font-size: 12px; color: var(--text-muted); text-align: center; line-height: 1.6; margin-top: 4px; }
 
-    .btn-primary {
-      background: var(--accent);
-      box-shadow: 0 4px 8px -4px rgba(37, 99, 235, 0.3);
-    }
-    .btn-primary:hover {
-      background: var(--accent-hover);
-      box-shadow: 0 8px 16px -6px rgba(37, 99, 235, 0.35);
-    }
+    footer { text-align: center; font-size: 12px; color: var(--text-muted); padding: 16px 32px 24px; border-top: 1px solid var(--border-light); background: #fafbfc; }
 
-    .btn-outline {
-      background: transparent;
-      color: var(--text-primary);
-      border: 1.5px solid var(--border-light);
-      box-shadow: none;
-    }
-    .btn-outline:hover {
-      background: #f1f5f9;
-      border-color: #cbd5e1;
-    }
-
-    .hint {
-      font-size: 12px;
-      color: var(--text-muted);
-      text-align: center;
-      line-height: 1.6;
-      margin-top: 4px;
-    }
-
-    /* Footer */
-    footer {
-      text-align: center;
-      font-size: 12px;
-      color: var(--text-muted);
-      padding: 16px 32px 24px;
-      border-top: 1px solid var(--border-light);
-      background: #fafbfc;
-    }
-
-    /* Responsive */
     @media (max-width: 600px) {
-      header {
-        flex-direction: column;
-        align-items: flex-start;
-        padding: 24px 20px 16px;
-      }
-      .stamp {
-        align-self: flex-start;
-      }
-      form {
-        padding: 16px 20px 4px;
-      }
-      .form-grid {
-        grid-template-columns: 1fr;
-        gap: 12px;
-      }
-      .submit-area {
-        padding: 20px 20px 24px;
-      }
-      .btn-group {
-        flex-direction: column;
-      }
-      .btn {
-        min-width: unset;
-        width: 100%;
-      }
-      .zelle-box {
-        padding: 12px 12px 0;
-      }
-      footer {
-        padding: 12px 20px 16px;
-      }
+      header { flex-direction: column; align-items: flex-start; padding: 22px 20px 16px; }
+      .stamp { align-self: flex-start; }
+      form { padding: 16px 20px 4px; }
+      .form-grid { grid-template-columns: 1fr; gap: 12px; }
+      .submit-area { padding: 18px 20px 24px; }
+      .btn-group { flex-direction: column; }
+      .btn { min-width: unset; width: 100%; }
+      .zelle-box, .gestor-box { padding: 12px 12px 0; }
+      footer { padding: 12px 20px 16px; }
+      .category-picker { grid-template-columns: 1fr; }
     }
-
     @media (max-width: 400px) {
-      body {
-        padding: 12px 8px;
-      }
-      .ticket {
-        border-radius: 12px;
-      }
-      input,
-      textarea {
-        font-size: 13px;
-        padding: 8px 12px;
-      }
+      body { padding: 12px 8px 40px; }
+      .ticket { border-radius: 12px; }
+      input, textarea, select { font-size: 13px; padding: 8px 12px; }
     }
   </style>
 </head>
 <body>
+  <div class="app">
 
-  <div class="ticket">
-    <header>
-      <div class="header-left">
-        <span class="badge">📋 Formulario de venta</span>
-        <h1>Planilla de Venta</h1>
-        <div class="sub">Completa los datos y envía directo por WhatsApp</div>
+    <!-- Estado de conexión -->
+    <div class="status-bar" id="statusBar">
+      <div class="status-left">
+        <span class="dot"></span>
+        <span id="statusText">En línea</span>
       </div>
-      <div class="stamp">Original</div>
-    </header>
+      <span class="save-indicator" id="saveIndicator">Borrador guardado en este dispositivo</span>
+    </div>
 
-    <form id="planillaForm">
-      <div class="form-grid">
-        <!-- Fecha -->
-        <div class="group">
-          <label for="fecha">📅 Fecha</label>
-          <input type="date" id="fecha" name="fecha" />
+    <!-- Selector de tipo de planilla -->
+    <div class="category-picker">
+      <button type="button" class="cat-btn" id="btnVenta" onclick="switchCategory('venta')">
+        <span class="cat-title">📦 Planilla de Venta</span>
+        <span class="cat-sub">Venta de equipos, con Zelle</span>
+      </button>
+      <button type="button" class="cat-btn" id="btnGeneral" onclick="switchCategory('general')">
+        <span class="cat-title">🧾 Planilla General</span>
+        <span class="cat-sub">Cliente, garantía, comisión</span>
+      </button>
+    </div>
+
+    <div class="ticket">
+      <header>
+        <div class="header-left">
+          <span class="badge" id="headerBadge">📋 Formulario de venta</span>
+          <h1 id="headerTitle">Planilla de Venta</h1>
+          <div class="sub" id="headerSub">Completa los datos y envía directo por WhatsApp</div>
         </div>
+        <div class="stamp">Original</div>
+      </header>
 
-        <!-- Nombre cliente -->
-        <div class="group">
-          <label for="nombreCliente">👤 Nombre del cliente</label>
-          <input type="text" id="nombreCliente" name="nombreCliente" placeholder="Nombre completo" />
-        </div>
-
-        <!-- Teléfono cliente -->
-        <div class="group">
-          <label for="telCliente">📱 Teléfono del cliente</label>
-          <input type="tel" id="telCliente" name="telCliente" placeholder="5xxxxxxx" />
-        </div>
-
-        <!-- Equipo -->
-        <div class="group">
-          <label for="equipo">📦 Equipo a comprar</label>
-          <input type="text" id="equipo" name="equipo" placeholder="Ej: iPhone 13, 128GB" />
-        </div>
-
-        <!-- Cantidad y moneda -->
-        <div class="group">
-          <label for="cantidad">💵 Cantidad y tipo de moneda</label>
-          <input type="text" id="cantidad" name="cantidad" placeholder="Ej: 150 USD" />
-        </div>
-
-        <!-- Cambio -->
-        <div class="group">
-          <label for="cambio">💱 Cambio</label>
-          <input type="text" id="cambio" name="cambio" placeholder="Ej: 1 USD = 380 CUP" />
-        </div>
-
-        <!-- Dirección -->
-        <div class="group full-width">
-          <label for="direccion">📍 Dirección</label>
-          <input type="text" id="direccion" name="direccion" placeholder="Calle, número, entre calles" />
-        </div>
-
-        <!-- Punto de referencia -->
-        <div class="group full-width">
-          <label for="referencia">📍 Punto de referencia</label>
-          <input type="text" id="referencia" name="referencia" placeholder="Ej: cerca del parque..." />
-        </div>
-
-        <!-- Costo domicilio -->
-        <div class="group full-width">
-          <label for="domicilio">🛵 Costo del domicilio (municipio)</label>
-          <input type="text" id="domicilio" name="domicilio" placeholder="Ej: 200 CUP" />
-        </div>
-      </div>
-
-      <!-- Zelle -->
-      <div class="section-break">
-        <div class="section-title"><span class="emoji">🏦</span> En caso de Zelle — datos de quien transfiere</div>
-        <div class="zelle-box">
-          <div class="form-grid" style="gap:12px 16px;">
-            <div class="group">
-              <label for="zelleNombre">👤 Nombre</label>
-              <input type="text" id="zelleNombre" name="zelleNombre" placeholder="Nombre completo" />
-            </div>
-            <div class="group">
-              <label for="zelleTelefono">📱 Teléfono</label>
-              <input type="tel" id="zelleTelefono" name="zelleTelefono" placeholder="Número de contacto" />
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <!-- Datos del gestor (fijos) -->
-      <div class="section-break">
-        <div class="section-title"><span class="emoji">👤</span> Datos del gestor <span class="opt" style="font-weight:400; font-size:13px; color:var(--text-muted);">(fijos)</span></div>
+      <!-- ===================== FORMULARIO: PLANILLA DE VENTA ===================== -->
+      <form id="formVenta" class="planilla-form">
         <div class="form-grid">
           <div class="group">
-            <label for="gestorNombre">👤 Nombre del gestor</label>
-            <input type="text" id="gestorNombre" name="gestorNombre" value="Claudia Yamaye González Rodríguez" readonly />
+            <label for="v_fecha">📅 Fecha</label>
+            <input type="date" id="v_fecha" name="fecha" />
           </div>
           <div class="group">
-            <label for="gestorTelefono">📱 Teléfono del gestor</label>
-            <input type="tel" id="gestorTelefono" name="gestorTelefono" value="54571729" readonly />
+            <label for="v_nombreCliente">👤 Nombre del cliente</label>
+            <input type="text" id="v_nombreCliente" name="nombreCliente" placeholder="Nombre completo" />
+          </div>
+          <div class="group">
+            <label for="v_telCliente">📱 Teléfono del cliente</label>
+            <input type="tel" id="v_telCliente" name="telCliente" placeholder="5xxxxxxx" />
+          </div>
+          <div class="group">
+            <label for="v_equipo">📦 Equipo a comprar</label>
+            <input type="text" id="v_equipo" name="equipo" placeholder="Ej: iPhone 13, 128GB" />
+          </div>
+          <div class="group">
+            <label for="v_cantidad">💵 Cantidad y tipo de moneda</label>
+            <input type="text" id="v_cantidad" name="cantidad" placeholder="Ej: 150 USD" />
+          </div>
+          <div class="group">
+            <label for="v_cambio">💱 Cambio</label>
+            <input type="text" id="v_cambio" name="cambio" placeholder="Ej: 1 USD = 380 CUP" />
           </div>
           <div class="group full-width">
-            <label for="gestorTarjeta">💳 Tarjeta del gestor</label>
-            <input type="text" id="gestorTarjeta" name="gestorTarjeta" value="9224-0699-9677-9001" readonly />
+            <label for="v_direccion">📍 Dirección</label>
+            <input type="text" id="v_direccion" name="direccion" placeholder="Calle, número, entre calles" />
+          </div>
+          <div class="group full-width">
+            <label for="v_referencia">📍 Punto de referencia</label>
+            <input type="text" id="v_referencia" name="referencia" placeholder="Ej: cerca del parque..." />
+          </div>
+          <div class="group full-width">
+            <label for="v_domicilio">🛵 Costo del domicilio (municipio)</label>
+            <input type="text" id="v_domicilio" name="domicilio" placeholder="Ej: 200 CUP" />
           </div>
         </div>
-      </div>
 
-      <!-- Observaciones -->
-      <div class="section-break">
-        <div class="group full-width" style="margin-bottom:0;">
-          <label for="observaciones">📝 Observaciones</label>
-          <textarea id="observaciones" name="observaciones" placeholder="Cualquier detalle adicional..."></textarea>
+        <div class="section-break">
+          <div class="section-title"><span class="emoji">🏦</span> En caso de Zelle — datos de quien transfiere</div>
+          <div class="zelle-box">
+            <div class="form-grid" style="gap:12px 16px;">
+              <div class="group">
+                <label for="v_zelleNombre">👤 Nombre</label>
+                <input type="text" id="v_zelleNombre" name="zelleNombre" placeholder="Nombre completo" />
+              </div>
+              <div class="group">
+                <label for="v_zelleTelefono">📱 Teléfono</label>
+                <input type="tel" id="v_zelleTelefono" name="zelleTelefono" placeholder="Número de contacto" />
+              </div>
+            </div>
+          </div>
         </div>
-      </div>
 
-      <!-- Botones -->
-      <div class="submit-area">
-        <div class="btn-group">
-          <button type="submit" class="btn btn-primary">📤 Enviar por WhatsApp</button>
-          <button type="button" id="copyBtn" class="btn btn-outline">📋 Copiar mensaje</button>
+        <div class="section-break">
+          <div class="section-title"><span class="emoji">👤</span> Datos del gestor <span class="fijo-tag">(fijos)</span></div>
+          <div class="form-grid">
+            <div class="group">
+              <label for="v_gestorNombre">👤 Nombre del gestor</label>
+              <input type="text" id="v_gestorNombre" name="gestorNombre" value="Claudia Yamaye González Rodríguez" readonly />
+            </div>
+            <div class="group">
+              <label for="v_gestorTelefono">📱 Teléfono del gestor</label>
+              <input type="tel" id="v_gestorTelefono" name="gestorTelefono" value="54571729" readonly />
+            </div>
+            <div class="group full-width">
+              <label for="v_gestorTarjeta">💳 Tarjeta del gestor</label>
+              <input type="text" id="v_gestorTarjeta" name="gestorTarjeta" value="9224-0699-9677-9001" readonly />
+            </div>
+          </div>
         </div>
-        <div class="hint">
-          Los campos vacíos no se incluirán. Si los emojis no se ven bien al enviar, usa "Copiar mensaje" y pégalo directo en el chat.
-        </div>
-      </div>
-    </form>
 
-    <footer>Planilla de Venta · generada para envío directo</footer>
+        <div class="section-break">
+          <div class="group full-width" style="margin-bottom:0;">
+            <label for="v_observaciones">📝 Observaciones</label>
+            <textarea id="v_observaciones" name="observaciones" placeholder="Cualquier detalle adicional..."></textarea>
+          </div>
+        </div>
+
+        <div class="submit-area">
+          <div class="btn-group">
+            <button type="submit" class="btn btn-primary">📤 Enviar por WhatsApp</button>
+            <button type="button" class="btn btn-outline copy-btn">📋 Copiar mensaje</button>
+          </div>
+          <button type="button" class="btn btn-ghost clear-btn">🗑️ Borrar borrador de esta planilla</button>
+          <div class="hint">Los campos vacíos no se incluirán. Si estás sin conexión, usa "Copiar mensaje" y pégalo en el chat apenas vuelva la señal.</div>
+        </div>
+      </form>
+
+      <!-- ===================== FORMULARIO: PLANILLA GENERAL ===================== -->
+      <form id="formGeneral" class="planilla-form" style="display:none;">
+        <div class="form-grid">
+          <div class="group">
+            <label for="g_fecha">📅 Fecha</label>
+            <input type="date" id="g_fecha" name="fecha" />
+          </div>
+          <div class="group">
+            <label for="g_nombreCliente">👤 Nombre y Apellido del cliente</label>
+            <input type="text" id="g_nombreCliente" name="nombreCliente" placeholder="Nombre completo" />
+          </div>
+          <div class="group">
+            <label for="g_ciCliente">🪪 CI del cliente</label>
+            <input type="text" id="g_ciCliente" name="ciCliente" placeholder="11 dígitos" inputmode="numeric" maxlength="11" />
+          </div>
+          <div class="group">
+            <label for="g_telCliente">📱 Teléfono del cliente</label>
+            <input type="tel" id="g_telCliente" name="telCliente" placeholder="5xxxxxxx" />
+          </div>
+          <div class="group">
+            <label for="g_equipo">📦 Equipo a comprar</label>
+            <input type="text" id="g_equipo" name="equipo" placeholder="Ej: iPhone 13, 128GB" />
+          </div>
+          <div class="group">
+            <label for="g_garantia">🛡️ Garantía</label>
+            <input type="text" id="g_garantia" name="garantia" placeholder="Ej: 3 meses" />
+          </div>
+          <div class="group full-width">
+            <label for="g_direccion">📍 Dirección</label>
+            <input type="text" id="g_direccion" name="direccion" placeholder="Calle, número, entre calles" />
+          </div>
+          <div class="group">
+            <label for="g_cantidad">💵 Cantidad a pagar</label>
+            <input type="text" id="g_cantidad" name="cantidad" placeholder="Ej: 150 USD" />
+          </div>
+          <div class="group">
+            <label for="g_vuelto">💰 Vuelto</label>
+            <input type="text" id="g_vuelto" name="vuelto" placeholder="Ej: 20 CUP" />
+          </div>
+          <div class="group full-width">
+            <label for="g_domicilio">🛵 Costo del domicilio</label>
+            <input type="text" id="g_domicilio" name="domicilio" placeholder="Ej: 200 CUP" />
+          </div>
+          <div class="group">
+            <label for="g_pagaQuien">🙋 Paga el domicilio</label>
+            <select id="g_pagaQuien" name="pagaQuien">
+              <option value="">Seleccionar...</option>
+              <option value="Gestor">Gestor</option>
+              <option value="Cliente">Cliente</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="section-break">
+          <div class="section-title"><span class="emoji">🏦</span> En caso de Zelle — datos de quien transfiere</div>
+          <div class="zelle-box">
+            <div class="form-grid" style="gap:12px 16px;">
+              <div class="group full-width">
+                <label for="g_zelleTelefono">📱 Teléfono del que va a pagar por Zelle</label>
+                <input type="tel" id="g_zelleTelefono" name="zelleTelefono" placeholder="Número de contacto" />
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="section-break">
+          <div class="section-title"><span class="emoji">👤</span> Datos del gestor <span class="fijo-tag">(prellenados, editables)</span></div>
+          <div class="gestor-box">
+            <div class="form-grid">
+              <div class="group">
+                <label for="g_gestorNombre">👤 Nombre de Gestor</label>
+                <input type="text" id="g_gestorNombre" name="gestorNombre" value="Claudia Yamaye González Rodríguez" />
+              </div>
+              <div class="group">
+                <label for="g_gestorTelefono">📱 Teléfono del Gestor</label>
+                <input type="tel" id="g_gestorTelefono" name="gestorTelefono" value="54571729" />
+              </div>
+              <div class="group">
+                <label for="g_gestorTarjeta">💳 Tarjeta del Gestor</label>
+                <input type="text" id="g_gestorTarjeta" name="gestorTarjeta" value="9224-0699-9677-9001" />
+              </div>
+              <div class="group">
+                <label for="g_comision">🧮 Comisión</label>
+                <input type="text" id="g_comision" name="comision" placeholder="Ej: 10 USD" />
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="section-break">
+          <div class="group full-width" style="margin-bottom:0;">
+            <label for="g_observaciones">📝 Observaciones</label>
+            <textarea id="g_observaciones" name="observaciones" placeholder="Cualquier detalle adicional..."></textarea>
+          </div>
+        </div>
+
+        <div class="submit-area">
+          <div class="btn-group">
+            <button type="submit" class="btn btn-primary">📤 Enviar por WhatsApp</button>
+            <button type="button" class="btn btn-outline copy-btn">📋 Copiar mensaje</button>
+          </div>
+          <button type="button" class="btn btn-ghost clear-btn">🗑️ Borrar borrador de esta planilla</button>
+          <div class="hint">Los campos vacíos no se incluirán. Si estás sin conexión, usa "Copiar mensaje" y pégalo en el chat apenas vuelva la señal.</div>
+        </div>
+      </form>
+
+      <footer>Planilla · Mesa de Ayuda · funciona sin conexión, se guarda en este dispositivo</footer>
+    </div>
   </div>
 
   <script>
-    // ========== LÓGICA IDÉNTICA A LA ORIGINAL (mejorada solo en comentarios) ==========
     const WHATSAPP_LINK = "https://wa.me/5354571729";
+
+    // ---------- Categorías ----------
+    const CATEGORIES = {
+      venta: {
+        formId: "formVenta",
+        badge: "📦 Formulario de venta",
+        title: "Planilla de Venta",
+        sub: "Venta de equipos con opción de pago por Zelle",
+        storageKey: "planilla_draft_venta",
+        title_msg: "❗❗ PLANILLA DE VENTA ❗❗",
+        fieldDefs: [
+          { id: "fecha", label: "📅 Fecha", isDate: true },
+          { id: "nombreCliente", label: "👤 Nombre del cliente" },
+          { id: "telCliente", label: "📱 Teléfono del cliente" },
+          { id: "equipo", label: "📦 Equipo a comprar" },
+          { id: "cantidad", label: "💵 Cantidad y tipo de moneda" },
+          { id: "cambio", label: "💱 Cambio" },
+          { id: "direccion", label: "📍 Dirección" },
+          { id: "referencia", label: "📍 Punto de referencia" },
+          { id: "domicilio", label: "🛵 Costo del domicilio si es para municipio" },
+        ],
+        zelleDefs: [
+          { id: "zelleNombre", label: "👤 Nombre" },
+          { id: "zelleTelefono", label: "📱 Teléfono" },
+        ],
+        zelleTitle: "🏦 En caso de Zelle, datos de quien realizará la transferencia:",
+        gestorDefs: [
+          { id: "gestorNombre", label: "👤 Nombre del gestor" },
+          { id: "gestorTelefono", label: "📱 Teléfono del gestor" },
+          { id: "gestorTarjeta", label: "💳 Tarjeta del gestor" },
+        ],
+      },
+      general: {
+        formId: "formGeneral",
+        badge: "🧾 Formulario general",
+        title: "Planilla General",
+        sub: "Cliente, garantía, gestor y comisión",
+        storageKey: "planilla_draft_general",
+        title_msg: "❗❗ PLANILLA ❗❗",
+        fieldDefs: [
+          { id: "fecha", label: "➡️Fecha", isDate: true },
+          { id: "nombreCliente", label: "➡️Nombre y Apellido del cliente" },
+          { id: "ciCliente", label: "➡️CI del cliente" },
+          { id: "telCliente", label: "➡️Teléfono del cliente" },
+          { id: "equipo", label: "➡️Equipo a comprar" },
+          { id: "direccion", label: "➡️Dirección" },
+          { id: "garantia", label: "➡️Garantía" },
+          { id: "cantidad", label: "➡️Cantidad a pagar" },
+          { id: "vuelto", label: "➡️Vuelto" },
+          { id: "domicilio", label: "➡️Costo del domicilio" },
+          { id: "pagaQuien", label: "➡️Paga el gestor o el cliente" },
+        ],
+        zelleDefs: [
+          { id: "zelleTelefono", label: "➡️Teléfono del q va a pagar por Zelle" },
+        ],
+        zelleTitle: "🏦 En caso de Zelle:",
+        gestorDefs: [
+          { id: "gestorNombre", label: "➡️Nombre de Gestor" },
+          { id: "gestorTelefono", label: "➡️Teléfono del Gestor" },
+          { id: "gestorTarjeta", label: "➡️Tarjeta del Gestor" },
+          { id: "comision", label: "➡️Comisión" },
+        ],
+      },
+    };
+
+    let currentCategory = localStorage.getItem("planilla_categoria") || "venta";
 
     function isMobileDevice() {
       return /Android|iPhone|iPad|iPod/i.test(navigator.userAgent);
@@ -503,35 +524,9 @@
       const match = WHATSAPP_LINK.match(/wa\.me\/(\d{7,15})/);
       if (!match) return null;
       const phone = match[1];
-
-      if (isMobileDevice()) {
-        return `whatsapp://send?phone=${phone}&text=${encoded}`;
-      }
+      if (isMobileDevice()) return `whatsapp://send?phone=${phone}&text=${encoded}`;
       return `https://web.whatsapp.com/send?phone=${phone}&text=${encoded}`;
     }
-
-    const fieldDefs = [
-      { id: "fecha", label: "📅 Fecha", isDate: true },
-      { id: "nombreCliente", label: "👤 Nombre del cliente" },
-      { id: "telCliente", label: "📱 Teléfono del cliente" },
-      { id: "equipo", label: "📦 Equipo a comprar" },
-      { id: "cantidad", label: "💵 Cantidad y tipo de moneda" },
-      { id: "cambio", label: "💱 Cambio" },
-      { id: "direccion", label: "📍 Dirección" },
-      { id: "referencia", label: "📍 Punto de referencia" },
-      { id: "domicilio", label: "🛵 Costo del domicilio si es para municipio" },
-    ];
-
-    const zelleDefs = [
-      { id: "zelleNombre", label: "👤 Nombre" },
-      { id: "zelleTelefono", label: "📱 Teléfono" },
-    ];
-
-    const gestorDefs = [
-      { id: "gestorNombre", label: "👤 Nombre del gestor" },
-      { id: "gestorTelefono", label: "📱 Teléfono del gestor" },
-      { id: "gestorTarjeta", label: "💳 Tarjeta del gestor" },
-    ];
 
     function formatFecha(value) {
       if (!value) return "";
@@ -539,12 +534,12 @@
       return `${d}/${m}/${y}`;
     }
 
-    function buildMessage(data) {
+    function buildMessage(cat, data) {
       let lines = [];
-      lines.push("❗❗ PLANILLA DE VENTA ❗❗");
+      lines.push(cat.title_msg);
       lines.push("");
 
-      fieldDefs.forEach(f => {
+      cat.fieldDefs.forEach(f => {
         let val = data[f.id];
         if (val && val.trim() !== "") {
           if (f.isDate) val = formatFecha(val);
@@ -552,26 +547,22 @@
         }
       });
 
-      const zelleHasData = zelleDefs.some(f => data[f.id] && data[f.id].trim() !== "");
+      const zelleHasData = cat.zelleDefs.some(f => data[f.id] && data[f.id].trim() !== "");
       if (zelleHasData) {
         lines.push("");
-        lines.push("🏦 En caso de Zelle, datos de quien realizará la transferencia:");
-        zelleDefs.forEach(f => {
+        lines.push(cat.zelleTitle);
+        cat.zelleDefs.forEach(f => {
           const val = data[f.id];
-          if (val && val.trim() !== "") {
-            lines.push(`${f.label}: ${val}`);
-          }
+          if (val && val.trim() !== "") lines.push(`${f.label}: ${val}`);
         });
       }
 
-      const gestorHasData = gestorDefs.some(f => data[f.id] && data[f.id].trim() !== "");
+      const gestorHasData = cat.gestorDefs.some(f => data[f.id] && data[f.id].trim() !== "");
       if (gestorHasData) {
         lines.push("");
-        gestorDefs.forEach(f => {
+        cat.gestorDefs.forEach(f => {
           const val = data[f.id];
-          if (val && val.trim() !== "") {
-            lines.push(`${f.label}: ${val}`);
-          }
+          if (val && val.trim() !== "") lines.push(`${f.label}: ${val}`);
         });
       }
 
@@ -583,8 +574,8 @@
       return lines.join("\n");
     }
 
-    function getFormData() {
-      const formData = new FormData(document.getElementById("planillaForm"));
+    function getFormData(formEl) {
+      const formData = new FormData(formEl);
       const data = {};
       formData.forEach((value, key) => { data[key] = value; });
       return data;
@@ -614,21 +605,112 @@
       });
     }
 
-    // Submit
-    document.getElementById("planillaForm").addEventListener("submit", function(e) {
-      e.preventDefault();
+    // ---------- Autoguardado (funciona offline: usa localStorage) ----------
+    let saveTimer = null;
+    function scheduleSave(formEl, storageKey) {
+      clearTimeout(saveTimer);
+      saveTimer = setTimeout(() => {
+        const data = getFormData(formEl);
+        localStorage.setItem(storageKey, JSON.stringify(data));
+        const now = new Date();
+        const hh = String(now.getHours()).padStart(2, "0");
+        const mm = String(now.getMinutes()).padStart(2, "0");
+        document.getElementById("saveIndicator").textContent = `Borrador guardado · ${hh}:${mm}`;
+      }, 400);
+    }
 
-      const data = getFormData();
-      const message = buildMessage(data);
+    function restoreDraft(formEl, storageKey) {
+      const raw = localStorage.getItem(storageKey);
+      if (!raw) return;
+      try {
+        const data = JSON.parse(raw);
+        Object.keys(data).forEach(key => {
+          const field = formEl.elements.namedItem(key);
+          if (field && data[key]) field.value = data[key];
+        });
+      } catch (e) { /* borrador corrupto, se ignora */ }
+    }
+
+    function clearDraft(formEl, storageKey) {
+      if (!confirm("¿Borrar todos los datos escritos en esta planilla?")) return;
+      localStorage.removeItem(storageKey);
+      formEl.reset();
+      // Restaurar valores fijos por defecto de gestor si aplica
+      restoreDefaults(formEl);
+      document.getElementById("saveIndicator").textContent = "Borrador borrado";
+    }
+
+    function restoreDefaults(formEl) {
+      const defaults = {
+        gestorNombre: "Claudia Yamaye González Rodríguez",
+        gestorTelefono: "54571729",
+        gestorTarjeta: "9224-0699-9677-9001",
+      };
+      Object.keys(defaults).forEach(key => {
+        const field = formEl.elements.namedItem(key);
+        if (field) field.value = defaults[key];
+      });
+    }
+
+    // ---------- Selector de categoría ----------
+    function switchCategory(key) {
+      currentCategory = key;
+      localStorage.setItem("planilla_categoria", key);
+      const cat = CATEGORIES[key];
+
+      document.getElementById("btnVenta").classList.toggle("active", key === "venta");
+      document.getElementById("btnGeneral").classList.toggle("active", key === "general");
+      document.getElementById("formVenta").style.display = key === "venta" ? "block" : "none";
+      document.getElementById("formGeneral").style.display = key === "general" ? "block" : "none";
+
+      document.getElementById("headerBadge").textContent = cat.badge;
+      document.getElementById("headerTitle").textContent = cat.title;
+      document.getElementById("headerSub").textContent = cat.sub;
+
+      const formEl = document.getElementById(cat.formId);
+      restoreDraft(formEl, cat.storageKey);
+      updateSaveIndicatorFromStorage(cat.storageKey);
+    }
+
+    function updateSaveIndicatorFromStorage(storageKey) {
+      const raw = localStorage.getItem(storageKey);
+      document.getElementById("saveIndicator").textContent = raw
+        ? "Hay un borrador guardado en este dispositivo"
+        : "Sin borrador guardado todavía";
+    }
+
+    // ---------- Estado de conexión ----------
+    function updateStatus() {
+      const bar = document.getElementById("statusBar");
+      const text = document.getElementById("statusText");
+      if (navigator.onLine) {
+        bar.classList.remove("offline");
+        text.textContent = "En línea";
+      } else {
+        bar.classList.add("offline");
+        text.textContent = "Sin conexión — los datos se guardan en este dispositivo";
+      }
+    }
+    window.addEventListener("online", updateStatus);
+    window.addEventListener("offline", updateStatus);
+
+    // ---------- Envío / copiado ----------
+    function handleSubmit(e, cat) {
+      e.preventDefault();
+      const formEl = document.getElementById(cat.formId);
+      const data = getFormData(formEl);
+      const message = buildMessage(cat, data);
       const directUrl = buildWhatsappUrl(message);
+
+      if (!navigator.onLine) {
+        copyToClipboard(message);
+        alert("Estás sin conexión. El mensaje fue copiado; WhatsApp intentará abrir y lo podrás pegar y enviar apenas vuelva la señal.");
+      }
 
       if (directUrl) {
         if (isMobileDevice()) {
-          const fallbackUrl =
-            `https://api.whatsapp.com/send?phone=${WHATSAPP_LINK.match(/wa\.me\/(\d{7,15})/)[1]}&text=${encodeURIComponent(message)}`;
-          const fallbackTimer = setTimeout(() => {
-            window.location.href = fallbackUrl;
-          }, 1500);
+          const fallbackUrl = `https://api.whatsapp.com/send?phone=${WHATSAPP_LINK.match(/wa\.me\/(\d{7,15})/)[1]}&text=${encodeURIComponent(message)}`;
+          const fallbackTimer = setTimeout(() => { window.location.href = fallbackUrl; }, 1500);
           window.addEventListener("blur", () => clearTimeout(fallbackTimer), { once: true });
           window.location.href = directUrl;
         } else {
@@ -639,24 +721,47 @@
         alert("El mensaje fue copiado. Se abrirá WhatsApp: pega el mensaje y envíalo.");
         window.open(WHATSAPP_LINK, "_blank");
       }
-    });
+    }
 
-    // Botón copiar
-    document.getElementById("copyBtn").addEventListener("click", function() {
-      const data = getFormData();
-      const message = buildMessage(data);
-      const btn = this;
+    function handleCopy(btn, cat) {
+      const formEl = document.getElementById(cat.formId);
+      const data = getFormData(formEl);
+      const message = buildMessage(cat, data);
       copyToClipboard(message)
         .then(() => {
+          const original = btn.innerHTML;
           btn.textContent = "✅ ¡Copiado!";
-          setTimeout(() => { btn.innerHTML = "📋 Copiar mensaje"; }, 1800);
+          setTimeout(() => { btn.innerHTML = original; }, 1800);
         })
         .catch(() => {
+          const original = btn.innerHTML;
           btn.textContent = "❌ Error";
-          setTimeout(() => { btn.innerHTML = "📋 Copiar mensaje"; }, 1800);
+          setTimeout(() => { btn.innerHTML = original; }, 1800);
         });
-    });
-  </script>
+    }
 
+    // ---------- Inicialización ----------
+    Object.keys(CATEGORIES).forEach(key => {
+      const cat = CATEGORIES[key];
+      const formEl = document.getElementById(cat.formId);
+
+      formEl.addEventListener("submit", (e) => handleSubmit(e, cat));
+      formEl.addEventListener("input", () => scheduleSave(formEl, cat.storageKey));
+      formEl.querySelector(".copy-btn").addEventListener("click", function() { handleCopy(this, cat); });
+      formEl.querySelector(".clear-btn").addEventListener("click", () => clearDraft(formEl, cat.storageKey));
+
+      restoreDraft(formEl, cat.storageKey);
+    });
+
+    switchCategory(currentCategory);
+    updateStatus();
+
+    // ---------- Service Worker (permite abrir la planilla sin conexión) ----------
+    if ("serviceWorker" in navigator) {
+      window.addEventListener("load", () => {
+        navigator.serviceWorker.register("sw.js").catch(() => { /* si falla, la app sigue funcionando en línea */ });
+      });
+    }
+  </script>
 </body>
 </html>
