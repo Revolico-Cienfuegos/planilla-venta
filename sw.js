@@ -1,5 +1,5 @@
 // Service Worker de la Planilla — permite abrir y llenar el formulario sin conexión.
-const CACHE_NAME = "planilla-cache-v1";
+const CACHE_NAME = "planilla-cache-v2";
 const APP_SHELL = [
   "./",
   "./index.html",
