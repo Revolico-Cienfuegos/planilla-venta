@@ -360,7 +360,7 @@
         </div>
         <div class="group">
           <label for="v_cambio">💱 Cambio</label>
-          <input type="text" id="v_cambio" name="cambio" placeholder="Ej: 1 USD = 380 CUP" />
+          <input type="text" id="v_cambio" name="cambio" placeholder="Ej: 5 USD" />
         </div>
         <div class="group full-width">
           <label for="v_direccion">📍 Dirección</label>
@@ -543,8 +543,8 @@
 <div class="modal-overlay" id="modalAuto">
   <div class="modal-box">
     <h2>📥 Pegar mensaje del cliente</h2>
-    <p>Pega aquí el texto que te envió por WhatsApp. La app extraerá automáticamente los datos (nombre, teléfono, equipo, dirección, etc.) y los colocará en la planilla activa.</p>
-    <textarea id="modalTextarea" placeholder="Ejemplo:&#10;Nombre: Juan Pérez&#10;Teléfono: 51234567&#10;Equipo: iPhone 13 128GB&#10;Cantidad: 150 USD&#10;Dirección: Calle 1 #2 entre 3 y 4"></textarea>
+    <p>Pega aquí el texto <strong>tal cual</strong> te lo enviaron. La app extraerá automáticamente: nombre, teléfono, dirección, referencia, equipo, cantidad (producto + monto) y cambio (vuelto).</p>
+    <textarea id="modalTextarea" placeholder="Ejemplo:&#10;Pepe calle 47 entre 68 y 70 cerca de la panaderia la paloma lampara recargable 1 lampara 55 usd cambio 5 usd 54354612"></textarea>
     <div class="modal-actions">
       <button type="button" class="btn btn-secondary" id="modalCancel">Cancelar</button>
       <button type="button" class="btn btn-success" id="modalProcess">✅ Procesar</button>
@@ -757,27 +757,23 @@
     });
   }
 
-  // ---------- Cambio de categoría (mejorado) ----------
+  // ---------- Cambio de categoría ----------
   function switchCategory(key) {
     currentCategory = key;
     localStorage.setItem("planilla_categoria", key);
     const cat = CATEGORIES[key];
 
-    // Actualizar clases de los botones
     document.querySelectorAll('.cat-btn').forEach(btn => {
       btn.classList.toggle('active', btn.dataset.category === key);
     });
 
-    // Mostrar/ocultar formularios
     document.getElementById("formVenta").style.display = key === "venta" ? "block" : "none";
     document.getElementById("formGeneral").style.display = key === "general" ? "block" : "none";
 
-    // Actualizar encabezados
     document.getElementById("headerBadge").textContent = cat.badge;
     document.getElementById("headerTitle").textContent = cat.title;
     document.getElementById("headerSub").textContent = cat.sub;
 
-    // Restaurar borrador de la categoría activa
     const formEl = document.getElementById(cat.formId);
     restoreDraft(formEl, cat.storageKey);
     updateSaveIndicatorFromStorage(cat.storageKey);
@@ -851,76 +847,133 @@
       });
   }
 
-  // ---------- AUTO-LLENAR ----------
-  function openAutoModal() {
-    document.getElementById("modalAuto").classList.add("open");
-    document.getElementById("modalTextarea").value = "";
-    document.getElementById("modalTextarea").focus();
-  }
-
-  function closeAutoModal() {
-    document.getElementById("modalAuto").classList.remove("open");
-  }
-
-  function parseMessage(text) {
+  // ---------- AUTO-LLENAR AVANZADO (sin etiquetas) ----------
+  function parseMessageNatural(text) {
     const result = {};
-    const synonyms = {
-      nombre: ["nombre", "cliente", "nombre completo", "nombre y apellido", "nombre del cliente"],
-      telefono: ["teléfono", "tel", "celular", "cel", "número", "contacto"],
-      equipo: ["equipo", "producto", "artículo", "modelo"],
-      cantidad: ["cantidad", "precio", "monto", "total", "importe"],
-      cambio: ["cambio", "tasa", "tc"],
-      direccion: ["dirección", "dir", "domicilio", "calle", "ubicación"],
-      referencia: ["referencia", "punto de referencia", "señas"],
-      domicilio: ["domicilio", "costo envío", "envío", "flete", "delivery"],
-      garantia: ["garantía", "garantia", "meses de garantía"],
-      ci: ["ci", "cédula", "cedula", "identificación", "carnet"],
-      vuelto: ["vuelto", "cambio", "devuelta"],
-      pagaquien: ["paga", "paga el", "quien paga"],
-      comision: ["comisión", "comision", "comi"],
-      observaciones: ["observaciones", "obs", "notas", "adicional"],
-      zellenombre: ["zelle nombre", "nombre zelle", "titular zelle"],
-      zelletelefono: ["zelle teléfono", "teléfono zelle", "zelle celular"],
-    };
 
-    const lines = text.split(/\n/);
-    for (const line of lines) {
-      const trimmed = line.trim();
-      const colonIdx = trimmed.indexOf(":");
-      if (colonIdx !== -1) {
-        const key = trimmed.substring(0, colonIdx).trim();
-        const value = trimmed.substring(colonIdx + 1).trim();
-        if (value) {
-          let found = false;
-          for (const [field, aliases] of Object.entries(synonyms)) {
-            if (aliases.some(alias => key.toLowerCase().includes(alias.toLowerCase()))) {
-              result[field] = value;
-              found = true;
-              break;
-            }
+    // Limpiar: quitar saltos de línea y espacios extra
+    let clean = text.replace(/\s+/g, ' ').trim();
+
+    // 1. Extraer CAMBIO (vuelto) primero
+    const cambioRegex = /(?:cambio|vuelto|devuelta|llevar\s+cambio)\s+([\d.]+)\s*(?:USD|CUP|pesos?|usd|cup|Pesos?|MN|mn)?/i;
+    const cambioMatch = clean.match(cambioRegex);
+    if (cambioMatch) {
+      result.cambio = cambioMatch[0].trim();
+      // Eliminar del texto para no interferir
+      clean = clean.replace(cambioMatch[0], '').replace(/\s+/g, ' ').trim();
+    }
+
+    // 2. Extraer teléfono (8 dígitos)
+    const phoneRegex = /\b(\d{3}[\s\-]?\d{2}[\s\-]?\d{3}|\d{8})\b/;
+    const phoneMatch = clean.match(phoneRegex);
+    if (phoneMatch) {
+      let phone = phoneMatch[1].replace(/[\s\-]/g, '');
+      if (phone.length === 8) {
+        result.telefono = phone;
+        clean = clean.replace(phoneMatch[0], '').replace(/\s+/g, ' ').trim();
+      }
+    }
+
+    // 3. Extraer cantidad de producto y monto
+    // Buscar monto (número + moneda)
+    let monto = '';
+    const montoRegex = /\b(\d+(?:\.\d{1,2})?)\s*(?:USD|CUP|pesos?|usd|cup|Pesos?|MN|mn)\b/i;
+    const montoMatch = clean.match(montoRegex);
+    if (montoMatch) {
+      monto = montoMatch[0].trim();
+      clean = clean.replace(montoMatch[0], '').replace(/\s+/g, ' ').trim();
+    } else {
+      // Buscar solo número (sin moneda) si está seguido de "usd" o similar (ya cubierto)
+      const numMoneda = /\b(\d+(?:\.\d{1,2})?)\s*(usd|cup|pesos|mn)\b/i;
+      const nm = clean.match(numMoneda);
+      if (nm) {
+        monto = nm[0].trim();
+        clean = clean.replace(nm[0], '').replace(/\s+/g, ' ').trim();
+      }
+    }
+
+    // Buscar cantidad de productos: número + palabra (que no sea moneda)
+    let producto = '';
+    const prodRegex = /\b(\d+)\s+([a-zA-ZÁÉÍÓÚáéíóúñÑ]+(?:[\s\-][a-zA-ZÁÉÍÓÚáéíóúñÑ]+)*)\b/;
+    const prodMatch = clean.match(prodRegex);
+    if (prodMatch) {
+      // Verificar que la segunda palabra no sea una moneda o palabra irrelevante
+      const second = prodMatch[2].toLowerCase();
+      if (!/usd|cup|pesos|mn|calle|avenida|entre|referencia|cerca|junto|al lado|frente|detrás/i.test(second)) {
+        producto = prodMatch[0].trim();
+        clean = clean.replace(prodMatch[0], '').replace(/\s+/g, ' ').trim();
+      }
+    }
+
+    // Construir campo cantidad: si hay producto y monto, unirlos; si no, solo monto
+    if (producto && monto) {
+      result.cantidad = `${producto} - ${monto}`;
+    } else if (producto) {
+      result.cantidad = producto;
+    } else if (monto) {
+      result.cantidad = monto;
+    }
+
+    // 4. Extraer dirección
+    const dirRegex = /(?:calle|avenida|av\.?|callejón|pasaje|carretera|#|entre|esquina|y\s+(?:calle|avenida))\s+[^,.]{5,}/i;
+    const dirMatch = clean.match(dirRegex);
+    if (dirMatch) {
+      result.direccion = dirMatch[0].trim();
+      clean = clean.replace(dirMatch[0], '').replace(/\s+/g, ' ').trim();
+    }
+
+    // 5. Extraer referencia
+    const refRegex = /(?:cerca\s+de|junto\s+a|al\s+lado\s+de|referencia|frente\s+a|detrás\s+de|entre\s+[^,]+?y\s+[^,]+?)\s+[^,.]{3,}/i;
+    const refMatch = clean.match(refRegex);
+    if (refMatch) {
+      result.referencia = refMatch[0].trim();
+      clean = clean.replace(refMatch[0], '').replace(/\s+/g, ' ').trim();
+    }
+
+    // 6. Extraer equipo y nombre del resto
+    const tokens = clean.split(/\s+/).filter(t => t.length > 1);
+    let nombreCandidato = '';
+    let equipoCandidato = [];
+    let foundNombre = false;
+    for (let i = 0; i < tokens.length; i++) {
+      const t = tokens[i];
+      if (/^[A-ZÁÉÍÓÚÑ]/.test(t) && !/calle|avenida|entre|referencia|junto|cerca|al lado|frente|detrás|usd|cup|pesos|mn/i.test(t)) {
+        if (!foundNombre) {
+          nombreCandidato += t + ' ';
+          if (i + 1 < tokens.length && tokens[i+1].length < 10 && /^[A-ZÁÉÍÓÚÑ]/.test(tokens[i+1])) {
+            nombreCandidato += tokens[i+1] + ' ';
+            i++;
           }
-          if (!found) { /* no hacer nada */ }
+          foundNombre = true;
+        } else {
+          equipoCandidato.push(t);
+        }
+      } else {
+        equipoCandidato.push(t);
+      }
+    }
+    if (nombreCandidato.trim()) {
+      result.nombre = nombreCandidato.trim();
+    }
+    if (equipoCandidato.length > 0) {
+      result.equipo = equipoCandidato.join(' ');
+    } else {
+      if (clean.trim() && clean.trim() !== (result.nombre || '').trim()) {
+        result.equipo = clean.trim();
+      }
+    }
+
+    // Si no se encontró nombre, asignar la primera palabra que no sea número
+    if (!result.nombre && text) {
+      const words = text.split(/\s+/);
+      for (const w of words) {
+        if (w.length > 1 && !/^\d+$/.test(w) && !/calle|avenida|entre|referencia|cerca|junto|usd|cup|pesos|mn/i.test(w)) {
+          result.nombre = w;
+          break;
         }
       }
     }
 
-    // Fallback: buscar sin dos puntos
-    if (Object.keys(result).length === 0) {
-      const patterns = [
-        { regex: /(?:^|\s)nombre\s+([A-Za-zÁÉÍÓÚáéíóúñÑ\s]{3,})/i, field: "nombre" },
-        { regex: /(?:^|\s)tel(?:éfono)?\s+([\d\s\-]{6,})/i, field: "telefono" },
-        { regex: /(?:^|\s)equipo\s+([^\n]{3,})/i, field: "equipo" },
-        { regex: /(?:^|\s)cantidad\s+([^\n]{2,})/i, field: "cantidad" },
-        { regex: /(?:^|\s)cambio\s+([^\n]{2,})/i, field: "cambio" },
-        { regex: /(?:^|\s)direcci(?:ón|on)\s+([^\n]{5,})/i, field: "direccion" },
-      ];
-      for (const p of patterns) {
-        const match = text.match(p.regex);
-        if (match && match[1]) {
-          result[p.field] = match[1].trim();
-        }
-      }
-    }
     return result;
   }
 
@@ -933,13 +986,13 @@
       telefono: "telCliente",
       equipo: "equipo",
       cantidad: "cantidad",
-      cambio: "cambio",
+      cambio: "cambio",      // para venta
+      vuelto: "vuelto",      // para general
       direccion: "direccion",
       referencia: "referencia",
       domicilio: "domicilio",
       garantia: "garantia",
       ci: "ciCliente",
-      vuelto: "vuelto",
       pagaquien: "pagaQuien",
       comision: "comision",
       observaciones: "observaciones",
@@ -949,7 +1002,11 @@
 
     let filledCount = 0;
     for (const [key, value] of Object.entries(parsed)) {
-      const fieldId = fieldMap[key];
+      let fieldId = fieldMap[key];
+      // Si es 'cambio' y estamos en planilla general, usar 'vuelto'
+      if (key === 'cambio' && currentCategory === 'general') {
+        fieldId = 'vuelto';
+      }
       if (fieldId) {
         const input = formEl.elements.namedItem(fieldId);
         if (input && !input.readOnly) {
@@ -964,8 +1021,19 @@
       document.getElementById("saveIndicator").textContent = `✅ Se rellenaron ${filledCount} campos automáticamente`;
       setTimeout(() => updateSaveIndicatorFromStorage(cat.storageKey), 3000);
     } else {
-      alert("No se pudo extraer ningún dato. Asegúrate de que el mensaje tenga etiquetas como 'Nombre:', 'Teléfono:', etc.");
+      alert("No se pudo extraer ningún dato. Asegúrate de que el mensaje contenga información reconocible (nombre, teléfono, dirección, etc.).");
     }
+  }
+
+  // ---------- Modal ----------
+  function openAutoModal() {
+    document.getElementById("modalAuto").classList.add("open");
+    document.getElementById("modalTextarea").value = "";
+    document.getElementById("modalTextarea").focus();
+  }
+
+  function closeAutoModal() {
+    document.getElementById("modalAuto").classList.remove("open");
   }
 
   function processAutoFill() {
@@ -975,14 +1043,14 @@
       alert("Por favor, pega el mensaje del cliente.");
       return;
     }
-    const parsed = parseMessage(text);
+    const parsed = parseMessageNatural(text);
     applyParsedData(parsed);
     closeAutoModal();
   }
 
   // ---------- Inicialización ----------
   document.addEventListener("DOMContentLoaded", function() {
-    // Eventos de los botones de categoría
+    // Eventos de categoría
     document.querySelectorAll('.cat-btn').forEach(btn => {
       btn.addEventListener('click', function() {
         const category = this.dataset.category;
@@ -1011,7 +1079,7 @@
       if (e.target === this) closeAutoModal();
     });
 
-    // Iniciar con la categoría guardada
+    // Iniciar
     switchCategory(currentCategory);
     updateStatus();
 
