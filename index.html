@@ -180,8 +180,6 @@
     .btn-ghost:hover { color: var(--danger); }
     .btn-auto { background: #8b5cf6; box-shadow: 0 4px 8px -4px rgba(139,92,246,0.3); }
     .btn-auto:hover { background: #7c3aed; }
-    .btn-add { background: #0ea5e9; box-shadow: 0 4px 8px -4px rgba(14,165,233,0.3); }
-    .btn-add:hover { background: #0284c7; }
 
     .hint { font-size: 12px; color: var(--text-muted); text-align: center; line-height: 1.6; margin-top: 4px; }
 
@@ -210,7 +208,7 @@
       border-radius: var(--radius);
       max-width: 600px;
       width: 100%;
-      max-height: 90vh;
+      max-height: 85vh;
       padding: 28px 24px 24px;
       box-shadow: 0 40px 80px rgba(0,0,0,0.3);
       display: flex;
@@ -232,12 +230,12 @@
     .modal-box p {
       font-size: 14px;
       color: var(--text-secondary);
-      margin-bottom: 12px;
+      margin-bottom: 16px;
     }
     .modal-box textarea {
       flex: 1;
-      min-height: 120px;
-      max-height: 35vh;
+      min-height: 180px;
+      max-height: 40vh;
       padding: 14px;
       font-size: 14px;
       border: 1px solid var(--border-light);
@@ -278,42 +276,6 @@
     .modal-actions .btn-success:hover {
       background: #15803d;
     }
-    .modal-actions .btn-add-modal {
-      background: #0ea5e9;
-      box-shadow: 0 4px 8px -4px rgba(14,165,233,0.3);
-    }
-    .modal-actions .btn-add-modal:hover {
-      background: #0284c7;
-    }
-
-    /* mini input para agregar mensaje */
-    .add-msg-area {
-      display: flex;
-      gap: 8px;
-      margin-bottom: 10px;
-      flex-wrap: wrap;
-    }
-    .add-msg-area input {
-      flex: 1;
-      min-width: 140px;
-      padding: 10px 12px;
-      border: 1px solid var(--border-light);
-      border-radius: var(--radius-sm);
-      font-size: 14px;
-      font-family: var(--font);
-      background: #fafbfc;
-    }
-    .add-msg-area input:focus {
-      border-color: var(--border-focus);
-      box-shadow: 0 0 0 3px rgba(37,99,235,0.1);
-      background: #fff;
-    }
-    .add-msg-area .btn {
-      flex: none;
-      min-width: auto;
-      padding: 10px 16px;
-      font-size: 14px;
-    }
 
     @media (max-width: 600px) {
       header { flex-direction: column; align-items: flex-start; padding: 22px 20px 16px; }
@@ -327,9 +289,7 @@
       footer { padding: 12px 20px 16px; }
       .category-picker { grid-template-columns: 1fr; }
       .modal-box { padding: 20px 16px 16px; }
-      .modal-box textarea { min-height: 100px; }
-      .add-msg-area { flex-direction: column; }
-      .add-msg-area input { width: 100%; }
+      .modal-box textarea { min-height: 140px; }
     }
     @media (max-width: 400px) {
       body { padding: 12px 8px 40px; }
@@ -576,19 +536,12 @@
   </div>
 </div>
 
-<!-- MODAL AUTO-LLENAR (con acumulador) -->
+<!-- MODAL AUTO-LLENAR -->
 <div class="modal-overlay" id="modalAuto">
   <div class="modal-box">
     <h2>📥 Pegar mensaje del cliente</h2>
-    <p>Pega aquí el texto <strong>tal cual</strong> te lo enviaron. También puedes ir agregando mensajes uno a uno usando el botón <strong>"➕ Agregar"</strong>.</p>
-
-    <!-- Área para agregar mensajes uno a uno -->
-    <div class="add-msg-area">
-      <input type="text" id="msgInput" placeholder="Pega un mensaje aquí y pulsa Agregar" />
-      <button type="button" class="btn btn-add-modal" id="addMsgBtn">➕ Agregar</button>
-    </div>
-
-    <textarea id="modalTextarea" placeholder="El texto completo aparecerá aquí..."></textarea>
+    <p>Pega aquí el texto <strong>tal cual</strong> te lo enviaron. Funciona con comas o sin comas.</p>
+    <textarea id="modalTextarea" placeholder="Ejemplo con comas:&#10;pepe, 54354612, lampara 55 usd, 1 lampara usd, calle 47 entre 68 y 70, cerca de la panaderia la paloma"></textarea>
     <div class="modal-actions">
       <button type="button" class="btn btn-secondary" id="modalCancel">Cancelar</button>
       <button type="button" class="btn btn-success" id="modalProcess">✅ Procesar</button>
@@ -891,106 +844,125 @@
       });
   }
 
-  // ---------- AUTO-LLENAR AVANZADO (con y sin comas, y acumulador) ----------
+  // ---------- AUTO-LLENAR MEJORADO (con y sin comas) ----------
   function parseMessageNatural(text) {
-    // Limpiar y normalizar
     let clean = text.replace(/\s+/g, ' ').trim();
-
-    // Detectar si hay comas (separador principal)
     const hasCommas = clean.includes(',');
 
     if (hasCommas) {
-      // Dividir por comas y procesar cada parte
+      // Dividir por comas y limpiar
       const parts = clean.split(',').map(p => p.trim()).filter(p => p.length > 0);
       const result = {};
 
-      // Recorrer partes y asignar según prioridad
-      let nombre = '';
-      let telefono = '';
-      let cantidad = '';
-      let cambio = '';
-      let direccion = '';
-      let referencia = '';
-      let equipo = '';
-      let observaciones = '';
+      // Identificadores de campos
+      const phoneRegex = /\b(\d{3}[\s\-]?\d{2}[\s\-]?\d{3}|\d{8})\b/;
+      const cambioRegex = /(?:cambio|vuelto|devuelta|llevar\s+cambio)\s+([\d.]+)\s*(?:USD|CUP|pesos?|usd|cup|Pesos?|MN|mn)?/i;
+      const dirRegex = /(?:calle|avenida|av\.?|callejón|pasaje|carretera|#|entre|esquina|y\s+(?:calle|avenida))\s+[^,.]{5,}/i;
+      const refRegex = /(?:cerca\s+de|junto\s+a|al\s+lado\s+de|referencia|frente\s+a|detrás\s+de|entre\s+[^,]+?y\s+[^,]+?)\s+[^,.]{3,}/i;
+      const montoRegex = /\b(\d+(?:\.\d{1,2})?)\s*(?:USD|CUP|pesos?|usd|cup|Pesos?|MN|mn)\b/i;
+      const prodRegex = /\b(\d+)\s+([a-zA-ZÁÉÍÓÚáéíóúñÑ]+(?:[\s\-][a-zA-ZÁÉÍÓÚáéíóúñÑ]+)*)\b/;
 
-      // Primero pasar por todas las partes para extraer teléfono y cambio
-      const remainingParts = [];
+      // Variables temporales
+      let nombre = '', telefono = '', cantidad = '', cambio = '', direccion = '', referencia = '', equipo = '';
+      let montoEncontrado = '', productoEncontrado = '';
+
+      // Primera pasada: extraer teléfono, cambio, dirección, referencia (exactos)
       for (let part of parts) {
         // Teléfono
-        const phoneMatch = part.match(/\b(\d{3}[\s\-]?\d{2}[\s\-]?\d{3}|\d{8})\b/);
-        if (phoneMatch) {
+        const phoneMatch = part.match(phoneRegex);
+        if (phoneMatch && !telefono) {
           let phone = phoneMatch[1].replace(/[\s\-]/g, '');
           if (phone.length === 8) {
             telefono = phone;
-            continue; // no guardamos esta parte
-          }
-        }
-
-        // Cambio / vuelto
-        const cambioMatch = part.match(/(?:cambio|vuelto|devuelta|llevar\s+cambio)\s+([\d.]+)\s*(?:USD|CUP|pesos?|usd|cup|Pesos?|MN|mn)?/i);
-        if (cambioMatch) {
-          cambio = cambioMatch[0].trim();
-          continue;
-        }
-
-        // Si no es teléfono ni cambio, guardamos para procesar después
-        remainingParts.push(part);
-      }
-
-      // Ahora procesar las partes restantes
-      for (let part of remainingParts) {
-        // Intentar identificar cantidad (número + moneda o producto)
-        const montoMatch = part.match(/\b(\d+(?:\.\d{1,2})?)\s*(?:USD|CUP|pesos?|usd|cup|Pesos?|MN|mn)\b/i);
-        if (montoMatch && !cantidad) {
-          cantidad = montoMatch[0].trim();
-          // Quitar esa parte para no usarla después
-          part = part.replace(montoMatch[0], '').trim();
-          if (!part) continue;
-        }
-
-        // Intentar identificar producto: número + palabra (que no sea moneda)
-        const prodMatch = part.match(/\b(\d+)\s+([a-zA-ZÁÉÍÓÚáéíóúñÑ]+(?:[\s\-][a-zA-ZÁÉÍÓÚáéíóúñÑ]+)*)\b/);
-        if (prodMatch && !cantidad) {
-          const second = prodMatch[2].toLowerCase();
-          if (!/usd|cup|pesos|mn|calle|avenida|entre|referencia|cerca|junto|al lado|frente|detrás/i.test(second)) {
-            cantidad = prodMatch[0].trim();
-            part = part.replace(prodMatch[0], '').trim();
-            if (!part) continue;
-          }
-        }
-
-        // Dirección
-        const dirMatch = part.match(/(?:calle|avenida|av\.?|callejón|pasaje|carretera|#|entre|esquina|y\s+(?:calle|avenida))\s+[^,.]{5,}/i);
-        if (dirMatch && !direccion) {
-          direccion = dirMatch[0].trim();
-          part = part.replace(dirMatch[0], '').trim();
-          if (!part) continue;
-        }
-
-        // Referencia
-        const refMatch = part.match(/(?:cerca\s+de|junto\s+a|al\s+lado\s+de|referencia|frente\s+a|detrás\s+de|entre\s+[^,]+?y\s+[^,]+?)\s+[^,.]{3,}/i);
-        if (refMatch && !referencia) {
-          referencia = refMatch[0].trim();
-          part = part.replace(refMatch[0], '').trim();
-          if (!part) continue;
-        }
-
-        // Si la parte restante parece un nombre (mayúscula, no contiene números raros)
-        if (part.length > 1 && !nombre) {
-          // Si tiene mayúscula y no es una palabra muy común
-          if (/^[A-ZÁÉÍÓÚÑ]/.test(part) && !/calle|avenida|entre|referencia|cerca|junto|al lado|frente|detrás|usd|cup|pesos|mn/i.test(part)) {
-            nombre = part;
             continue;
           }
         }
-
-        // Si no se asignó a nada, puede ser equipo o parte de equipo
-        if (part.length > 1) {
-          // Si ya hay equipo, concatenar
-          if (equipo) equipo += ' ' + part;
-          else equipo = part;
+        // Cambio
+        const cambioMatch = part.match(cambioRegex);
+        if (cambioMatch && !cambio) {
+          cambio = cambioMatch[0].trim();
+          continue;
         }
+        // Dirección
+        const dirMatch = part.match(dirRegex);
+        if (dirMatch && !direccion) {
+          direccion = dirMatch[0].trim();
+          continue;
+        }
+        // Referencia
+        const refMatch = part.match(refRegex);
+        if (refMatch && !referencia) {
+          referencia = refMatch[0].trim();
+          continue;
+        }
+      }
+
+      // Segunda pasada: extraer monto y producto para cantidad, y el resto para equipo/nombre
+      // Recolectar partes no usadas
+      let remainingParts = [];
+      for (let part of parts) {
+        // Si la parte ya fue usada en los campos anteriores, saltar
+        let used = false;
+        if (telefono && part.includes(telefono)) used = true;
+        if (cambio && part.includes(cambio)) used = true;
+        if (direccion && part.includes(direccion)) used = true;
+        if (referencia && part.includes(referencia)) used = true;
+        if (used) continue;
+        remainingParts.push(part);
+      }
+
+      // Extraer monto y producto de remainingParts
+      let monto = '', producto = '';
+      for (let part of remainingParts) {
+        // Monto
+        const montoMatch = part.match(montoRegex);
+        if (montoMatch && !monto) {
+          monto = montoMatch[0].trim();
+          // Quitar el monto de la parte
+          part = part.replace(montoMatch[0], '').trim();
+        }
+        // Producto (número + palabra) si no es moneda y no se ha asignado
+        const prodMatch = part.match(prodRegex);
+        if (prodMatch && !producto) {
+          const second = prodMatch[2].toLowerCase();
+          if (!/usd|cup|pesos|mn|calle|avenida|entre|referencia|cerca|junto|al lado|frente|detrás/i.test(second)) {
+            producto = prodMatch[0].trim();
+            part = part.replace(prodMatch[0], '').trim();
+          }
+        }
+        // Si la parte restante no está vacía y no es nombre, la guardamos para equipo
+        if (part.length > 0) {
+          // Si parece nombre (mayúscula y sin números) y no hay nombre aún, asignar
+          if (/^[A-ZÁÉÍÓÚÑ]/.test(part) && !/\d/.test(part) && !nombre) {
+            nombre = part;
+          } else {
+            // Sino, acumular para equipo
+            if (equipo) equipo += ' ' + part;
+            else equipo = part;
+          }
+        }
+      }
+
+      // Construir cantidad: combinar producto y monto si ambos existen
+      if (producto && monto) {
+        cantidad = producto + ' - ' + monto;
+      } else if (producto) {
+        cantidad = producto;
+      } else if (monto) {
+        cantidad = monto;
+      }
+
+      // Si no hay nombre, intentar sacarlo de la primera parte no usada
+      if (!nombre && remainingParts.length > 0) {
+        const first = remainingParts[0].trim();
+        if (first.length > 1 && !/^\d+$/.test(first) && !/calle|avenida|entre|referencia|cerca|junto|usd|cup|pesos|mn/i.test(first)) {
+          nombre = first;
+        }
+      }
+
+      // Si no hay equipo, usar el producto (si no se asignó a cantidad)
+      if (!equipo && producto && !cantidad.includes(producto)) {
+        equipo = producto;
       }
 
       // Asignar resultados
@@ -1002,80 +974,78 @@
       if (referencia) result.referencia = referencia;
       if (equipo) result.equipo = equipo;
 
-      // Si no se encontró nombre, usar la primera parte que no se usó
-      if (!result.nombre && parts.length > 0) {
-        const first = parts[0].trim();
-        if (first.length > 1 && !/^\d+$/.test(first) && !/calle|avenida|entre|referencia|cerca|junto|usd|cup|pesos|mn/i.test(first)) {
-          result.nombre = first;
-        }
-      }
-
       return result;
     } else {
-      // ---------- SIN COMAS: usar el parser natural original mejorado ----------
+      // ---------- SIN COMAS: usar el parser natural original (ya funcional) ----------
+      // (Mantener la lógica anterior para textos sin comas, que ya funcionaba)
+      // Por brevedad, copiamos la misma lógica que teníamos antes para el caso sin comas.
+      // En aras de la claridad, pondré la misma función que ya estaba (la que funciona).
+      // (El código anterior ya tiene una implementación para sin comas, así que la reutilizamos)
+      // Para no duplicar, invocamos la función existente.
+      // Pero como estamos en una nueva función, la incluimos aquí.
       const result = {};
-      let clean = text.replace(/\s+/g, ' ').trim();
+      let cleanText = text.replace(/\s+/g, ' ').trim();
 
-      // 1. Cambio
+      // Cambio
       const cambioRegex = /(?:cambio|vuelto|devuelta|llevar\s+cambio)\s+([\d.]+)\s*(?:USD|CUP|pesos?|usd|cup|Pesos?|MN|mn)?/i;
-      const cambioMatch = clean.match(cambioRegex);
+      const cambioMatch = cleanText.match(cambioRegex);
       if (cambioMatch) {
         result.cambio = cambioMatch[0].trim();
-        clean = clean.replace(cambioMatch[0], '').replace(/\s+/g, ' ').trim();
+        cleanText = cleanText.replace(cambioMatch[0], '').replace(/\s+/g, ' ').trim();
       }
 
-      // 2. Teléfono
+      // Teléfono
       const phoneRegex = /\b(\d{3}[\s\-]?\d{2}[\s\-]?\d{3}|\d{8})\b/;
-      const phoneMatch = clean.match(phoneRegex);
+      const phoneMatch = cleanText.match(phoneRegex);
       if (phoneMatch) {
         let phone = phoneMatch[1].replace(/[\s\-]/g, '');
         if (phone.length === 8) {
           result.telefono = phone;
-          clean = clean.replace(phoneMatch[0], '').replace(/\s+/g, ' ').trim();
+          cleanText = cleanText.replace(phoneMatch[0], '').replace(/\s+/g, ' ').trim();
         }
       }
 
-      // 3. Cantidad (monto + producto)
+      // Cantidad (monto + producto)
       let monto = '';
       const montoRegex = /\b(\d+(?:\.\d{1,2})?)\s*(?:USD|CUP|pesos?|usd|cup|Pesos?|MN|mn)\b/i;
-      const montoMatch = clean.match(montoRegex);
+      const montoMatch = cleanText.match(montoRegex);
       if (montoMatch) {
         monto = montoMatch[0].trim();
-        clean = clean.replace(montoMatch[0], '').replace(/\s+/g, ' ').trim();
+        cleanText = cleanText.replace(montoMatch[0], '').replace(/\s+/g, ' ').trim();
       }
 
       let producto = '';
       const prodRegex = /\b(\d+)\s+([a-zA-ZÁÉÍÓÚáéíóúñÑ]+(?:[\s\-][a-zA-ZÁÉÍÓÚáéíóúñÑ]+)*)\b/;
-      const prodMatch = clean.match(prodRegex);
+      const prodMatch = cleanText.match(prodRegex);
       if (prodMatch) {
         const second = prodMatch[2].toLowerCase();
         if (!/usd|cup|pesos|mn|calle|avenida|entre|referencia|cerca|junto|al lado|frente|detrás/i.test(second)) {
           producto = prodMatch[0].trim();
-          clean = clean.replace(prodMatch[0], '').replace(/\s+/g, ' ').trim();
+          cleanText = cleanText.replace(prodMatch[0], '').replace(/\s+/g, ' ').trim();
         }
       }
       if (producto && monto) result.cantidad = `${producto} - ${monto}`;
       else if (producto) result.cantidad = producto;
       else if (monto) result.cantidad = monto;
 
-      // 4. Dirección
+      // Dirección
       const dirRegex = /(?:calle|avenida|av\.?|callejón|pasaje|carretera|#|entre|esquina|y\s+(?:calle|avenida))\s+[^,.]{5,}/i;
-      const dirMatch = clean.match(dirRegex);
+      const dirMatch = cleanText.match(dirRegex);
       if (dirMatch) {
         result.direccion = dirMatch[0].trim();
-        clean = clean.replace(dirMatch[0], '').replace(/\s+/g, ' ').trim();
+        cleanText = cleanText.replace(dirMatch[0], '').replace(/\s+/g, ' ').trim();
       }
 
-      // 5. Referencia
+      // Referencia
       const refRegex = /(?:cerca\s+de|junto\s+a|al\s+lado\s+de|referencia|frente\s+a|detrás\s+de|entre\s+[^,]+?y\s+[^,]+?)\s+[^,.]{3,}/i;
-      const refMatch = clean.match(refRegex);
+      const refMatch = cleanText.match(refRegex);
       if (refMatch) {
         result.referencia = refMatch[0].trim();
-        clean = clean.replace(refMatch[0], '').replace(/\s+/g, ' ').trim();
+        cleanText = cleanText.replace(refMatch[0], '').replace(/\s+/g, ' ').trim();
       }
 
-      // 6. Nombre y equipo
-      const tokens = clean.split(/\s+/).filter(t => t.length > 1);
+      // Nombre y equipo
+      const tokens = cleanText.split(/\s+/).filter(t => t.length > 1);
       let nombreCandidato = '';
       let equipoCandidato = [];
       let foundNombre = false;
@@ -1098,7 +1068,7 @@
       }
       if (nombreCandidato.trim()) result.nombre = nombreCandidato.trim();
       if (equipoCandidato.length > 0) result.equipo = equipoCandidato.join(' ');
-      else if (clean.trim() && clean.trim() !== (result.nombre || '').trim()) result.equipo = clean.trim();
+      else if (cleanText.trim() && cleanText.trim() !== (result.nombre || '').trim()) result.equipo = cleanText.trim();
 
       if (!result.nombre && text) {
         const words = text.split(/\s+/);
@@ -1140,7 +1110,6 @@
     let filledCount = 0;
     for (const [key, value] of Object.entries(parsed)) {
       let fieldId = fieldMap[key];
-      // Si es 'cambio' y estamos en general, usar 'vuelto'
       if (key === 'cambio' && currentCategory === 'general') {
         fieldId = 'vuelto';
       }
@@ -1162,11 +1131,10 @@
     }
   }
 
-  // ---------- Modal con acumulador ----------
+  // ---------- Modal ----------
   function openAutoModal() {
     document.getElementById("modalAuto").classList.add("open");
     document.getElementById("modalTextarea").value = "";
-    document.getElementById("msgInput").value = "";
     document.getElementById("modalTextarea").focus();
   }
 
@@ -1174,28 +1142,11 @@
     document.getElementById("modalAuto").classList.remove("open");
   }
 
-  function addMessageToAccumulator() {
-    const input = document.getElementById("msgInput");
-    const text = input.value.trim();
-    if (!text) {
-      alert("Pega un mensaje en el campo de entrada.");
-      return;
-    }
-    const textarea = document.getElementById("modalTextarea");
-    if (textarea.value.trim()) {
-      textarea.value += "\n" + text;
-    } else {
-      textarea.value = text;
-    }
-    input.value = "";
-    input.focus();
-  }
-
   function processAutoFill() {
     const textarea = document.getElementById("modalTextarea");
     const text = textarea.value;
     if (!text.trim()) {
-      alert("No hay ningún mensaje acumulado. Pega o agrega al menos un mensaje.");
+      alert("Por favor, pega el mensaje del cliente.");
       return;
     }
     const parsed = parseMessageNatural(text);
@@ -1225,16 +1176,8 @@
       restoreDraft(formEl, cat.storageKey);
     });
 
-    // Eventos del modal (acumulador)
     document.getElementById("modalCancel").addEventListener("click", closeAutoModal);
     document.getElementById("modalProcess").addEventListener("click", processAutoFill);
-    document.getElementById("addMsgBtn").addEventListener("click", addMessageToAccumulator);
-    document.getElementById("msgInput").addEventListener("keydown", function(e) {
-      if (e.key === "Enter") {
-        e.preventDefault();
-        addMessageToAccumulator();
-      }
-    });
     document.getElementById("modalAuto").addEventListener("click", function(e) {
       if (e.target === this) closeAutoModal();
     });
