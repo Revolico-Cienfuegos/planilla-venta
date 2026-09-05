@@ -12,8 +12,8 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,400;14..32,500;14..32,600;14..32,700&display=swap" rel="stylesheet" />
   <style>
+    /* ========== Estilos (igual que antes) ========== */
     * { margin: 0; padding: 0; box-sizing: border-box; }
-
     :root {
       --bg: #f4f6f9;
       --card-bg: #ffffff;
@@ -34,7 +34,6 @@
       --radius-sm: 10px;
       --font: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
     }
-
     body {
       background: var(--bg);
       font-family: var(--font);
@@ -46,9 +45,7 @@
       padding: 24px 16px 60px;
       line-height: 1.5;
     }
-
     .app { max-width: 720px; width: 100%; }
-
     .status-bar {
       display: flex;
       align-items: center;
@@ -543,8 +540,8 @@
 <div class="modal-overlay" id="modalAuto">
   <div class="modal-box">
     <h2>📥 Pegar mensaje del cliente</h2>
-    <p>Pega aquí el texto <strong>tal cual</strong> te lo enviaron. La app extraerá automáticamente: nombre, teléfono, dirección, referencia, equipo, cantidad (producto + monto) y cambio (vuelto).</p>
-    <textarea id="modalTextarea" placeholder="Ejemplo:&#10;Pepe calle 47 entre 68 y 70 cerca de la panaderia la paloma lampara recargable 1 lampara 55 usd cambio 5 usd 54354612"></textarea>
+    <p>Pega aquí el texto <strong>tal cual</strong> te lo enviaron. Acepta tanto mensajes con comas como sin comas.</p>
+    <textarea id="modalTextarea" placeholder="Ejemplo con comas:&#10;pepe, 54354612, lampara 55 usd, 1 lampara usd, calle 47 entre 68 y 70, cerca de la panaderia la paloma"></textarea>
     <div class="modal-actions">
       <button type="button" class="btn btn-secondary" id="modalCancel">Cancelar</button>
       <button type="button" class="btn btn-success" id="modalProcess">✅ Procesar</button>
@@ -847,134 +844,227 @@
       });
   }
 
-  // ---------- AUTO-LLENAR AVANZADO (sin etiquetas) ----------
+  // ---------- AUTO-LLENAR AVANZADO (con y sin comas) ----------
   function parseMessageNatural(text) {
-    const result = {};
-
-    // Limpiar: quitar saltos de línea y espacios extra
+    // Limpiar y normalizar
     let clean = text.replace(/\s+/g, ' ').trim();
 
-    // 1. Extraer CAMBIO (vuelto) primero
-    const cambioRegex = /(?:cambio|vuelto|devuelta|llevar\s+cambio)\s+([\d.]+)\s*(?:USD|CUP|pesos?|usd|cup|Pesos?|MN|mn)?/i;
-    const cambioMatch = clean.match(cambioRegex);
-    if (cambioMatch) {
-      result.cambio = cambioMatch[0].trim();
-      // Eliminar del texto para no interferir
-      clean = clean.replace(cambioMatch[0], '').replace(/\s+/g, ' ').trim();
-    }
+    // Detectar si hay comas (separador principal)
+    const hasCommas = clean.includes(',');
 
-    // 2. Extraer teléfono (8 dígitos)
-    const phoneRegex = /\b(\d{3}[\s\-]?\d{2}[\s\-]?\d{3}|\d{8})\b/;
-    const phoneMatch = clean.match(phoneRegex);
-    if (phoneMatch) {
-      let phone = phoneMatch[1].replace(/[\s\-]/g, '');
-      if (phone.length === 8) {
-        result.telefono = phone;
-        clean = clean.replace(phoneMatch[0], '').replace(/\s+/g, ' ').trim();
-      }
-    }
+    if (hasCommas) {
+      // Dividir por comas y procesar cada parte
+      const parts = clean.split(',').map(p => p.trim()).filter(p => p.length > 0);
+      const result = {};
 
-    // 3. Extraer cantidad de producto y monto
-    // Buscar monto (número + moneda)
-    let monto = '';
-    const montoRegex = /\b(\d+(?:\.\d{1,2})?)\s*(?:USD|CUP|pesos?|usd|cup|Pesos?|MN|mn)\b/i;
-    const montoMatch = clean.match(montoRegex);
-    if (montoMatch) {
-      monto = montoMatch[0].trim();
-      clean = clean.replace(montoMatch[0], '').replace(/\s+/g, ' ').trim();
-    } else {
-      // Buscar solo número (sin moneda) si está seguido de "usd" o similar (ya cubierto)
-      const numMoneda = /\b(\d+(?:\.\d{1,2})?)\s*(usd|cup|pesos|mn)\b/i;
-      const nm = clean.match(numMoneda);
-      if (nm) {
-        monto = nm[0].trim();
-        clean = clean.replace(nm[0], '').replace(/\s+/g, ' ').trim();
-      }
-    }
+      // Recorrer partes y asignar según prioridad
+      let nombre = '';
+      let telefono = '';
+      let cantidad = '';
+      let cambio = '';
+      let direccion = '';
+      let referencia = '';
+      let equipo = '';
+      let observaciones = '';
 
-    // Buscar cantidad de productos: número + palabra (que no sea moneda)
-    let producto = '';
-    const prodRegex = /\b(\d+)\s+([a-zA-ZÁÉÍÓÚáéíóúñÑ]+(?:[\s\-][a-zA-ZÁÉÍÓÚáéíóúñÑ]+)*)\b/;
-    const prodMatch = clean.match(prodRegex);
-    if (prodMatch) {
-      // Verificar que la segunda palabra no sea una moneda o palabra irrelevante
-      const second = prodMatch[2].toLowerCase();
-      if (!/usd|cup|pesos|mn|calle|avenida|entre|referencia|cerca|junto|al lado|frente|detrás/i.test(second)) {
-        producto = prodMatch[0].trim();
-        clean = clean.replace(prodMatch[0], '').replace(/\s+/g, ' ').trim();
-      }
-    }
-
-    // Construir campo cantidad: si hay producto y monto, unirlos; si no, solo monto
-    if (producto && monto) {
-      result.cantidad = `${producto} - ${monto}`;
-    } else if (producto) {
-      result.cantidad = producto;
-    } else if (monto) {
-      result.cantidad = monto;
-    }
-
-    // 4. Extraer dirección
-    const dirRegex = /(?:calle|avenida|av\.?|callejón|pasaje|carretera|#|entre|esquina|y\s+(?:calle|avenida))\s+[^,.]{5,}/i;
-    const dirMatch = clean.match(dirRegex);
-    if (dirMatch) {
-      result.direccion = dirMatch[0].trim();
-      clean = clean.replace(dirMatch[0], '').replace(/\s+/g, ' ').trim();
-    }
-
-    // 5. Extraer referencia
-    const refRegex = /(?:cerca\s+de|junto\s+a|al\s+lado\s+de|referencia|frente\s+a|detrás\s+de|entre\s+[^,]+?y\s+[^,]+?)\s+[^,.]{3,}/i;
-    const refMatch = clean.match(refRegex);
-    if (refMatch) {
-      result.referencia = refMatch[0].trim();
-      clean = clean.replace(refMatch[0], '').replace(/\s+/g, ' ').trim();
-    }
-
-    // 6. Extraer equipo y nombre del resto
-    const tokens = clean.split(/\s+/).filter(t => t.length > 1);
-    let nombreCandidato = '';
-    let equipoCandidato = [];
-    let foundNombre = false;
-    for (let i = 0; i < tokens.length; i++) {
-      const t = tokens[i];
-      if (/^[A-ZÁÉÍÓÚÑ]/.test(t) && !/calle|avenida|entre|referencia|junto|cerca|al lado|frente|detrás|usd|cup|pesos|mn/i.test(t)) {
-        if (!foundNombre) {
-          nombreCandidato += t + ' ';
-          if (i + 1 < tokens.length && tokens[i+1].length < 10 && /^[A-ZÁÉÍÓÚÑ]/.test(tokens[i+1])) {
-            nombreCandidato += tokens[i+1] + ' ';
-            i++;
+      // Primero pasar por todas las partes para extraer teléfono y cambio
+      const remainingParts = [];
+      for (let part of parts) {
+        // Teléfono
+        const phoneMatch = part.match(/\b(\d{3}[\s\-]?\d{2}[\s\-]?\d{3}|\d{8})\b/);
+        if (phoneMatch) {
+          let phone = phoneMatch[1].replace(/[\s\-]/g, '');
+          if (phone.length === 8) {
+            telefono = phone;
+            continue; // no guardamos esta parte
           }
-          foundNombre = true;
+        }
+
+        // Cambio / vuelto
+        const cambioMatch = part.match(/(?:cambio|vuelto|devuelta|llevar\s+cambio)\s+([\d.]+)\s*(?:USD|CUP|pesos?|usd|cup|Pesos?|MN|mn)?/i);
+        if (cambioMatch) {
+          cambio = cambioMatch[0].trim();
+          continue;
+        }
+
+        // Si no es teléfono ni cambio, guardamos para procesar después
+        remainingParts.push(part);
+      }
+
+      // Ahora procesar las partes restantes
+      for (let part of remainingParts) {
+        // Intentar identificar cantidad (número + moneda o producto)
+        const montoMatch = part.match(/\b(\d+(?:\.\d{1,2})?)\s*(?:USD|CUP|pesos?|usd|cup|Pesos?|MN|mn)\b/i);
+        if (montoMatch && !cantidad) {
+          cantidad = montoMatch[0].trim();
+          // Quitar esa parte para no usarla después
+          part = part.replace(montoMatch[0], '').trim();
+          if (!part) continue;
+        }
+
+        // Intentar identificar producto: número + palabra (que no sea moneda)
+        const prodMatch = part.match(/\b(\d+)\s+([a-zA-ZÁÉÍÓÚáéíóúñÑ]+(?:[\s\-][a-zA-ZÁÉÍÓÚáéíóúñÑ]+)*)\b/);
+        if (prodMatch && !cantidad) {
+          const second = prodMatch[2].toLowerCase();
+          if (!/usd|cup|pesos|mn|calle|avenida|entre|referencia|cerca|junto|al lado|frente|detrás/i.test(second)) {
+            cantidad = prodMatch[0].trim();
+            part = part.replace(prodMatch[0], '').trim();
+            if (!part) continue;
+          }
+        }
+
+        // Dirección
+        const dirMatch = part.match(/(?:calle|avenida|av\.?|callejón|pasaje|carretera|#|entre|esquina|y\s+(?:calle|avenida))\s+[^,.]{5,}/i);
+        if (dirMatch && !direccion) {
+          direccion = dirMatch[0].trim();
+          part = part.replace(dirMatch[0], '').trim();
+          if (!part) continue;
+        }
+
+        // Referencia
+        const refMatch = part.match(/(?:cerca\s+de|junto\s+a|al\s+lado\s+de|referencia|frente\s+a|detrás\s+de|entre\s+[^,]+?y\s+[^,]+?)\s+[^,.]{3,}/i);
+        if (refMatch && !referencia) {
+          referencia = refMatch[0].trim();
+          part = part.replace(refMatch[0], '').trim();
+          if (!part) continue;
+        }
+
+        // Si la parte restante parece un nombre (mayúscula, no contiene números raros)
+        if (part.length > 1 && !nombre) {
+          // Si tiene mayúscula y no es una palabra muy común
+          if (/^[A-ZÁÉÍÓÚÑ]/.test(part) && !/calle|avenida|entre|referencia|cerca|junto|al lado|frente|detrás|usd|cup|pesos|mn/i.test(part)) {
+            nombre = part;
+            continue;
+          }
+        }
+
+        // Si no se asignó a nada, puede ser equipo o parte de equipo
+        if (part.length > 1) {
+          // Si ya hay equipo, concatenar
+          if (equipo) equipo += ' ' + part;
+          else equipo = part;
+        }
+      }
+
+      // Asignar resultados
+      if (nombre) result.nombre = nombre;
+      if (telefono) result.telefono = telefono;
+      if (cantidad) result.cantidad = cantidad;
+      if (cambio) result.cambio = cambio;
+      if (direccion) result.direccion = direccion;
+      if (referencia) result.referencia = referencia;
+      if (equipo) result.equipo = equipo;
+
+      // Si no se encontró nombre, usar la primera parte que no se usó
+      if (!result.nombre && parts.length > 0) {
+        const first = parts[0].trim();
+        if (first.length > 1 && !/^\d+$/.test(first) && !/calle|avenida|entre|referencia|cerca|junto|usd|cup|pesos|mn/i.test(first)) {
+          result.nombre = first;
+        }
+      }
+
+      return result;
+    } else {
+      // ---------- SIN COMAS: usar el parser natural original mejorado ----------
+      const result = {};
+      let clean = text.replace(/\s+/g, ' ').trim();
+
+      // 1. Cambio
+      const cambioRegex = /(?:cambio|vuelto|devuelta|llevar\s+cambio)\s+([\d.]+)\s*(?:USD|CUP|pesos?|usd|cup|Pesos?|MN|mn)?/i;
+      const cambioMatch = clean.match(cambioRegex);
+      if (cambioMatch) {
+        result.cambio = cambioMatch[0].trim();
+        clean = clean.replace(cambioMatch[0], '').replace(/\s+/g, ' ').trim();
+      }
+
+      // 2. Teléfono
+      const phoneRegex = /\b(\d{3}[\s\-]?\d{2}[\s\-]?\d{3}|\d{8})\b/;
+      const phoneMatch = clean.match(phoneRegex);
+      if (phoneMatch) {
+        let phone = phoneMatch[1].replace(/[\s\-]/g, '');
+        if (phone.length === 8) {
+          result.telefono = phone;
+          clean = clean.replace(phoneMatch[0], '').replace(/\s+/g, ' ').trim();
+        }
+      }
+
+      // 3. Cantidad (monto + producto)
+      let monto = '';
+      const montoRegex = /\b(\d+(?:\.\d{1,2})?)\s*(?:USD|CUP|pesos?|usd|cup|Pesos?|MN|mn)\b/i;
+      const montoMatch = clean.match(montoRegex);
+      if (montoMatch) {
+        monto = montoMatch[0].trim();
+        clean = clean.replace(montoMatch[0], '').replace(/\s+/g, ' ').trim();
+      }
+
+      let producto = '';
+      const prodRegex = /\b(\d+)\s+([a-zA-ZÁÉÍÓÚáéíóúñÑ]+(?:[\s\-][a-zA-ZÁÉÍÓÚáéíóúñÑ]+)*)\b/;
+      const prodMatch = clean.match(prodRegex);
+      if (prodMatch) {
+        const second = prodMatch[2].toLowerCase();
+        if (!/usd|cup|pesos|mn|calle|avenida|entre|referencia|cerca|junto|al lado|frente|detrás/i.test(second)) {
+          producto = prodMatch[0].trim();
+          clean = clean.replace(prodMatch[0], '').replace(/\s+/g, ' ').trim();
+        }
+      }
+      if (producto && monto) result.cantidad = `${producto} - ${monto}`;
+      else if (producto) result.cantidad = producto;
+      else if (monto) result.cantidad = monto;
+
+      // 4. Dirección
+      const dirRegex = /(?:calle|avenida|av\.?|callejón|pasaje|carretera|#|entre|esquina|y\s+(?:calle|avenida))\s+[^,.]{5,}/i;
+      const dirMatch = clean.match(dirRegex);
+      if (dirMatch) {
+        result.direccion = dirMatch[0].trim();
+        clean = clean.replace(dirMatch[0], '').replace(/\s+/g, ' ').trim();
+      }
+
+      // 5. Referencia
+      const refRegex = /(?:cerca\s+de|junto\s+a|al\s+lado\s+de|referencia|frente\s+a|detrás\s+de|entre\s+[^,]+?y\s+[^,]+?)\s+[^,.]{3,}/i;
+      const refMatch = clean.match(refRegex);
+      if (refMatch) {
+        result.referencia = refMatch[0].trim();
+        clean = clean.replace(refMatch[0], '').replace(/\s+/g, ' ').trim();
+      }
+
+      // 6. Nombre y equipo
+      const tokens = clean.split(/\s+/).filter(t => t.length > 1);
+      let nombreCandidato = '';
+      let equipoCandidato = [];
+      let foundNombre = false;
+      for (let i = 0; i < tokens.length; i++) {
+        const t = tokens[i];
+        if (/^[A-ZÁÉÍÓÚÑ]/.test(t) && !/calle|avenida|entre|referencia|junto|cerca|al lado|frente|detrás|usd|cup|pesos|mn/i.test(t)) {
+          if (!foundNombre) {
+            nombreCandidato += t + ' ';
+            if (i + 1 < tokens.length && tokens[i+1].length < 10 && /^[A-ZÁÉÍÓÚÑ]/.test(tokens[i+1])) {
+              nombreCandidato += tokens[i+1] + ' ';
+              i++;
+            }
+            foundNombre = true;
+          } else {
+            equipoCandidato.push(t);
+          }
         } else {
           equipoCandidato.push(t);
         }
-      } else {
-        equipoCandidato.push(t);
       }
-    }
-    if (nombreCandidato.trim()) {
-      result.nombre = nombreCandidato.trim();
-    }
-    if (equipoCandidato.length > 0) {
-      result.equipo = equipoCandidato.join(' ');
-    } else {
-      if (clean.trim() && clean.trim() !== (result.nombre || '').trim()) {
-        result.equipo = clean.trim();
-      }
-    }
+      if (nombreCandidato.trim()) result.nombre = nombreCandidato.trim();
+      if (equipoCandidato.length > 0) result.equipo = equipoCandidato.join(' ');
+      else if (clean.trim() && clean.trim() !== (result.nombre || '').trim()) result.equipo = clean.trim();
 
-    // Si no se encontró nombre, asignar la primera palabra que no sea número
-    if (!result.nombre && text) {
-      const words = text.split(/\s+/);
-      for (const w of words) {
-        if (w.length > 1 && !/^\d+$/.test(w) && !/calle|avenida|entre|referencia|cerca|junto|usd|cup|pesos|mn/i.test(w)) {
-          result.nombre = w;
-          break;
+      if (!result.nombre && text) {
+        const words = text.split(/\s+/);
+        for (const w of words) {
+          if (w.length > 1 && !/^\d+$/.test(w) && !/calle|avenida|entre|referencia|cerca|junto|usd|cup|pesos|mn/i.test(w)) {
+            result.nombre = w;
+            break;
+          }
         }
       }
-    }
 
-    return result;
+      return result;
+    }
   }
 
   function applyParsedData(parsed) {
@@ -986,8 +1076,8 @@
       telefono: "telCliente",
       equipo: "equipo",
       cantidad: "cantidad",
-      cambio: "cambio",      // para venta
-      vuelto: "vuelto",      // para general
+      cambio: "cambio",
+      vuelto: "vuelto",
       direccion: "direccion",
       referencia: "referencia",
       domicilio: "domicilio",
@@ -1003,7 +1093,7 @@
     let filledCount = 0;
     for (const [key, value] of Object.entries(parsed)) {
       let fieldId = fieldMap[key];
-      // Si es 'cambio' y estamos en planilla general, usar 'vuelto'
+      // Si es 'cambio' y estamos en general, usar 'vuelto'
       if (key === 'cambio' && currentCategory === 'general') {
         fieldId = 'vuelto';
       }
@@ -1050,7 +1140,6 @@
 
   // ---------- Inicialización ----------
   document.addEventListener("DOMContentLoaded", function() {
-    // Eventos de categoría
     document.querySelectorAll('.cat-btn').forEach(btn => {
       btn.addEventListener('click', function() {
         const category = this.dataset.category;
@@ -1058,7 +1147,6 @@
       });
     });
 
-    // Configurar cada categoría
     Object.keys(CATEGORIES).forEach(key => {
       const cat = CATEGORIES[key];
       const formEl = document.getElementById(cat.formId);
@@ -1072,18 +1160,15 @@
       restoreDraft(formEl, cat.storageKey);
     });
 
-    // Eventos del modal
     document.getElementById("modalCancel").addEventListener("click", closeAutoModal);
     document.getElementById("modalProcess").addEventListener("click", processAutoFill);
     document.getElementById("modalAuto").addEventListener("click", function(e) {
       if (e.target === this) closeAutoModal();
     });
 
-    // Iniciar
     switchCategory(currentCategory);
     updateStatus();
 
-    // Service Worker
     if ("serviceWorker" in navigator) {
       window.addEventListener("load", () => {
         navigator.serviceWorker.register("sw.js").catch(() => { /* falla silenciosa */ });
