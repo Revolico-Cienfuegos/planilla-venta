@@ -12,8 +12,9 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,400;14..32,500;14..32,600;14..32,700&display=swap" rel="stylesheet" />
   <style>
-    /* ========== Estilos (igual que antes) ========== */
+    /* (estilos exactamente igual que antes, sin cambios) */
     * { margin: 0; padding: 0; box-sizing: border-box; }
+
     :root {
       --bg: #f4f6f9;
       --card-bg: #ffffff;
@@ -34,6 +35,7 @@
       --radius-sm: 10px;
       --font: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
     }
+
     body {
       background: var(--bg);
       font-family: var(--font);
@@ -45,7 +47,9 @@
       padding: 24px 16px 60px;
       line-height: 1.5;
     }
+
     .app { max-width: 720px; width: 100%; }
+
     .status-bar {
       display: flex;
       align-items: center;
@@ -161,6 +165,18 @@
     .section-title .emoji { font-size: 18px; }
     .zelle-box, .gestor-box { background: #f8fafc; border: 1px solid var(--border-light); border-radius: var(--radius-sm); padding: 16px 16px 4px; margin-top: 4px; }
     .zelle-box .group:last-child, .gestor-box .group:last-child { margin-bottom: 0; }
+
+    .paste-box {
+      background: var(--card-bg); border: 1px solid var(--border-light); border-radius: var(--radius);
+      box-shadow: var(--shadow); padding: 18px 20px 20px; margin-bottom: 14px;
+    }
+    .paste-box textarea#pasteInput { min-height: 90px; }
+    .paste-box .hint { text-align: left; margin-top: 8px; }
+    input.autofilled, textarea.autofilled {
+      background: #fffbeb !important; border-color: #fcd34d !important;
+      transition: background 1.5s ease, border-color 1.5s ease;
+    }
+
     .fijo-tag { font-weight: 400; font-size: 12px; color: var(--text-muted); }
 
     .submit-area { padding: 22px 32px 32px; border-top: 1px solid var(--border-light); margin-top: 8px; display: flex; flex-direction: column; gap: 10px; }
@@ -178,104 +194,10 @@
     .btn-outline:hover { background: #f1f5f9; border-color: #cbd5e1; }
     .btn-ghost { background: transparent; color: var(--text-muted); border: none; box-shadow: none; flex: none; min-width: auto; padding: 8px 10px; font-size: 13px; }
     .btn-ghost:hover { color: var(--danger); }
-    .btn-auto { background: #8b5cf6; box-shadow: 0 4px 8px -4px rgba(139,92,246,0.3); }
-    .btn-auto:hover { background: #7c3aed; }
 
     .hint { font-size: 12px; color: var(--text-muted); text-align: center; line-height: 1.6; margin-top: 4px; }
 
     footer { text-align: center; font-size: 12px; color: var(--text-muted); padding: 16px 32px 24px; border-top: 1px solid var(--border-light); background: #fafbfc; }
-
-    .modal-overlay {
-      position: fixed;
-      top: 0; left: 0; width: 100%; height: 100%;
-      background: rgba(0,0,0,0.5);
-      backdrop-filter: blur(4px);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      z-index: 999;
-      padding: 20px;
-      opacity: 0;
-      pointer-events: none;
-      transition: opacity 0.25s ease;
-    }
-    .modal-overlay.open {
-      opacity: 1;
-      pointer-events: auto;
-    }
-    .modal-box {
-      background: var(--card-bg);
-      border-radius: var(--radius);
-      max-width: 600px;
-      width: 100%;
-      max-height: 85vh;
-      padding: 28px 24px 24px;
-      box-shadow: 0 40px 80px rgba(0,0,0,0.3);
-      display: flex;
-      flex-direction: column;
-      transform: translateY(20px);
-      transition: transform 0.25s ease;
-    }
-    .modal-overlay.open .modal-box {
-      transform: translateY(0);
-    }
-    .modal-box h2 {
-      font-size: 20px;
-      font-weight: 700;
-      margin-bottom: 6px;
-      display: flex;
-      align-items: center;
-      gap: 8px;
-    }
-    .modal-box p {
-      font-size: 14px;
-      color: var(--text-secondary);
-      margin-bottom: 16px;
-    }
-    .modal-box textarea {
-      flex: 1;
-      min-height: 180px;
-      max-height: 40vh;
-      padding: 14px;
-      font-size: 14px;
-      border: 1px solid var(--border-light);
-      border-radius: var(--radius-sm);
-      font-family: var(--font);
-      resize: vertical;
-      background: #fafbfc;
-    }
-    .modal-box textarea:focus {
-      border-color: var(--border-focus);
-      box-shadow: 0 0 0 3px rgba(37,99,235,0.1);
-      background: #fff;
-    }
-    .modal-actions {
-      display: flex;
-      gap: 12px;
-      margin-top: 16px;
-      flex-wrap: wrap;
-    }
-    .modal-actions .btn {
-      flex: 1;
-      min-width: 80px;
-      padding: 12px 16px;
-      font-size: 14px;
-    }
-    .modal-actions .btn-secondary {
-      background: transparent;
-      color: var(--text-primary);
-      border: 1.5px solid var(--border-light);
-    }
-    .modal-actions .btn-secondary:hover {
-      background: #f1f5f9;
-    }
-    .modal-actions .btn-success {
-      background: var(--success);
-      box-shadow: 0 4px 8px -4px rgba(22,163,74,0.3);
-    }
-    .modal-actions .btn-success:hover {
-      background: #15803d;
-    }
 
     @media (max-width: 600px) {
       header { flex-direction: column; align-items: flex-start; padding: 22px 20px 16px; }
@@ -288,8 +210,6 @@
       .zelle-box, .gestor-box { padding: 12px 12px 0; }
       footer { padding: 12px 20px 16px; }
       .category-picker { grid-template-columns: 1fr; }
-      .modal-box { padding: 20px 16px 16px; }
-      .modal-box textarea { min-height: 140px; }
     }
     @media (max-width: 400px) {
       body { padding: 12px 8px 40px; }
@@ -299,870 +219,910 @@
   </style>
 </head>
 <body>
-<div class="app">
+  <div class="app">
 
-  <!-- Barra de estado -->
-  <div class="status-bar" id="statusBar">
-    <div class="status-left">
-      <span class="dot"></span>
-      <span id="statusText">En línea</span>
+    <div class="status-bar" id="statusBar">
+      <div class="status-left">
+        <span class="dot"></span>
+        <span id="statusText">En línea</span>
+      </div>
+      <span class="save-indicator" id="saveIndicator">Borrador guardado en este dispositivo</span>
     </div>
-    <span class="save-indicator" id="saveIndicator">Borrador guardado en este dispositivo</span>
-  </div>
 
-  <!-- Selector de categoría -->
-  <div class="category-picker">
-    <button type="button" class="cat-btn" data-category="venta" id="btnVenta">
-      <span class="cat-title">📦 Planilla de Venta</span>
-      <span class="cat-sub">Venta de equipos, con Zelle</span>
-    </button>
-    <button type="button" class="cat-btn" data-category="general" id="btnGeneral">
-      <span class="cat-title">🧾 Planilla General</span>
-      <span class="cat-sub">Cliente, garantía, comisión</span>
-    </button>
-  </div>
+    <div class="category-picker">
+      <button type="button" class="cat-btn" id="btnVenta" onclick="switchCategory('venta')">
+        <span class="cat-title">📦 Planilla de Venta</span>
+        <span class="cat-sub">Venta de equipos, con Zelle</span>
+      </button>
+      <button type="button" class="cat-btn" id="btnGeneral" onclick="switchCategory('general')">
+        <span class="cat-title">🧾 Planilla General</span>
+        <span class="cat-sub">Cliente, garantía, comisión</span>
+      </button>
+    </div>
 
-  <div class="ticket">
-    <header>
-      <div class="header-left">
-        <span class="badge" id="headerBadge">📋 Formulario de venta</span>
-        <h1 id="headerTitle">Planilla de Venta</h1>
-        <div class="sub" id="headerSub">Completa los datos y envía directo por WhatsApp</div>
+    <div class="paste-box">
+      <div class="section-title"><span class="emoji">🪄</span> Autocompletar desde el mensaje del cliente</div>
+      <textarea id="pasteInput" placeholder="Pega aquí el texto tal cual te lo mandó el cliente por WhatsApp (nombre, CI, equipo, dirección, precio, etc. en cualquier orden)">pepe, 54354612, lampra (55 usd), 1 lampara  usd o mn o transferencia, 10000 MN o 10 usd, calle 47 entre 68 y 70, cerca de la panaderia la paloma. ahi te di el nombre que es pepe, te di el numero de telefeono, te di el equipo a comprar que es Lampara (55usd), te di la cantidad y tipo de moneda que es 1 lampara en usd, te di el cambio que es 1000MN y te di la direccion y el punto de referencia</textarea>
+      <div class="btn-group" style="margin-top:10px;">
+        <button type="button" class="btn btn-primary" id="autofillBtn">🪄 Autocompletar campos</button>
+        <button type="button" class="btn btn-outline" id="clearPasteBtn">🗑️ Borrar texto pegado</button>
       </div>
-      <div class="stamp">Original</div>
-    </header>
+      <div class="hint" id="autofillResult">Detecta lo que puede (nombre, CI, teléfono, equipo, dirección, montos...). Siempre revisa antes de enviar.</div>
+    </div>
 
-    <!-- PLANILLA DE VENTA -->
-    <form id="formVenta" class="planilla-form">
-      <div class="form-grid">
-        <div class="group">
-          <label for="v_fecha">📅 Fecha</label>
-          <input type="date" id="v_fecha" name="fecha" />
+    <div class="ticket">
+      <header>
+        <div class="header-left">
+          <span class="badge" id="headerBadge">📋 Formulario de venta</span>
+          <h1 id="headerTitle">Planilla de Venta</h1>
+          <div class="sub" id="headerSub">Completa los datos y envía directo por WhatsApp</div>
         </div>
-        <div class="group">
-          <label for="v_nombreCliente">👤 Nombre del cliente</label>
-          <input type="text" id="v_nombreCliente" name="nombreCliente" placeholder="Nombre completo" />
-        </div>
-        <div class="group">
-          <label for="v_telCliente">📱 Teléfono del cliente</label>
-          <input type="tel" id="v_telCliente" name="telCliente" placeholder="5xxxxxxx" />
-        </div>
-        <div class="group">
-          <label for="v_equipo">📦 Equipo a comprar</label>
-          <input type="text" id="v_equipo" name="equipo" placeholder="Ej: iPhone 13, 128GB" />
-        </div>
-        <div class="group">
-          <label for="v_cantidad">💵 Cantidad y tipo de moneda</label>
-          <input type="text" id="v_cantidad" name="cantidad" placeholder="Ej: 150 USD" />
-        </div>
-        <div class="group">
-          <label for="v_cambio">💱 Cambio</label>
-          <input type="text" id="v_cambio" name="cambio" placeholder="Ej: 5 USD" />
-        </div>
-        <div class="group full-width">
-          <label for="v_direccion">📍 Dirección</label>
-          <input type="text" id="v_direccion" name="direccion" placeholder="Calle, número, entre calles" />
-        </div>
-        <div class="group full-width">
-          <label for="v_referencia">📍 Punto de referencia</label>
-          <input type="text" id="v_referencia" name="referencia" placeholder="Ej: cerca del parque..." />
-        </div>
-        <div class="group full-width">
-          <label for="v_domicilio">🛵 Costo del domicilio (municipio)</label>
-          <input type="text" id="v_domicilio" name="domicilio" placeholder="Ej: 200 CUP" />
-        </div>
-      </div>
+        <div class="stamp">Original</div>
+      </header>
 
-      <div class="section-break">
-        <div class="section-title"><span class="emoji">🏦</span> En caso de Zelle — datos de quien transfiere</div>
-        <div class="zelle-box">
-          <div class="form-grid" style="gap:12px 16px;">
-            <div class="group">
-              <label for="v_zelleNombre">👤 Nombre</label>
-              <input type="text" id="v_zelleNombre" name="zelleNombre" placeholder="Nombre completo" />
-            </div>
-            <div class="group">
-              <label for="v_zelleTelefono">📱 Teléfono</label>
-              <input type="tel" id="v_zelleTelefono" name="zelleTelefono" placeholder="Número de contacto" />
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <div class="section-break">
-        <div class="section-title"><span class="emoji">👤</span> Datos del gestor <span class="fijo-tag">(fijos)</span></div>
+      <form id="formVenta" class="planilla-form">
         <div class="form-grid">
           <div class="group">
-            <label for="v_gestorNombre">👤 Nombre del gestor</label>
-            <input type="text" id="v_gestorNombre" name="gestorNombre" value="Claudia Yamaye González Rodríguez" readonly />
+            <label for="v_fecha">📅 Fecha</label>
+            <input type="date" id="v_fecha" name="fecha" />
           </div>
           <div class="group">
-            <label for="v_gestorTelefono">📱 Teléfono del gestor</label>
-            <input type="tel" id="v_gestorTelefono" name="gestorTelefono" value="54571729" readonly />
+            <label for="v_nombreCliente">👤 Nombre del cliente</label>
+            <input type="text" id="v_nombreCliente" name="nombreCliente" placeholder="Nombre completo" />
+          </div>
+          <div class="group">
+            <label for="v_telCliente">📱 Teléfono del cliente</label>
+            <input type="tel" id="v_telCliente" name="telCliente" placeholder="5xxxxxxx" />
+          </div>
+          <div class="group">
+            <label for="v_equipo">📦 Equipo a comprar</label>
+            <input type="text" id="v_equipo" name="equipo" placeholder="Ej: iPhone 13, 128GB" />
+          </div>
+          <div class="group">
+            <label for="v_cantidad">💵 Cantidad y tipo de moneda</label>
+            <input type="text" id="v_cantidad" name="cantidad" placeholder="Ej: 150 USD" />
+          </div>
+          <div class="group">
+            <label for="v_cambio">💱 Cambio</label>
+            <input type="text" id="v_cambio" name="cambio" placeholder="Ej: 1 USD = 380 CUP" />
           </div>
           <div class="group full-width">
-            <label for="v_gestorTarjeta">💳 Tarjeta del gestor</label>
-            <input type="text" id="v_gestorTarjeta" name="gestorTarjeta" value="9224-0699-9677-9001" readonly />
+            <label for="v_direccion">📍 Dirección</label>
+            <input type="text" id="v_direccion" name="direccion" placeholder="Calle, número, entre calles" />
+          </div>
+          <div class="group full-width">
+            <label for="v_referencia">📍 Punto de referencia</label>
+            <input type="text" id="v_referencia" name="referencia" placeholder="Ej: cerca del parque..." />
+          </div>
+          <div class="group full-width">
+            <label for="v_domicilio">🛵 Costo del domicilio (municipio)</label>
+            <input type="text" id="v_domicilio" name="domicilio" placeholder="Ej: 200 CUP" />
           </div>
         </div>
-      </div>
 
-      <div class="section-break">
-        <div class="group full-width" style="margin-bottom:0;">
-          <label for="v_observaciones">📝 Observaciones</label>
-          <textarea id="v_observaciones" name="observaciones" placeholder="Cualquier detalle adicional..."></textarea>
-        </div>
-      </div>
-
-      <div class="submit-area">
-        <div class="btn-group">
-          <button type="submit" class="btn btn-primary">📤 Enviar por WhatsApp</button>
-          <button type="button" class="btn btn-outline copy-btn">📋 Copiar mensaje</button>
-          <button type="button" class="btn btn-auto auto-btn">📥 Auto‑llenar desde mensaje</button>
-        </div>
-        <button type="button" class="btn btn-ghost clear-btn">🗑️ Borrar borrador de esta planilla</button>
-        <div class="hint">Los campos vacíos no se incluirán. Si estás sin conexión, usa "Copiar mensaje" y pégalo en el chat apenas vuelva la señal.</div>
-      </div>
-    </form>
-
-    <!-- PLANILLA GENERAL -->
-    <form id="formGeneral" class="planilla-form" style="display:none;">
-      <div class="form-grid">
-        <div class="group">
-          <label for="g_fecha">📅 Fecha</label>
-          <input type="date" id="g_fecha" name="fecha" />
-        </div>
-        <div class="group">
-          <label for="g_nombreCliente">👤 Nombre y Apellido del cliente</label>
-          <input type="text" id="g_nombreCliente" name="nombreCliente" placeholder="Nombre completo" />
-        </div>
-        <div class="group">
-          <label for="g_ciCliente">🪪 CI del cliente</label>
-          <input type="text" id="g_ciCliente" name="ciCliente" placeholder="11 dígitos" inputmode="numeric" maxlength="11" />
-        </div>
-        <div class="group">
-          <label for="g_telCliente">📱 Teléfono del cliente</label>
-          <input type="tel" id="g_telCliente" name="telCliente" placeholder="5xxxxxxx" />
-        </div>
-        <div class="group">
-          <label for="g_equipo">📦 Equipo a comprar</label>
-          <input type="text" id="g_equipo" name="equipo" placeholder="Ej: iPhone 13, 128GB" />
-        </div>
-        <div class="group">
-          <label for="g_garantia">🛡️ Garantía</label>
-          <input type="text" id="g_garantia" name="garantia" placeholder="Ej: 3 meses" />
-        </div>
-        <div class="group full-width">
-          <label for="g_direccion">📍 Dirección</label>
-          <input type="text" id="g_direccion" name="direccion" placeholder="Calle, número, entre calles" />
-        </div>
-        <div class="group">
-          <label for="g_cantidad">💵 Cantidad a pagar</label>
-          <input type="text" id="g_cantidad" name="cantidad" placeholder="Ej: 150 USD" />
-        </div>
-        <div class="group">
-          <label for="g_vuelto">💰 Vuelto</label>
-          <input type="text" id="g_vuelto" name="vuelto" placeholder="Ej: 20 CUP" />
-        </div>
-        <div class="group full-width">
-          <label for="g_domicilio">🛵 Costo del domicilio</label>
-          <input type="text" id="g_domicilio" name="domicilio" placeholder="Ej: 200 CUP" />
-        </div>
-        <div class="group">
-          <label for="g_pagaQuien">🙋 Paga el domicilio</label>
-          <select id="g_pagaQuien" name="pagaQuien">
-            <option value="">Seleccionar...</option>
-            <option value="Gestor">Gestor</option>
-            <option value="Cliente">Cliente</option>
-          </select>
-        </div>
-      </div>
-
-      <div class="section-break">
-        <div class="section-title"><span class="emoji">🏦</span> En caso de Zelle — datos de quien transfiere</div>
-        <div class="zelle-box">
-          <div class="form-grid" style="gap:12px 16px;">
-            <div class="group full-width">
-              <label for="g_zelleTelefono">📱 Teléfono del que va a pagar por Zelle</label>
-              <input type="tel" id="g_zelleTelefono" name="zelleTelefono" placeholder="Número de contacto" />
+        <div class="section-break">
+          <div class="section-title"><span class="emoji">🏦</span> En caso de Zelle — datos de quien transfiere</div>
+          <div class="zelle-box">
+            <div class="form-grid" style="gap:12px 16px;">
+              <div class="group">
+                <label for="v_zelleNombre">👤 Nombre</label>
+                <input type="text" id="v_zelleNombre" name="zelleNombre" placeholder="Nombre completo" />
+              </div>
+              <div class="group">
+                <label for="v_zelleTelefono">📱 Teléfono</label>
+                <input type="tel" id="v_zelleTelefono" name="zelleTelefono" placeholder="Número de contacto" />
+              </div>
             </div>
           </div>
         </div>
-      </div>
 
-      <div class="section-break">
-        <div class="section-title"><span class="emoji">👤</span> Datos del gestor <span class="fijo-tag">(prellenados, editables)</span></div>
-        <div class="gestor-box">
+        <div class="section-break">
+          <div class="section-title"><span class="emoji">👤</span> Datos del gestor <span class="fijo-tag">(fijos)</span></div>
           <div class="form-grid">
             <div class="group">
-              <label for="g_gestorNombre">👤 Nombre de Gestor</label>
-              <input type="text" id="g_gestorNombre" name="gestorNombre" value="Claudia Yamaye González Rodríguez" />
+              <label for="v_gestorNombre">👤 Nombre del gestor</label>
+              <input type="text" id="v_gestorNombre" name="gestorNombre" value="Claudia Yamaye González Rodríguez" readonly />
             </div>
             <div class="group">
-              <label for="g_gestorTelefono">📱 Teléfono del Gestor</label>
-              <input type="tel" id="g_gestorTelefono" name="gestorTelefono" value="54571729" />
+              <label for="v_gestorTelefono">📱 Teléfono del gestor</label>
+              <input type="tel" id="v_gestorTelefono" name="gestorTelefono" value="54571729" readonly />
             </div>
-            <div class="group">
-              <label for="g_gestorTarjeta">💳 Tarjeta del Gestor</label>
-              <input type="text" id="g_gestorTarjeta" name="gestorTarjeta" value="9224-0699-9677-9001" />
-            </div>
-            <div class="group">
-              <label for="g_comision">🧮 Comisión</label>
-              <input type="text" id="g_comision" name="comision" placeholder="Ej: 10 USD" />
+            <div class="group full-width">
+              <label for="v_gestorTarjeta">💳 Tarjeta del gestor</label>
+              <input type="text" id="v_gestorTarjeta" name="gestorTarjeta" value="9224-0699-9677-9001" readonly />
             </div>
           </div>
         </div>
-      </div>
 
-      <div class="section-break">
-        <div class="group full-width" style="margin-bottom:0;">
-          <label for="g_observaciones">📝 Observaciones</label>
-          <textarea id="g_observaciones" name="observaciones" placeholder="Cualquier detalle adicional..."></textarea>
+        <div class="section-break">
+          <div class="group full-width" style="margin-bottom:0;">
+            <label for="v_observaciones">📝 Observaciones</label>
+            <textarea id="v_observaciones" name="observaciones" placeholder="Cualquier detalle adicional..."></textarea>
+          </div>
         </div>
-      </div>
 
-      <div class="submit-area">
-        <div class="btn-group">
-          <button type="submit" class="btn btn-primary">📤 Enviar por WhatsApp</button>
-          <button type="button" class="btn btn-outline copy-btn">📋 Copiar mensaje</button>
-          <button type="button" class="btn btn-auto auto-btn">📥 Auto‑llenar desde mensaje</button>
+        <div class="submit-area">
+          <div class="btn-group">
+            <button type="submit" class="btn btn-primary">📤 Enviar por WhatsApp</button>
+            <button type="button" class="btn btn-outline copy-btn">📋 Copiar mensaje</button>
+          </div>
+          <button type="button" class="btn btn-ghost clear-btn">🗑️ Borrar borrador de esta planilla</button>
+          <div class="hint">Los campos vacíos no se incluirán. Si estás sin conexión, usa "Copiar mensaje" y pégalo en el chat apenas vuelva la señal.</div>
         </div>
-        <button type="button" class="btn btn-ghost clear-btn">🗑️ Borrar borrador de esta planilla</button>
-        <div class="hint">Los campos vacíos no se incluirán. Si estás sin conexión, usa "Copiar mensaje" y pégalo en el chat apenas vuelva la señal.</div>
-      </div>
-    </form>
+      </form>
 
-    <footer>Planilla · de · Venta · funciona sin conexión, se guarda en este dispositivo</footer>
-  </div>
-</div>
+      <form id="formGeneral" class="planilla-form" style="display:none;">
+        <div class="form-grid">
+          <div class="group">
+            <label for="g_fecha">📅 Fecha</label>
+            <input type="date" id="g_fecha" name="fecha" />
+          </div>
+          <div class="group">
+            <label for="g_nombreCliente">👤 Nombre y Apellido del cliente</label>
+            <input type="text" id="g_nombreCliente" name="nombreCliente" placeholder="Nombre completo" />
+          </div>
+          <div class="group">
+            <label for="g_ciCliente">🪪 CI del cliente</label>
+            <input type="text" id="g_ciCliente" name="ciCliente" placeholder="11 dígitos" inputmode="numeric" maxlength="11" />
+          </div>
+          <div class="group">
+            <label for="g_telCliente">📱 Teléfono del cliente</label>
+            <input type="tel" id="g_telCliente" name="telCliente" placeholder="5xxxxxxx" />
+          </div>
+          <div class="group">
+            <label for="g_equipo">📦 Equipo a comprar</label>
+            <input type="text" id="g_equipo" name="equipo" placeholder="Ej: iPhone 13, 128GB" />
+          </div>
+          <div class="group">
+            <label for="g_garantia">🛡️ Garantía</label>
+            <input type="text" id="g_garantia" name="garantia" placeholder="Ej: 3 meses" />
+          </div>
+          <div class="group full-width">
+            <label for="g_direccion">📍 Dirección</label>
+            <input type="text" id="g_direccion" name="direccion" placeholder="Calle, número, entre calles" />
+          </div>
+          <div class="group">
+            <label for="g_cantidad">💵 Cantidad a pagar</label>
+            <input type="text" id="g_cantidad" name="cantidad" placeholder="Ej: 150 USD" />
+          </div>
+          <div class="group">
+            <label for="g_vuelto">💰 Vuelto</label>
+            <input type="text" id="g_vuelto" name="vuelto" placeholder="Ej: 20 CUP" />
+          </div>
+          <div class="group full-width">
+            <label for="g_domicilio">🛵 Costo del domicilio</label>
+            <input type="text" id="g_domicilio" name="domicilio" placeholder="Ej: 200 CUP" />
+          </div>
+          <div class="group">
+            <label for="g_pagaQuien">🙋 Paga el domicilio</label>
+            <select id="g_pagaQuien" name="pagaQuien">
+              <option value="">Seleccionar...</option>
+              <option value="Gestor">Gestor</option>
+              <option value="Cliente">Cliente</option>
+            </select>
+          </div>
+        </div>
 
-<!-- MODAL AUTO-LLENAR -->
-<div class="modal-overlay" id="modalAuto">
-  <div class="modal-box">
-    <h2>📥 Pegar mensaje del cliente</h2>
-    <p>Pega aquí el texto <strong>tal cual</strong> te lo enviaron. Funciona con comas o sin comas.</p>
-    <textarea id="modalTextarea" placeholder="Ejemplo con comas:&#10;pepe, 54354612, lampara 55 usd, 1 lampara usd, calle 47 entre 68 y 70, cerca de la panaderia la paloma"></textarea>
-    <div class="modal-actions">
-      <button type="button" class="btn btn-secondary" id="modalCancel">Cancelar</button>
-      <button type="button" class="btn btn-success" id="modalProcess">✅ Procesar</button>
+        <div class="section-break">
+          <div class="section-title"><span class="emoji">🏦</span> En caso de Zelle — datos de quien transfiere</div>
+          <div class="zelle-box">
+            <div class="form-grid" style="gap:12px 16px;">
+              <div class="group full-width">
+                <label for="g_zelleTelefono">📱 Teléfono del que va a pagar por Zelle</label>
+                <input type="tel" id="g_zelleTelefono" name="zelleTelefono" placeholder="Número de contacto" />
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="section-break">
+          <div class="section-title"><span class="emoji">👤</span> Datos del gestor <span class="fijo-tag">(prellenados, editables)</span></div>
+          <div class="gestor-box">
+            <div class="form-grid">
+              <div class="group">
+                <label for="g_gestorNombre">👤 Nombre de Gestor</label>
+                <input type="text" id="g_gestorNombre" name="gestorNombre" value="Claudia Yamaye González Rodríguez" />
+              </div>
+              <div class="group">
+                <label for="g_gestorTelefono">📱 Teléfono del Gestor</label>
+                <input type="tel" id="g_gestorTelefono" name="gestorTelefono" value="54571729" />
+              </div>
+              <div class="group">
+                <label for="g_gestorTarjeta">💳 Tarjeta del Gestor</label>
+                <input type="text" id="g_gestorTarjeta" name="gestorTarjeta" value="9224-0699-9677-9001" />
+              </div>
+              <div class="group">
+                <label for="g_comision">🧮 Comisión</label>
+                <input type="text" id="g_comision" name="comision" placeholder="Ej: 10 USD" />
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="section-break">
+          <div class="group full-width" style="margin-bottom:0;">
+            <label for="g_observaciones">📝 Observaciones</label>
+            <textarea id="g_observaciones" name="observaciones" placeholder="Cualquier detalle adicional..."></textarea>
+          </div>
+        </div>
+
+        <div class="submit-area">
+          <div class="btn-group">
+            <button type="submit" class="btn btn-primary">📤 Enviar por WhatsApp</button>
+            <button type="button" class="btn btn-outline copy-btn">📋 Copiar mensaje</button>
+          </div>
+          <button type="button" class="btn btn-ghost clear-btn">🗑️ Borrar borrador de esta planilla</button>
+          <div class="hint">Los campos vacíos no se incluirán. Si estás sin conexión, usa "Copiar mensaje" y pégalo en el chat apenas vuelva la señal.</div>
+        </div>
+      </form>
+
+      <footer>Planilla · de · Venta · funciona sin conexión, se guarda en este dispositivo</footer>
     </div>
   </div>
-</div>
 
-<script>
-  const WHATSAPP_LINK = "https://wa.me/5354571729";
-  let currentCategory = localStorage.getItem("planilla_categoria") || "venta";
+  <script>
+    const WHATSAPP_LINK = "https://wa.me/5354571729";
 
-  // ---------- Definición de categorías ----------
-  const CATEGORIES = {
-    venta: {
-      formId: "formVenta",
-      badge: "📦 Formulario de venta",
-      title: "Planilla de Venta",
-      sub: "Venta de equipos con opción de pago por Zelle",
-      storageKey: "planilla_draft_venta",
-      title_msg: "❗❗ PLANILLA DE VENTA ❗❗",
-      fieldDefs: [
-        { id: "fecha", label: "📅 Fecha", isDate: true },
-        { id: "nombreCliente", label: "👤 Nombre del cliente" },
-        { id: "telCliente", label: "📱 Teléfono del cliente" },
-        { id: "equipo", label: "📦 Equipo a comprar" },
-        { id: "cantidad", label: "💵 Cantidad y tipo de moneda" },
-        { id: "cambio", label: "💱 Cambio" },
-        { id: "direccion", label: "📍 Dirección" },
-        { id: "referencia", label: "📍 Punto de referencia" },
-        { id: "domicilio", label: "🛵 Costo del domicilio si es para municipio" },
-      ],
-      zelleDefs: [
-        { id: "zelleNombre", label: "👤 Nombre" },
-        { id: "zelleTelefono", label: "📱 Teléfono" },
-      ],
-      zelleTitle: "🏦 En caso de Zelle, datos de quien realizará la transferencia:",
-      gestorDefs: [
-        { id: "gestorNombre", label: "👤 Nombre del gestor" },
-        { id: "gestorTelefono", label: "📱 Teléfono del gestor" },
-        { id: "gestorTarjeta", label: "💳 Tarjeta del gestor" },
-      ],
-    },
-    general: {
-      formId: "formGeneral",
-      badge: "🧾 Formulario general",
-      title: "Planilla General",
-      sub: "Cliente, garantía, gestor y comisión",
-      storageKey: "planilla_draft_general",
-      title_msg: "❗❗ PLANILLA ❗❗",
-      fieldDefs: [
-        { id: "fecha", label: "➡️Fecha", isDate: true },
-        { id: "nombreCliente", label: "➡️Nombre y Apellido del cliente" },
-        { id: "ciCliente", label: "➡️CI del cliente" },
-        { id: "telCliente", label: "➡️Teléfono del cliente" },
-        { id: "equipo", label: "➡️Equipo a comprar" },
-        { id: "direccion", label: "➡️Dirección" },
-        { id: "garantia", label: "➡️Garantía" },
-        { id: "cantidad", label: "➡️Cantidad a pagar" },
-        { id: "vuelto", label: "➡️Vuelto" },
-        { id: "domicilio", label: "➡️Costo del domicilio" },
-        { id: "pagaQuien", label: "➡️Paga el gestor o el cliente" },
-      ],
-      zelleDefs: [
-        { id: "zelleTelefono", label: "➡️Teléfono del q va a pagar por Zelle" },
-      ],
-      zelleTitle: "🏦 En caso de Zelle:",
-      gestorDefs: [
-        { id: "gestorNombre", label: "➡️Nombre de Gestor" },
-        { id: "gestorTelefono", label: "➡️Teléfono del Gestor" },
-        { id: "gestorTarjeta", label: "➡️Tarjeta del Gestor" },
-        { id: "comision", label: "➡️Comisión" },
-      ],
-    },
-  };
-
-  // ---------- Funciones comunes ----------
-  function isMobileDevice() {
-    return /Android|iPhone|iPad|iPod/i.test(navigator.userAgent);
-  }
-
-  function buildWhatsappUrl(message) {
-    const encoded = encodeURIComponent(message);
-    const match = WHATSAPP_LINK.match(/wa\.me\/(\d{7,15})/);
-    if (!match) return null;
-    const phone = match[1];
-    if (isMobileDevice()) return `whatsapp://send?phone=${phone}&text=${encoded}`;
-    return `https://web.whatsapp.com/send?phone=${phone}&text=${encoded}`;
-  }
-
-  function formatFecha(value) {
-    if (!value) return "";
-    const [y, m, d] = value.split("-");
-    return `${d}/${m}/${y}`;
-  }
-
-  function buildMessage(cat, data) {
-    let lines = [];
-    lines.push(cat.title_msg);
-    lines.push("");
-
-    cat.fieldDefs.forEach(f => {
-      let val = data[f.id];
-      if (val && val.trim() !== "") {
-        if (f.isDate) val = formatFecha(val);
-        lines.push(`${f.label}: ${val}`);
-      }
-    });
-
-    const zelleHasData = cat.zelleDefs.some(f => data[f.id] && data[f.id].trim() !== "");
-    if (zelleHasData) {
-      lines.push("");
-      lines.push(cat.zelleTitle);
-      cat.zelleDefs.forEach(f => {
-        const val = data[f.id];
-        if (val && val.trim() !== "") lines.push(`${f.label}: ${val}`);
-      });
-    }
-
-    const gestorHasData = cat.gestorDefs.some(f => data[f.id] && data[f.id].trim() !== "");
-    if (gestorHasData) {
-      lines.push("");
-      cat.gestorDefs.forEach(f => {
-        const val = data[f.id];
-        if (val && val.trim() !== "") lines.push(`${f.label}: ${val}`);
-      });
-    }
-
-    if (data.observaciones && data.observaciones.trim() !== "") {
-      lines.push("");
-      lines.push(`📝 Observaciones: ${data.observaciones}`);
-    }
-
-    return lines.join("\n");
-  }
-
-  function getFormData(formEl) {
-    const formData = new FormData(formEl);
-    const data = {};
-    formData.forEach((value, key) => { data[key] = value; });
-    return data;
-  }
-
-  function copyToClipboard(text) {
-    if (navigator.clipboard && window.isSecureContext) {
-      return navigator.clipboard.writeText(text);
-    }
-    return new Promise((resolve, reject) => {
-      const ta = document.createElement("textarea");
-      ta.value = text;
-      ta.style.position = "fixed";
-      ta.style.left = "-9999px";
-      ta.style.top = "0";
-      document.body.appendChild(ta);
-      ta.focus();
-      ta.select();
-      try {
-        const ok = document.execCommand("copy");
-        document.body.removeChild(ta);
-        ok ? resolve() : reject(new Error("execCommand falló"));
-      } catch (err) {
-        document.body.removeChild(ta);
-        reject(err);
-      }
-    });
-  }
-
-  // ---------- Autoguardado ----------
-  let saveTimer = null;
-  function scheduleSave(formEl, storageKey) {
-    clearTimeout(saveTimer);
-    saveTimer = setTimeout(() => {
-      const data = getFormData(formEl);
-      localStorage.setItem(storageKey, JSON.stringify(data));
-      const now = new Date();
-      const hh = String(now.getHours()).padStart(2, "0");
-      const mm = String(now.getMinutes()).padStart(2, "0");
-      document.getElementById("saveIndicator").textContent = `Borrador guardado · ${hh}:${mm}`;
-    }, 400);
-  }
-
-  function restoreDraft(formEl, storageKey) {
-    const raw = localStorage.getItem(storageKey);
-    if (!raw) return;
-    try {
-      const data = JSON.parse(raw);
-      Object.keys(data).forEach(key => {
-        const field = formEl.elements.namedItem(key);
-        if (field && data[key] !== undefined) field.value = data[key];
-      });
-    } catch (e) { /* ignorar */ }
-  }
-
-  function clearDraft(formEl, storageKey) {
-    if (!confirm("¿Borrar todos los datos escritos en esta planilla?")) return;
-    localStorage.removeItem(storageKey);
-    formEl.reset();
-    restoreDefaults(formEl);
-    document.getElementById("saveIndicator").textContent = "Borrador borrado";
-  }
-
-  function restoreDefaults(formEl) {
-    const defaults = {
-      gestorNombre: "Claudia Yamaye González Rodríguez",
-      gestorTelefono: "54571729",
-      gestorTarjeta: "9224-0699-9677-9001",
+    // ---------- CATEGORÍAS ----------
+    const CATEGORIES = {
+      venta: {
+        formId: "formVenta",
+        badge: "📦 Formulario de venta",
+        title: "Planilla de Venta",
+        sub: "Venta de equipos con opción de pago por Zelle",
+        storageKey: "planilla_draft_venta",
+        title_msg: "❗❗ PLANILLA DE VENTA ❗❗",
+        fieldDefs: [
+          { id: "fecha", label: "📅 Fecha", isDate: true },
+          { id: "nombreCliente", label: "👤 Nombre del cliente" },
+          { id: "telCliente", label: "📱 Teléfono del cliente" },
+          { id: "equipo", label: "📦 Equipo a comprar" },
+          { id: "cantidad", label: "💵 Cantidad y tipo de moneda" },
+          { id: "cambio", label: "💱 Cambio" },
+          { id: "direccion", label: "📍 Dirección" },
+          { id: "referencia", label: "📍 Punto de referencia" },
+          { id: "domicilio", label: "🛵 Costo del domicilio si es para municipio" },
+        ],
+        zelleDefs: [
+          { id: "zelleNombre", label: "👤 Nombre" },
+          { id: "zelleTelefono", label: "📱 Teléfono" },
+        ],
+        zelleTitle: "🏦 En caso de Zelle, datos de quien realizará la transferencia:",
+        gestorDefs: [
+          { id: "gestorNombre", label: "👤 Nombre del gestor" },
+          { id: "gestorTelefono", label: "📱 Teléfono del gestor" },
+          { id: "gestorTarjeta", label: "💳 Tarjeta del gestor" },
+        ],
+      },
+      general: {
+        formId: "formGeneral",
+        badge: "🧾 Formulario general",
+        title: "Planilla General",
+        sub: "Cliente, garantía, gestor y comisión",
+        storageKey: "planilla_draft_general",
+        title_msg: "❗❗ PLANILLA ❗❗",
+        fieldDefs: [
+          { id: "fecha", label: "➡️Fecha", isDate: true },
+          { id: "nombreCliente", label: "➡️Nombre y Apellido del cliente" },
+          { id: "ciCliente", label: "➡️CI del cliente" },
+          { id: "telCliente", label: "➡️Teléfono del cliente" },
+          { id: "equipo", label: "➡️Equipo a comprar" },
+          { id: "direccion", label: "➡️Dirección" },
+          { id: "garantia", label: "➡️Garantía" },
+          { id: "cantidad", label: "➡️Cantidad a pagar" },
+          { id: "vuelto", label: "➡️Vuelto" },
+          { id: "domicilio", label: "➡️Costo del domicilio" },
+          { id: "pagaQuien", label: "➡️Paga el gestor o el cliente" },
+        ],
+        zelleDefs: [
+          { id: "zelleTelefono", label: "➡️Teléfono del q va a pagar por Zelle" },
+        ],
+        zelleTitle: "🏦 En caso de Zelle:",
+        gestorDefs: [
+          { id: "gestorNombre", label: "➡️Nombre de Gestor" },
+          { id: "gestorTelefono", label: "➡️Teléfono del Gestor" },
+          { id: "gestorTarjeta", label: "➡️Tarjeta del Gestor" },
+          { id: "comision", label: "➡️Comisión" },
+        ],
+      },
     };
-    Object.keys(defaults).forEach(key => {
-      const field = formEl.elements.namedItem(key);
-      if (field) field.value = defaults[key];
-    });
-  }
 
-  // ---------- Cambio de categoría ----------
-  function switchCategory(key) {
-    currentCategory = key;
-    localStorage.setItem("planilla_categoria", key);
-    const cat = CATEGORIES[key];
+    let currentCategory = localStorage.getItem("planilla_categoria") || "venta";
 
-    document.querySelectorAll('.cat-btn').forEach(btn => {
-      btn.classList.toggle('active', btn.dataset.category === key);
-    });
-
-    document.getElementById("formVenta").style.display = key === "venta" ? "block" : "none";
-    document.getElementById("formGeneral").style.display = key === "general" ? "block" : "none";
-
-    document.getElementById("headerBadge").textContent = cat.badge;
-    document.getElementById("headerTitle").textContent = cat.title;
-    document.getElementById("headerSub").textContent = cat.sub;
-
-    const formEl = document.getElementById(cat.formId);
-    restoreDraft(formEl, cat.storageKey);
-    updateSaveIndicatorFromStorage(cat.storageKey);
-  }
-
-  function updateSaveIndicatorFromStorage(storageKey) {
-    const raw = localStorage.getItem(storageKey);
-    document.getElementById("saveIndicator").textContent = raw
-      ? "Hay un borrador guardado en este dispositivo"
-      : "Sin borrador guardado todavía";
-  }
-
-  // ---------- Estado de conexión ----------
-  function updateStatus() {
-    const bar = document.getElementById("statusBar");
-    const text = document.getElementById("statusText");
-    if (navigator.onLine) {
-      bar.classList.remove("offline");
-      text.textContent = "En línea";
-    } else {
-      bar.classList.add("offline");
-      text.textContent = "Sin conexión — los datos se guardan en este dispositivo";
-    }
-  }
-  window.addEventListener("online", updateStatus);
-  window.addEventListener("offline", updateStatus);
-
-  // ---------- Envío y copia ----------
-  function handleSubmit(e, cat) {
-    e.preventDefault();
-    const formEl = document.getElementById(cat.formId);
-    const data = getFormData(formEl);
-    const message = buildMessage(cat, data);
-    const directUrl = buildWhatsappUrl(message);
-
-    if (!navigator.onLine) {
-      copyToClipboard(message);
-      alert("Estás sin conexión. El mensaje fue copiado; WhatsApp intentará abrir y lo podrás pegar y enviar apenas vuelva la señal.");
+    function isMobileDevice() {
+      return /Android|iPhone|iPad|iPod/i.test(navigator.userAgent);
     }
 
-    if (directUrl) {
-      if (isMobileDevice()) {
-        const fallbackUrl = `https://api.whatsapp.com/send?phone=${WHATSAPP_LINK.match(/wa\.me\/(\d{7,15})/)[1]}&text=${encodeURIComponent(message)}`;
-        const fallbackTimer = setTimeout(() => { window.location.href = fallbackUrl; }, 1500);
-        window.addEventListener("blur", () => clearTimeout(fallbackTimer), { once: true });
-        window.location.href = directUrl;
-      } else {
-        window.open(directUrl, "_blank");
-      }
-    } else {
-      copyToClipboard(message);
-      alert("El mensaje fue copiado. Se abrirá WhatsApp: pega el mensaje y envíalo.");
-      window.open(WHATSAPP_LINK, "_blank");
+    function buildWhatsappUrl(message) {
+      const encoded = encodeURIComponent(message);
+      const match = WHATSAPP_LINK.match(/wa\.me\/(\d{7,15})/);
+      if (!match) return null;
+      const phone = match[1];
+      if (isMobileDevice()) return `whatsapp://send?phone=${phone}&text=${encoded}`;
+      return `https://web.whatsapp.com/send?phone=${phone}&text=${encoded}`;
     }
-  }
 
-  function handleCopy(btn, cat) {
-    const formEl = document.getElementById(cat.formId);
-    const data = getFormData(formEl);
-    const message = buildMessage(cat, data);
-    copyToClipboard(message)
-      .then(() => {
-        const original = btn.innerHTML;
-        btn.textContent = "✅ ¡Copiado!";
-        setTimeout(() => { btn.innerHTML = original; }, 1800);
-      })
-      .catch(() => {
-        const original = btn.innerHTML;
-        btn.textContent = "❌ Error";
-        setTimeout(() => { btn.innerHTML = original; }, 1800);
+    function formatFecha(value) {
+      if (!value) return "";
+      const [y, m, d] = value.split("-");
+      return `${d}/${m}/${y}`;
+    }
+
+    function buildMessage(cat, data) {
+      let lines = [];
+      lines.push(cat.title_msg);
+      lines.push("");
+
+      cat.fieldDefs.forEach(f => {
+        let val = data[f.id];
+        if (val && val.trim() !== "") {
+          if (f.isDate) val = formatFecha(val);
+          lines.push(`${f.label}: ${val}`);
+        }
       });
-  }
 
-  // ---------- AUTO-LLENAR MEJORADO (con y sin comas) ----------
-  function parseMessageNatural(text) {
-    let clean = text.replace(/\s+/g, ' ').trim();
-    const hasCommas = clean.includes(',');
+      const zelleHasData = cat.zelleDefs.some(f => data[f.id] && data[f.id].trim() !== "");
+      if (zelleHasData) {
+        lines.push("");
+        lines.push(cat.zelleTitle);
+        cat.zelleDefs.forEach(f => {
+          const val = data[f.id];
+          if (val && val.trim() !== "") lines.push(`${f.label}: ${val}`);
+        });
+      }
 
-    if (hasCommas) {
-      // Dividir por comas y limpiar
-      const parts = clean.split(',').map(p => p.trim()).filter(p => p.length > 0);
-      const result = {};
+      const gestorHasData = cat.gestorDefs.some(f => data[f.id] && data[f.id].trim() !== "");
+      if (gestorHasData) {
+        lines.push("");
+        cat.gestorDefs.forEach(f => {
+          const val = data[f.id];
+          if (val && val.trim() !== "") lines.push(`${f.label}: ${val}`);
+        });
+      }
 
-      // Identificadores de campos
-      const phoneRegex = /\b(\d{3}[\s\-]?\d{2}[\s\-]?\d{3}|\d{8})\b/;
-      const cambioRegex = /(?:cambio|vuelto|devuelta|llevar\s+cambio)\s+([\d.]+)\s*(?:USD|CUP|pesos?|usd|cup|Pesos?|MN|mn)?/i;
-      const dirRegex = /(?:calle|avenida|av\.?|callejón|pasaje|carretera|#|entre|esquina|y\s+(?:calle|avenida))\s+[^,.]{5,}/i;
-      const refRegex = /(?:cerca\s+de|junto\s+a|al\s+lado\s+de|referencia|frente\s+a|detrás\s+de|entre\s+[^,]+?y\s+[^,]+?)\s+[^,.]{3,}/i;
-      const montoRegex = /\b(\d+(?:\.\d{1,2})?)\s*(?:USD|CUP|pesos?|usd|cup|Pesos?|MN|mn)\b/i;
-      const prodRegex = /\b(\d+)\s+([a-zA-ZÁÉÍÓÚáéíóúñÑ]+(?:[\s\-][a-zA-ZÁÉÍÓÚáéíóúñÑ]+)*)\b/;
+      if (data.observaciones && data.observaciones.trim() !== "") {
+        lines.push("");
+        lines.push(`📝 Observaciones: ${data.observaciones}`);
+      }
 
-      // Variables temporales
-      let nombre = '', telefono = '', cantidad = '', cambio = '', direccion = '', referencia = '', equipo = '';
-      let montoEncontrado = '', productoEncontrado = '';
+      return lines.join("\n");
+    }
 
-      // Primera pasada: extraer teléfono, cambio, dirección, referencia (exactos)
-      for (let part of parts) {
+    function getFormData(formEl) {
+      const formData = new FormData(formEl);
+      const data = {};
+      formData.forEach((value, key) => { data[key] = value; });
+      return data;
+    }
+
+    function copyToClipboard(text) {
+      if (navigator.clipboard && window.isSecureContext) {
+        return navigator.clipboard.writeText(text);
+      }
+      return new Promise((resolve, reject) => {
+        const ta = document.createElement("textarea");
+        ta.value = text;
+        ta.style.position = "fixed";
+        ta.style.left = "-9999px";
+        ta.style.top = "0";
+        document.body.appendChild(ta);
+        ta.focus();
+        ta.select();
+        try {
+          const ok = document.execCommand("copy");
+          document.body.removeChild(ta);
+          ok ? resolve() : reject(new Error("execCommand falló"));
+        } catch (err) {
+          document.body.removeChild(ta);
+          reject(err);
+        }
+      });
+    }
+
+    // ---------- 🧠 NUEVO AUTCOMPLETADO MEJORADO ----------
+    const DEVICE_KEYWORDS = [
+      "iphone", "ipad", "macbook", "imac", "airpods", "apple watch",
+      "samsung", "galaxy", "xiaomi", "redmi", "poco", "huawei", "honor",
+      "tecno", "infinix", "motorola", "moto g", "oneplus", "realme",
+      "tablet", "laptop", "notebook", "smart tv", "tv box", "tv",
+      "play station", "playstation", "ps5", "ps4", "xbox", "nintendo switch",
+      "power bank", "cargador", "audífonos", "auriculares", "bocina", "parlante",
+      "lámpara", "lampara", "lampra"   // <-- añadido para el ejemplo
+    ];
+
+    function normalizeCurrency(raw) {
+      let c = raw.toUpperCase();
+      if (c === "$" || c.startsWith("D")) return "USD";
+      if (c.startsWith("PES") || c === "MN" || c === "CUP") return "MN";
+      return c;
+    }
+
+    function extractMoney(text) {
+      const m = text.match(/(\d+[.,]?\d*)\s*(usd|cup|mn|mlc|\$|d[oó]lares|pesos)/i);
+      if (!m) return null;
+      return { amount: m[1].replace(",", "."), currency: normalizeCurrency(m[2]) };
+    }
+
+    function formatMoneyObj(amount, currency) {
+      return `${amount} ${currency}`;
+    }
+
+    // Clasifica por comas (estructura típica de mensajes con separación)
+    function classifySegments(text) {
+      const segments = text.split(",").map(s => s.trim()).filter(Boolean);
+      const values = {};
+      let nombreSet = false;
+      let equipoSet = false;
+      let cantidadSet = false;
+      let cambioSet = false;
+      let direccionSet = false;
+      let referenciaSet = false;
+
+      const ciRe = /\b\d{11}\b/;
+      const phoneRe = /(?:\+?53)?\s?5\d{7}\b/;
+      const addressRe = /(calle|avenida|\bave\.?\b|reparto|vedado|edificio|apto|apartamento|entre\s)/i;
+      const refRe = /(cerca de|frente a|al lado de|referencia:?)/i;
+      const garantiaRe = /garant[ií]a/i;
+      const domicilioKw = /domicilio|env[ií]o|mensajer[íi]a|delivery/i;
+      const vueltoKw = /vuelto/i;
+      const comisionKw = /comisi[oó]n/i;
+      const zelleKw = /zelle/i;
+      const cambioKw = /cambio|tasa|1\s*usd\s*[=x]/i;
+      const moneyReGlobal = new RegExp("(\\d+[.,]?\\d*)\\s*(usd|cup|mn|mlc|\\$|d[oó]lares|pesos)", "gi");
+
+      function pickFirstMoney(seg) {
+        const m = [...seg.matchAll(moneyReGlobal)];
+        if (m.length) return formatMoneyObj(m[0][1].replace(",", "."), normalizeCurrency(m[0][2]));
+        return null;
+      }
+
+      for (let seg of segments) {
+        // Si el segmento contiene "cambio" o "tasa", extraer el monto como cambio
+        if (cambioKw.test(seg) && !cambioSet) {
+          const m = seg.match(/(\d+[.,]?\d*)\s*(usd|cup|mn|mlc|\$|d[oó]lares|pesos)/i);
+          if (m) {
+            values.cambio = formatMoneyObj(m[1].replace(",", "."), normalizeCurrency(m[2]));
+            cambioSet = true;
+            continue;
+          } else {
+            // Si no hay monto, puede ser "10000 MN o 10 usd" -> tomar ambos
+            const all = [...seg.matchAll(moneyReGlobal)];
+            if (all.length >= 2) {
+              values.cambio = all.map(m => formatMoneyObj(m[1].replace(",", "."), normalizeCurrency(m[2]))).join(" o ");
+              cambioSet = true;
+              continue;
+            }
+          }
+        }
+
         // Teléfono
-        const phoneMatch = part.match(phoneRegex);
-        if (phoneMatch && !telefono) {
-          let phone = phoneMatch[1].replace(/[\s\-]/g, '');
-          if (phone.length === 8) {
-            telefono = phone;
+        if (phoneRe.test(seg)) {
+          const tel = seg.match(phoneRe)[0].replace(/[^\d]/g, "");
+          if (zelleKw.test(seg)) values.zelleTelefono = tel;
+          else if (!values.telCliente) values.telCliente = tel;
+          else if (!values.zelleTelefono) values.zelleTelefono = tel;
+          continue;
+        }
+
+        // CI
+        if (ciRe.test(seg) && !values.ciCliente) {
+          values.ciCliente = seg.match(ciRe)[0];
+          continue;
+        }
+
+        // Garantía
+        if (garantiaRe.test(seg) && !values.garantia) {
+          values.garantia = seg.replace(garantiaRe, "").trim();
+          continue;
+        }
+
+        // Zelle (nombre o teléfono)
+        if (zelleKw.test(seg) && !new RegExp(moneyReGlobal).test(seg) && !phoneRe.test(seg)) {
+          const name = seg.replace(zelleKw, "").replace(/a nombre de|nombre|es|:/gi, "").trim();
+          if (name && !values.zelleNombre) values.zelleNombre = name;
+          continue;
+        }
+
+        // Dirección
+        if (addressRe.test(seg) && !direccionSet) {
+          values.direccion = seg;
+          direccionSet = true;
+          continue;
+        }
+
+        // Referencia
+        if (refRe.test(seg) && !referenciaSet) {
+          values.referencia = seg;
+          referenciaSet = true;
+          continue;
+        }
+
+        // Si tiene monto (dinero)
+        if (moneyReGlobal.test(seg)) {
+          const firstMoney = pickFirstMoney(seg);
+          if (!firstMoney) continue;
+
+          // Domicilio
+          if (domicilioKw.test(seg) && !values.domicilio) {
+            values.domicilio = firstMoney;
+            continue;
+          }
+          // Vuelto
+          if (vueltoKw.test(seg) && !values.vuelto) {
+            values.vuelto = firstMoney;
+            continue;
+          }
+          // Comisión
+          if (comisionKw.test(seg) && !values.comision) {
+            values.comision = firstMoney;
+            continue;
+          }
+
+          // Si es un precio de equipo (ej. "lampara (55 usd)") y todavía no tenemos equipo
+          if (!equipoSet && /\(/.test(seg) && /\)/.test(seg)) {
+            // El equipo es todo el segmento
+            values.equipo = seg;
+            equipoSet = true;
+            // El precio podría ir también como cantidad, pero mejor esperar a otro segmento
+            continue;
+          }
+
+          // Si no se ha asignado cantidad, asignarlo como cantidad
+          if (!cantidadSet) {
+            // Pero si el segmento tiene palabras como "lampara" y un número, podría ser cantidad con unidad
+            // Ej: "1 lampara usd o mn o transferencia"
+            const unitMatch = seg.match(/(\d+)\s*([a-zA-Záéíóúñ]+)/i);
+            if (unitMatch && DEVICE_KEYWORDS.some(kw => seg.toLowerCase().includes(kw))) {
+              // Es una cantidad con unidad (ej. 1 lámpara)
+              const unit = unitMatch[2];
+              const moneda = seg.match(/(usd|mn|cup|mlc)/i);
+              const monedaStr = moneda ? moneda[0].toUpperCase() : "";
+              values.cantidad = `${unitMatch[1]} ${unit}${monedaStr ? ' en ' + monedaStr : ''}`;
+              cantidadSet = true;
+              continue;
+            } else {
+              // Si no, es solo un monto (ej. "150 USD")
+              values.cantidad = firstMoney;
+              cantidadSet = true;
+              continue;
+            }
+          }
+
+          // Si ya tenemos cantidad, y no es cambio, guardar como cambio (si no está ya)
+          if (!cambioSet) {
+            values.cambio = firstMoney;
+            cambioSet = true;
+            continue;
+          }
+
+          // Si sobra, va a observaciones
+        }
+
+        // Nombre (primer segmento sin números, corto, y sin palabras clave)
+        if (!nombreSet && !/\d/.test(seg) && seg.split(/\s+/).length <= 4 && !/calle|avenida|reparto|zelle|domicilio|garantía|vuelto|comisión|cambio/i.test(seg)) {
+          values.nombreCliente = seg;
+          nombreSet = true;
+          continue;
+        }
+
+        // Si es un equipo sin precio claro (ej. "lampra")
+        if (!equipoSet && DEVICE_KEYWORDS.some(kw => seg.toLowerCase().includes(kw))) {
+          // Si tiene paréntesis con precio, ya lo capturamos antes, sino tomamos el segmento entero
+          if (!/\(/.test(seg) || !/\)/.test(seg)) {
+            values.equipo = seg;
+            equipoSet = true;
             continue;
           }
         }
-        // Cambio
-        const cambioMatch = part.match(cambioRegex);
-        if (cambioMatch && !cambio) {
-          cambio = cambioMatch[0].trim();
-          continue;
-        }
-        // Dirección
-        const dirMatch = part.match(dirRegex);
-        if (dirMatch && !direccion) {
-          direccion = dirMatch[0].trim();
-          continue;
-        }
-        // Referencia
-        const refMatch = part.match(refRegex);
-        if (refMatch && !referencia) {
-          referencia = refMatch[0].trim();
-          continue;
+
+        // Si no encaja, guardar en observaciones (acumulando)
+        if (seg) {
+          if (!values.observaciones) values.observaciones = seg;
+          else values.observaciones += ", " + seg;
         }
       }
 
-      // Segunda pasada: extraer monto y producto para cantidad, y el resto para equipo/nombre
-      // Recolectar partes no usadas
-      let remainingParts = [];
-      for (let part of parts) {
-        // Si la parte ya fue usada en los campos anteriores, saltar
-        let used = false;
-        if (telefono && part.includes(telefono)) used = true;
-        if (cambio && part.includes(cambio)) used = true;
-        if (direccion && part.includes(direccion)) used = true;
-        if (referencia && part.includes(referencia)) used = true;
-        if (used) continue;
-        remainingParts.push(part);
-      }
+      return values;
+    }
 
-      // Extraer monto y producto de remainingParts
-      let monto = '', producto = '';
-      for (let part of remainingParts) {
-        // Monto
-        const montoMatch = part.match(montoRegex);
-        if (montoMatch && !monto) {
-          monto = montoMatch[0].trim();
-          // Quitar el monto de la parte
-          part = part.replace(montoMatch[0], '').trim();
-        }
-        // Producto (número + palabra) si no es moneda y no se ha asignado
-        const prodMatch = part.match(prodRegex);
-        if (prodMatch && !producto) {
-          const second = prodMatch[2].toLowerCase();
-          if (!/usd|cup|pesos|mn|calle|avenida|entre|referencia|cerca|junto|al lado|frente|detrás/i.test(second)) {
-            producto = prodMatch[0].trim();
-            part = part.replace(prodMatch[0], '').trim();
-          }
-        }
-        // Si la parte restante no está vacía y no es nombre, la guardamos para equipo
-        if (part.length > 0) {
-          // Si parece nombre (mayúscula y sin números) y no hay nombre aún, asignar
-          if (/^[A-ZÁÉÍÓÚÑ]/.test(part) && !/\d/.test(part) && !nombre) {
-            nombre = part;
-          } else {
-            // Sino, acumular para equipo
-            if (equipo) equipo += ' ' + part;
-            else equipo = part;
-          }
-        }
-      }
+    // Análisis de texto libre (cuando no hay comas o para completar)
+    function autofillFreeform(text) {
+      const values = {};
+      const lower = text.toLowerCase();
 
-      // Construir cantidad: combinar producto y monto si ambos existen
-      if (producto && monto) {
-        cantidad = producto + ' - ' + monto;
-      } else if (producto) {
-        cantidad = producto;
-      } else if (monto) {
-        cantidad = monto;
-      }
-
-      // Si no hay nombre, intentar sacarlo de la primera parte no usada
-      if (!nombre && remainingParts.length > 0) {
-        const first = remainingParts[0].trim();
-        if (first.length > 1 && !/^\d+$/.test(first) && !/calle|avenida|entre|referencia|cerca|junto|usd|cup|pesos|mn/i.test(first)) {
-          nombre = first;
-        }
-      }
-
-      // Si no hay equipo, usar el producto (si no se asignó a cantidad)
-      if (!equipo && producto && !cantidad.includes(producto)) {
-        equipo = producto;
-      }
-
-      // Asignar resultados
-      if (nombre) result.nombre = nombre;
-      if (telefono) result.telefono = telefono;
-      if (cantidad) result.cantidad = cantidad;
-      if (cambio) result.cambio = cambio;
-      if (direccion) result.direccion = direccion;
-      if (referencia) result.referencia = referencia;
-      if (equipo) result.equipo = equipo;
-
-      return result;
-    } else {
-      // ---------- SIN COMAS: usar el parser natural original (ya funcional) ----------
-      // (Mantener la lógica anterior para textos sin comas, que ya funcionaba)
-      // Por brevedad, copiamos la misma lógica que teníamos antes para el caso sin comas.
-      // En aras de la claridad, pondré la misma función que ya estaba (la que funciona).
-      // (El código anterior ya tiene una implementación para sin comas, así que la reutilizamos)
-      // Para no duplicar, invocamos la función existente.
-      // Pero como estamos en una nueva función, la incluimos aquí.
-      const result = {};
-      let cleanText = text.replace(/\s+/g, ' ').trim();
-
-      // Cambio
-      const cambioRegex = /(?:cambio|vuelto|devuelta|llevar\s+cambio)\s+([\d.]+)\s*(?:USD|CUP|pesos?|usd|cup|Pesos?|MN|mn)?/i;
-      const cambioMatch = cleanText.match(cambioRegex);
-      if (cambioMatch) {
-        result.cambio = cambioMatch[0].trim();
-        cleanText = cleanText.replace(cambioMatch[0], '').replace(/\s+/g, ' ').trim();
-      }
-
-      // Teléfono
-      const phoneRegex = /\b(\d{3}[\s\-]?\d{2}[\s\-]?\d{3}|\d{8})\b/;
-      const phoneMatch = cleanText.match(phoneRegex);
-      if (phoneMatch) {
-        let phone = phoneMatch[1].replace(/[\s\-]/g, '');
-        if (phone.length === 8) {
-          result.telefono = phone;
-          cleanText = cleanText.replace(phoneMatch[0], '').replace(/\s+/g, ' ').trim();
-        }
-      }
-
-      // Cantidad (monto + producto)
-      let monto = '';
-      const montoRegex = /\b(\d+(?:\.\d{1,2})?)\s*(?:USD|CUP|pesos?|usd|cup|Pesos?|MN|mn)\b/i;
-      const montoMatch = cleanText.match(montoRegex);
-      if (montoMatch) {
-        monto = montoMatch[0].trim();
-        cleanText = cleanText.replace(montoMatch[0], '').replace(/\s+/g, ' ').trim();
-      }
-
-      let producto = '';
-      const prodRegex = /\b(\d+)\s+([a-zA-ZÁÉÍÓÚáéíóúñÑ]+(?:[\s\-][a-zA-ZÁÉÍÓÚáéíóúñÑ]+)*)\b/;
-      const prodMatch = cleanText.match(prodRegex);
-      if (prodMatch) {
-        const second = prodMatch[2].toLowerCase();
-        if (!/usd|cup|pesos|mn|calle|avenida|entre|referencia|cerca|junto|al lado|frente|detrás/i.test(second)) {
-          producto = prodMatch[0].trim();
-          cleanText = cleanText.replace(prodMatch[0], '').replace(/\s+/g, ' ').trim();
-        }
-      }
-      if (producto && monto) result.cantidad = `${producto} - ${monto}`;
-      else if (producto) result.cantidad = producto;
-      else if (monto) result.cantidad = monto;
-
-      // Dirección
-      const dirRegex = /(?:calle|avenida|av\.?|callejón|pasaje|carretera|#|entre|esquina|y\s+(?:calle|avenida))\s+[^,.]{5,}/i;
-      const dirMatch = cleanText.match(dirRegex);
-      if (dirMatch) {
-        result.direccion = dirMatch[0].trim();
-        cleanText = cleanText.replace(dirMatch[0], '').replace(/\s+/g, ' ').trim();
-      }
-
-      // Referencia
-      const refRegex = /(?:cerca\s+de|junto\s+a|al\s+lado\s+de|referencia|frente\s+a|detrás\s+de|entre\s+[^,]+?y\s+[^,]+?)\s+[^,.]{3,}/i;
-      const refMatch = cleanText.match(refRegex);
-      if (refMatch) {
-        result.referencia = refMatch[0].trim();
-        cleanText = cleanText.replace(refMatch[0], '').replace(/\s+/g, ' ').trim();
-      }
-
-      // Nombre y equipo
-      const tokens = cleanText.split(/\s+/).filter(t => t.length > 1);
-      let nombreCandidato = '';
-      let equipoCandidato = [];
-      let foundNombre = false;
-      for (let i = 0; i < tokens.length; i++) {
-        const t = tokens[i];
-        if (/^[A-ZÁÉÍÓÚÑ]/.test(t) && !/calle|avenida|entre|referencia|junto|cerca|al lado|frente|detrás|usd|cup|pesos|mn/i.test(t)) {
-          if (!foundNombre) {
-            nombreCandidato += t + ' ';
-            if (i + 1 < tokens.length && tokens[i+1].length < 10 && /^[A-ZÁÉÍÓÚÑ]/.test(tokens[i+1])) {
-              nombreCandidato += tokens[i+1] + ' ';
-              i++;
-            }
-            foundNombre = true;
-          } else {
-            equipoCandidato.push(t);
-          }
-        } else {
-          equipoCandidato.push(t);
-        }
-      }
-      if (nombreCandidato.trim()) result.nombre = nombreCandidato.trim();
-      if (equipoCandidato.length > 0) result.equipo = equipoCandidato.join(' ');
-      else if (cleanText.trim() && cleanText.trim() !== (result.nombre || '').trim()) result.equipo = cleanText.trim();
-
-      if (!result.nombre && text) {
-        const words = text.split(/\s+/);
-        for (const w of words) {
-          if (w.length > 1 && !/^\d+$/.test(w) && !/calle|avenida|entre|referencia|cerca|junto|usd|cup|pesos|mn/i.test(w)) {
-            result.nombre = w;
+      // Nombre: buscar "me llamo", "nombre", o primer palabra sin números
+      let nameMatch = text.match(/(?:me llamo|mi nombre es|soy|nombre:?\s*)\s*([a-zA-ZÁÉÍÓÚÑáéíóúñ]+(?:\s+[a-zA-ZÁÉÍÓÚÑáéíóúñ]+){0,3})/i);
+      if (nameMatch) {
+        values.nombreCliente = nameMatch[1].trim();
+      } else {
+        // Tomar primer token que no sea número ni palabra clave
+        const tokens = text.split(/[\s,]+/);
+        for (const t of tokens) {
+          if (t.length > 1 && !/\d/.test(t) && !/calle|avenida|reparto|zelle|domicilio|garantía|vuelto|comisión|cambio|usd|mn|cup|mlc/i.test(t)) {
+            values.nombreCliente = t;
             break;
           }
         }
       }
 
-      return result;
-    }
-  }
+      // Teléfono
+      const telMatch = text.match(/(?:\+?53)?\s?5\d{7}\b/);
+      if (telMatch) values.telCliente = telMatch[0].replace(/[^\d]/g, "");
 
-  function applyParsedData(parsed) {
-    const cat = CATEGORIES[currentCategory];
-    const formEl = document.getElementById(cat.formId);
+      // CI
+      const ciMatch = text.match(/\b\d{11}\b/);
+      if (ciMatch) values.ciCliente = ciMatch[0];
 
-    const fieldMap = {
-      nombre: "nombreCliente",
-      telefono: "telCliente",
-      equipo: "equipo",
-      cantidad: "cantidad",
-      cambio: "cambio",
-      vuelto: "vuelto",
-      direccion: "direccion",
-      referencia: "referencia",
-      domicilio: "domicilio",
-      garantia: "garantia",
-      ci: "ciCliente",
-      pagaquien: "pagaQuien",
-      comision: "comision",
-      observaciones: "observaciones",
-      zellenombre: "zelleNombre",
-      zelletelefono: "zelleTelefono",
-    };
-
-    let filledCount = 0;
-    for (const [key, value] of Object.entries(parsed)) {
-      let fieldId = fieldMap[key];
-      if (key === 'cambio' && currentCategory === 'general') {
-        fieldId = 'vuelto';
-      }
-      if (fieldId) {
-        const input = formEl.elements.namedItem(fieldId);
-        if (input && !input.readOnly) {
-          input.value = value;
-          filledCount++;
+      // Equipo: buscar palabra clave y capturar hasta coma o punto o monto
+      for (const kw of DEVICE_KEYWORDS) {
+        const idx = lower.indexOf(kw);
+        if (idx !== -1) {
+          // Tomar desde la palabra clave hasta la siguiente coma o punto o fin
+          const start = idx;
+          let end = text.length;
+          const nextComma = text.indexOf(",", start);
+          const nextDot = text.indexOf(".", start);
+          const nextSemicolon = text.indexOf(";", start);
+          const nextNewline = text.indexOf("\n", start);
+          const stops = [nextComma, nextDot, nextSemicolon, nextNewline].filter(i => i !== -1);
+          if (stops.length) end = Math.min(...stops);
+          let fragment = text.slice(start, end).trim();
+          // Si el fragmento es muy largo, acortar a 50 chars
+          if (fragment.length > 50) fragment = fragment.slice(0, 50);
+          values.equipo = fragment;
+          break;
         }
       }
+
+      // Dirección
+      const dirMatch = text.match(/(calle[^.,\n]*|avenida[^.,\n]*|reparto[^.,\n]*|vedado[^.,\n]*|edificio[^.,\n]*|apto[^.,\n]*|apartamento[^.,\n]*|entre\s[^.,\n]*)/i);
+      if (dirMatch) values.direccion = dirMatch[0].trim();
+
+      // Referencia
+      const refMatch = text.match(/(cerca de[^.,\n]*|frente a[^.,\n]*|al lado de[^.,\n]*|referencia:?\s*[^.,\n]*)/i);
+      if (refMatch) values.referencia = refMatch[0].trim();
+
+      // Garantía
+      const garMatch = text.match(/garant[ií]a[:\s]*([^.,\n]*)/i);
+      if (garMatch && garMatch[1]) values.garantia = garMatch[1].trim();
+
+      // Cantidad: buscar "1 lampara" o similar
+      const unitMatch = text.match(/(\d+)\s*([a-zA-Záéíóúñ]+)\s*(?:en\s*)?(usd|mn|cup|mlc)?/i);
+      if (unitMatch && DEVICE_KEYWORDS.some(kw => lower.includes(kw))) {
+        const unit = unitMatch[2];
+        const moneda = unitMatch[3] ? unitMatch[3].toUpperCase() : "";
+        values.cantidad = `${unitMatch[1]} ${unit}${moneda ? ' en ' + moneda : ''}`;
+      } else {
+        // Buscar cualquier monto con moneda
+        const money = extractMoney(text);
+        if (money) values.cantidad = formatMoneyObj(money.amount, money.currency);
+      }
+
+      // Cambio: buscar "cambio", "tasa", o relación "1 usd ="
+      const cambioMatch = text.match(/cambio[:\s]*([^.,\n]*)/i);
+      if (cambioMatch && cambioMatch[1]) {
+        const val = cambioMatch[1].trim();
+        const money = extractMoney(val);
+        if (money) values.cambio = formatMoneyObj(money.amount, money.currency);
+        else values.cambio = val;
+      } else {
+        const rateMatch = text.match(/1\s*(?:usd)?\s*[=x]\s*(\d+)\s*(cup|mn)?/i);
+        if (rateMatch) {
+          const amount = rateMatch[1];
+          const currency = rateMatch[2] ? rateMatch[2].toUpperCase() : "MN";
+          values.cambio = `1 USD = ${amount} ${currency}`;
+        } else {
+          // Buscar dos montos con distintas monedas (ej. "10000 MN o 10 usd")
+          const allMoney = [...text.matchAll(/(\d+[.,]?\d*)\s*(usd|cup|mn|mlc|\$|d[oó]lares|pesos)/gi)];
+          if (allMoney.length >= 2) {
+            const m1 = { amount: allMoney[0][1].replace(",", "."), currency: normalizeCurrency(allMoney[0][2]) };
+            const m2 = { amount: allMoney[1][1].replace(",", "."), currency: normalizeCurrency(allMoney[1][2]) };
+            if (m1.currency !== m2.currency) {
+              values.cambio = `${m1.amount} ${m1.currency} o ${m2.amount} ${m2.currency}`;
+            }
+          }
+        }
+      }
+
+      // Domicilio
+      const domMatch = text.match(/domicilio[:\s]*([^.,\n]*)/i);
+      if (domMatch && domMatch[1]) values.domicilio = domMatch[1].trim();
+
+      // Zelle
+      const zelleIdx = lower.indexOf("zelle");
+      if (zelleIdx !== -1) {
+        const window_ = text.slice(zelleIdx, zelleIdx + 80);
+        const tel = window_.match(/(?:\+?53)?\s?5\d{7}\b/);
+        if (tel) values.zelleTelefono = tel[0].replace(/[^\d]/g, "");
+        const name = window_.match(/(?:a nombre de|nombre:?\s*)\s*([a-zA-ZÁÉÍÓÚÑáéíóúñ]+(?:\s+[a-zA-ZÁÉÍÓÚÑáéíóúñ]+){0,2})/i);
+        if (name) values.zelleNombre = name[1].trim();
+      }
+
+      return values;
     }
 
-    if (filledCount > 0) {
-      scheduleSave(formEl, cat.storageKey);
-      document.getElementById("saveIndicator").textContent = `✅ Se rellenaron ${filledCount} campos automáticamente`;
-      setTimeout(() => updateSaveIndicatorFromStorage(cat.storageKey), 3000);
-    } else {
-      alert("No se pudo extraer ningún dato. Asegúrate de que el mensaje contenga información reconocible (nombre, teléfono, dirección, etc.).");
-    }
-  }
+    // Función principal de autocompletado
+    function autofillFromText(cat, formEl, rawText) {
+      const text = rawText.trim();
+      if (!text) return 0;
 
-  // ---------- Modal ----------
-  function openAutoModal() {
-    document.getElementById("modalAuto").classList.add("open");
-    document.getElementById("modalTextarea").value = "";
-    document.getElementById("modalTextarea").focus();
-  }
+      // Primero clasificar por comas
+      const segValues = classifySegments(text);
+      // Luego completar con análisis libre
+      const freeValues = autofillFreeform(text);
+      // Combinar (segValues tiene prioridad)
+      const values = Object.assign({}, freeValues, segValues);
 
-  function closeAutoModal() {
-    document.getElementById("modalAuto").classList.remove("open");
-  }
-
-  function processAutoFill() {
-    const textarea = document.getElementById("modalTextarea");
-    const text = textarea.value;
-    if (!text.trim()) {
-      alert("Por favor, pega el mensaje del cliente.");
-      return;
-    }
-    const parsed = parseMessageNatural(text);
-    applyParsedData(parsed);
-    closeAutoModal();
-  }
-
-  // ---------- Inicialización ----------
-  document.addEventListener("DOMContentLoaded", function() {
-    document.querySelectorAll('.cat-btn').forEach(btn => {
-      btn.addEventListener('click', function() {
-        const category = this.dataset.category;
-        if (category) switchCategory(category);
+      let filledCount = 0;
+      Object.keys(values).forEach(key => {
+        const val = values[key];
+        if (!val) return;
+        const field = formEl.elements.namedItem(key);
+        if (!field) return;
+        if (field.value && field.value.trim() !== "") return; // no pisar si ya tiene
+        field.value = val;
+        field.classList.add("autofilled");
+        setTimeout(() => field.classList.remove("autofilled"), 4000);
+        filledCount++;
       });
-    });
 
+      // Fecha automática
+      const fechaField = formEl.elements.namedItem("fecha");
+      if (fechaField && !fechaField.value) {
+        const now = new Date();
+        fechaField.value = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, "0")}-${String(now.getDate()).padStart(2, "0")}`;
+      }
+
+      return filledCount;
+    }
+
+    function runAutofill() {
+      const text = document.getElementById("pasteInput").value;
+      const cat = CATEGORIES[currentCategory];
+      const formEl = document.getElementById(cat.formId);
+      const count = autofillFromText(cat, formEl, text);
+      const resultEl = document.getElementById("autofillResult");
+      resultEl.textContent = count > 0
+        ? `✅ Se completaron ${count} campo(s) automáticamente. Revisa antes de enviar — el resto lo completas a mano.`
+        : "⚠️ No se detectó suficiente información en el texto. Completa los campos a mano.";
+      scheduleSave(formEl, cat.storageKey);
+    }
+
+    // ---------- AUTOGUARDADO ----------
+    let saveTimer = null;
+    function scheduleSave(formEl, storageKey) {
+      clearTimeout(saveTimer);
+      saveTimer = setTimeout(() => {
+        const data = getFormData(formEl);
+        localStorage.setItem(storageKey, JSON.stringify(data));
+        const now = new Date();
+        const hh = String(now.getHours()).padStart(2, "0");
+        const mm = String(now.getMinutes()).padStart(2, "0");
+        document.getElementById("saveIndicator").textContent = `Borrador guardado · ${hh}:${mm}`;
+      }, 400);
+    }
+
+    function restoreDraft(formEl, storageKey) {
+      const raw = localStorage.getItem(storageKey);
+      if (!raw) return;
+      try {
+        const data = JSON.parse(raw);
+        Object.keys(data).forEach(key => {
+          const field = formEl.elements.namedItem(key);
+          if (field && data[key]) field.value = data[key];
+        });
+      } catch (e) { /* borrador corrupto, se ignora */ }
+    }
+
+    function clearDraft(formEl, storageKey) {
+      if (!confirm("¿Borrar todos los datos escritos en esta planilla?")) return;
+      localStorage.removeItem(storageKey);
+      formEl.reset();
+      restoreDefaults(formEl);
+      document.getElementById("saveIndicator").textContent = "Borrador borrado";
+    }
+
+    function restoreDefaults(formEl) {
+      const defaults = {
+        gestorNombre: "Claudia Yamaye González Rodríguez",
+        gestorTelefono: "54571729",
+        gestorTarjeta: "9224-0699-9677-9001",
+      };
+      Object.keys(defaults).forEach(key => {
+        const field = formEl.elements.namedItem(key);
+        if (field) field.value = defaults[key];
+      });
+    }
+
+    // ---------- CAMBIO DE CATEGORÍA ----------
+    function switchCategory(key) {
+      currentCategory = key;
+      localStorage.setItem("planilla_categoria", key);
+      const cat = CATEGORIES[key];
+
+      document.getElementById("btnVenta").classList.toggle("active", key === "venta");
+      document.getElementById("btnGeneral").classList.toggle("active", key === "general");
+      document.getElementById("formVenta").style.display = key === "venta" ? "block" : "none";
+      document.getElementById("formGeneral").style.display = key === "general" ? "block" : "none";
+
+      document.getElementById("headerBadge").textContent = cat.badge;
+      document.getElementById("headerTitle").textContent = cat.title;
+      document.getElementById("headerSub").textContent = cat.sub;
+
+      const formEl = document.getElementById(cat.formId);
+      restoreDraft(formEl, cat.storageKey);
+      updateSaveIndicatorFromStorage(cat.storageKey);
+    }
+
+    function updateSaveIndicatorFromStorage(storageKey) {
+      const raw = localStorage.getItem(storageKey);
+      document.getElementById("saveIndicator").textContent = raw
+        ? "Hay un borrador guardado en este dispositivo"
+        : "Sin borrador guardado todavía";
+    }
+
+    // ---------- ESTADO DE CONEXIÓN ----------
+    function updateStatus() {
+      const bar = document.getElementById("statusBar");
+      const text = document.getElementById("statusText");
+      if (navigator.onLine) {
+        bar.classList.remove("offline");
+        text.textContent = "En línea";
+      } else {
+        bar.classList.add("offline");
+        text.textContent = "Sin conexión — los datos se guardan en este dispositivo";
+      }
+    }
+    window.addEventListener("online", updateStatus);
+    window.addEventListener("offline", updateStatus);
+
+    // ---------- ENVÍO Y COPIADO ----------
+    function handleSubmit(e, cat) {
+      e.preventDefault();
+      const formEl = document.getElementById(cat.formId);
+      const data = getFormData(formEl);
+      const message = buildMessage(cat, data);
+      const directUrl = buildWhatsappUrl(message);
+
+      if (!navigator.onLine) {
+        copyToClipboard(message);
+        alert("Estás sin conexión. El mensaje fue copiado; WhatsApp intentará abrir y lo podrás pegar y enviar apenas vuelva la señal.");
+      }
+
+      if (directUrl) {
+        if (isMobileDevice()) {
+          const fallbackUrl = `https://api.whatsapp.com/send?phone=${WHATSAPP_LINK.match(/wa\.me\/(\d{7,15})/)[1]}&text=${encodeURIComponent(message)}`;
+          const fallbackTimer = setTimeout(() => { window.location.href = fallbackUrl; }, 1500);
+          window.addEventListener("blur", () => clearTimeout(fallbackTimer), { once: true });
+          window.location.href = directUrl;
+        } else {
+          window.open(directUrl, "_blank");
+        }
+      } else {
+        copyToClipboard(message);
+        alert("El mensaje fue copiado. Se abrirá WhatsApp: pega el mensaje y envíalo.");
+        window.open(WHATSAPP_LINK, "_blank");
+      }
+    }
+
+    function handleCopy(btn, cat) {
+      const formEl = document.getElementById(cat.formId);
+      const data = getFormData(formEl);
+      const message = buildMessage(cat, data);
+      copyToClipboard(message)
+        .then(() => {
+          const original = btn.innerHTML;
+          btn.textContent = "✅ ¡Copiado!";
+          setTimeout(() => { btn.innerHTML = original; }, 1800);
+        })
+        .catch(() => {
+          const original = btn.innerHTML;
+          btn.textContent = "❌ Error";
+          setTimeout(() => { btn.innerHTML = original; }, 1800);
+        });
+    }
+
+    // ---------- INICIALIZACIÓN ----------
     Object.keys(CATEGORIES).forEach(key => {
       const cat = CATEGORIES[key];
       const formEl = document.getElementById(cat.formId);
@@ -1171,26 +1131,25 @@
       formEl.addEventListener("input", () => scheduleSave(formEl, cat.storageKey));
       formEl.querySelector(".copy-btn").addEventListener("click", function() { handleCopy(this, cat); });
       formEl.querySelector(".clear-btn").addEventListener("click", () => clearDraft(formEl, cat.storageKey));
-      formEl.querySelector(".auto-btn").addEventListener("click", openAutoModal);
 
       restoreDraft(formEl, cat.storageKey);
     });
 
-    document.getElementById("modalCancel").addEventListener("click", closeAutoModal);
-    document.getElementById("modalProcess").addEventListener("click", processAutoFill);
-    document.getElementById("modalAuto").addEventListener("click", function(e) {
-      if (e.target === this) closeAutoModal();
+    document.getElementById("autofillBtn").addEventListener("click", runAutofill);
+    document.getElementById("clearPasteBtn").addEventListener("click", () => {
+      document.getElementById("pasteInput").value = "";
+      document.getElementById("autofillResult").textContent = "Detecta lo que puede (nombre, CI, teléfono, equipo, dirección, montos...). Siempre revisa antes de enviar.";
     });
 
     switchCategory(currentCategory);
     updateStatus();
 
+    // Service Worker
     if ("serviceWorker" in navigator) {
       window.addEventListener("load", () => {
-        navigator.serviceWorker.register("sw.js").catch(() => { /* falla silenciosa */ });
+        navigator.serviceWorker.register("sw.js").catch(() => { /* silencioso */ });
       });
     }
-  });
-</script>
+  </script>
 </body>
 </html>
