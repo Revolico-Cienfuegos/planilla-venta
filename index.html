@@ -180,6 +180,8 @@
     .btn-ghost:hover { color: var(--danger); }
     .btn-auto { background: #8b5cf6; box-shadow: 0 4px 8px -4px rgba(139,92,246,0.3); }
     .btn-auto:hover { background: #7c3aed; }
+    .btn-add { background: #0ea5e9; box-shadow: 0 4px 8px -4px rgba(14,165,233,0.3); }
+    .btn-add:hover { background: #0284c7; }
 
     .hint { font-size: 12px; color: var(--text-muted); text-align: center; line-height: 1.6; margin-top: 4px; }
 
@@ -208,7 +210,7 @@
       border-radius: var(--radius);
       max-width: 600px;
       width: 100%;
-      max-height: 85vh;
+      max-height: 90vh;
       padding: 28px 24px 24px;
       box-shadow: 0 40px 80px rgba(0,0,0,0.3);
       display: flex;
@@ -230,12 +232,12 @@
     .modal-box p {
       font-size: 14px;
       color: var(--text-secondary);
-      margin-bottom: 16px;
+      margin-bottom: 12px;
     }
     .modal-box textarea {
       flex: 1;
-      min-height: 180px;
-      max-height: 40vh;
+      min-height: 120px;
+      max-height: 35vh;
       padding: 14px;
       font-size: 14px;
       border: 1px solid var(--border-light);
@@ -276,6 +278,42 @@
     .modal-actions .btn-success:hover {
       background: #15803d;
     }
+    .modal-actions .btn-add-modal {
+      background: #0ea5e9;
+      box-shadow: 0 4px 8px -4px rgba(14,165,233,0.3);
+    }
+    .modal-actions .btn-add-modal:hover {
+      background: #0284c7;
+    }
+
+    /* mini input para agregar mensaje */
+    .add-msg-area {
+      display: flex;
+      gap: 8px;
+      margin-bottom: 10px;
+      flex-wrap: wrap;
+    }
+    .add-msg-area input {
+      flex: 1;
+      min-width: 140px;
+      padding: 10px 12px;
+      border: 1px solid var(--border-light);
+      border-radius: var(--radius-sm);
+      font-size: 14px;
+      font-family: var(--font);
+      background: #fafbfc;
+    }
+    .add-msg-area input:focus {
+      border-color: var(--border-focus);
+      box-shadow: 0 0 0 3px rgba(37,99,235,0.1);
+      background: #fff;
+    }
+    .add-msg-area .btn {
+      flex: none;
+      min-width: auto;
+      padding: 10px 16px;
+      font-size: 14px;
+    }
 
     @media (max-width: 600px) {
       header { flex-direction: column; align-items: flex-start; padding: 22px 20px 16px; }
@@ -289,7 +327,9 @@
       footer { padding: 12px 20px 16px; }
       .category-picker { grid-template-columns: 1fr; }
       .modal-box { padding: 20px 16px 16px; }
-      .modal-box textarea { min-height: 140px; }
+      .modal-box textarea { min-height: 100px; }
+      .add-msg-area { flex-direction: column; }
+      .add-msg-area input { width: 100%; }
     }
     @media (max-width: 400px) {
       body { padding: 12px 8px 40px; }
@@ -536,12 +576,19 @@
   </div>
 </div>
 
-<!-- MODAL AUTO-LLENAR -->
+<!-- MODAL AUTO-LLENAR (con acumulador) -->
 <div class="modal-overlay" id="modalAuto">
   <div class="modal-box">
     <h2>📥 Pegar mensaje del cliente</h2>
-    <p>Pega aquí el texto <strong>tal cual</strong> te lo enviaron. Acepta tanto mensajes con comas como sin comas.</p>
-    <textarea id="modalTextarea" placeholder="Ejemplo con comas:&#10;pepe, 54354612, lampara 55 usd, 1 lampara usd, calle 47 entre 68 y 70, cerca de la panaderia la paloma"></textarea>
+    <p>Pega aquí el texto <strong>tal cual</strong> te lo enviaron. También puedes ir agregando mensajes uno a uno usando el botón <strong>"➕ Agregar"</strong>.</p>
+
+    <!-- Área para agregar mensajes uno a uno -->
+    <div class="add-msg-area">
+      <input type="text" id="msgInput" placeholder="Pega un mensaje aquí y pulsa Agregar" />
+      <button type="button" class="btn btn-add-modal" id="addMsgBtn">➕ Agregar</button>
+    </div>
+
+    <textarea id="modalTextarea" placeholder="El texto completo aparecerá aquí..."></textarea>
     <div class="modal-actions">
       <button type="button" class="btn btn-secondary" id="modalCancel">Cancelar</button>
       <button type="button" class="btn btn-success" id="modalProcess">✅ Procesar</button>
@@ -844,7 +891,7 @@
       });
   }
 
-  // ---------- AUTO-LLENAR AVANZADO (con y sin comas) ----------
+  // ---------- AUTO-LLENAR AVANZADO (con y sin comas, y acumulador) ----------
   function parseMessageNatural(text) {
     // Limpiar y normalizar
     let clean = text.replace(/\s+/g, ' ').trim();
@@ -1115,10 +1162,11 @@
     }
   }
 
-  // ---------- Modal ----------
+  // ---------- Modal con acumulador ----------
   function openAutoModal() {
     document.getElementById("modalAuto").classList.add("open");
     document.getElementById("modalTextarea").value = "";
+    document.getElementById("msgInput").value = "";
     document.getElementById("modalTextarea").focus();
   }
 
@@ -1126,11 +1174,28 @@
     document.getElementById("modalAuto").classList.remove("open");
   }
 
+  function addMessageToAccumulator() {
+    const input = document.getElementById("msgInput");
+    const text = input.value.trim();
+    if (!text) {
+      alert("Pega un mensaje en el campo de entrada.");
+      return;
+    }
+    const textarea = document.getElementById("modalTextarea");
+    if (textarea.value.trim()) {
+      textarea.value += "\n" + text;
+    } else {
+      textarea.value = text;
+    }
+    input.value = "";
+    input.focus();
+  }
+
   function processAutoFill() {
     const textarea = document.getElementById("modalTextarea");
     const text = textarea.value;
     if (!text.trim()) {
-      alert("Por favor, pega el mensaje del cliente.");
+      alert("No hay ningún mensaje acumulado. Pega o agrega al menos un mensaje.");
       return;
     }
     const parsed = parseMessageNatural(text);
@@ -1160,8 +1225,16 @@
       restoreDraft(formEl, cat.storageKey);
     });
 
+    // Eventos del modal (acumulador)
     document.getElementById("modalCancel").addEventListener("click", closeAutoModal);
     document.getElementById("modalProcess").addEventListener("click", processAutoFill);
+    document.getElementById("addMsgBtn").addEventListener("click", addMessageToAccumulator);
+    document.getElementById("msgInput").addEventListener("keydown", function(e) {
+      if (e.key === "Enter") {
+        e.preventDefault();
+        addMessageToAccumulator();
+      }
+    });
     document.getElementById("modalAuto").addEventListener("click", function(e) {
       if (e.target === this) closeAutoModal();
     });
