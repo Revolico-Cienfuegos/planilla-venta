@@ -1,0 +1,29 @@
+# Configuración del Worker "planilla-ia".
+# No pongas aquí ninguna clave: la clave de acceso se guarda con `wrangler secret put ACCESS_KEY`.
+
+name = "planilla-ia"
+main = "src/index.js"
+compatibility_date = "2026-10-01"
+workers_dev = true
+
+# Workers AI (el binding se llama AI; el código lo usa como env.AI)
+[ai]
+binding = "AI"
+
+[vars]
+# Origen EXACTO de tu web (sin barra final ni ruta). Varios orígenes: sepáralos con comas.
+ALLOWED_ORIGINS = "https://revolico-cienfuegos.github.io"
+# Modelo (elegido por coste: el que más conversaciones permite en la cuota gratuita).
+MODEL = "@cf/meta/llama-3.1-8b-instruct-fp8-fast"
+
+# Registro de peticiones desactivado a propósito: no se guardan conversaciones.
+[observability]
+enabled = false
+
+# OPCIONAL — límite de ritmo por IP (capa suave contra abuso; es aproximado).
+# Descomenta solo si tu versión de wrangler lo acepta; verifica la sintaxis vigente en
+# https://developers.cloudflare.com/workers/runtime-apis/bindings/rate-limit/
+# [[ratelimits]]
+# name = "LIMITER"
+# namespace_id = "1001"
+# simple = { limit = 10, period = 60 }
