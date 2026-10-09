@@ -245,6 +245,7 @@
       <textarea id="pasteInput" placeholder="Pega aquí el texto tal cual te lo mandó el cliente por WhatsApp (nombre, CI, equipo, dirección, precio, etc. en cualquier orden)"></textarea>
       <div class="btn-group" style="margin-top:10px;">
         <button type="button" class="btn btn-primary" id="autofillBtn">🪄 Autocompletar campos</button>
+        <button type="button" class="btn btn-primary" id="iaBtn">🤖 Analizar conversación con IA</button>
         <button type="button" class="btn btn-outline" id="clearPasteBtn">🗑️ Borrar texto pegado</button>
       </div>
       <div class="hint" id="autofillResult">Detecta lo que puede (nombre, CI, teléfono, equipo, dirección, montos...). Siempre revisa antes de enviar.</div>
@@ -1151,5 +1152,6 @@
       });
     }
   </script>
+  <script src="ia.js"></script>
 </body>
 </html>
